@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 // components.md → Button: 32px, 6px radius, 13px/500, icon gap 7px; `sm` = 28px. One primary per region.
 const buttonVariants = cva(
-  "inline-flex shrink-0 items-center justify-center gap-[7px] whitespace-nowrap rounded-md border text-[13px] font-medium no-underline transition-[background-color,border-color,color,opacity] duration-[var(--dur-fast)] active:translate-y-[.5px] disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex shrink-0 items-center justify-center gap-[7px] whitespace-nowrap rounded-md border font-sans text-[13px] font-medium no-underline transition-[background-color,border-color,color,opacity] duration-[var(--dur-fast)] active:translate-y-[.5px] disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {

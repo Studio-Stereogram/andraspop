@@ -1,0 +1,277 @@
+/* Canvas content: the editorial register (meta-map-design skill → references/canvas.md).
+   Ported from prototype/index.html; class names carry an mm- prefix to stay clear of React Flow's. */
+
+/* ---------- ground ---------- */
+.mm-canvas.react-flow { background-color: var(--bg); }
+.mm-canvas .react-flow__pane { cursor: grab; }
+.mm-canvas .react-flow__pane.dragging { cursor: grabbing; }
+
+/* ---------- nodes ---------- */
+.mm-canvas .react-flow__node { cursor: pointer; }
+.mm-canvas .react-flow__node:focus-visible { box-shadow: none; }
+.mm-canvas .react-flow__node:focus-visible > .mm-node { box-shadow: var(--focus-ring); }
+
+.mm-node {
+  --bc: var(--ink);
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-node);
+  transition: opacity .2s, border-color .15s;
+}
+.mm-node:hover { border-color: var(--line-2); }
+.mm-node.t-note { background: var(--note); }
+.mm-node.dim { opacity: .16; }
+.mm-node.fade { opacity: .42; }
+.mm-node.dim.nb, .mm-node.fade.nb { opacity: .9; }
+
+/* selection = corner brackets (12px arms, 1.5px, 8px outside the card) */
+.mm-node::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .12s, inset .12s;
+  background:
+    linear-gradient(var(--bc), var(--bc)) left top / 12px 1.5px no-repeat, linear-gradient(var(--bc), var(--bc)) left top / 1.5px 12px no-repeat,
+    linear-gradient(var(--bc), var(--bc)) right top / 12px 1.5px no-repeat, linear-gradient(var(--bc), var(--bc)) right top / 1.5px 12px no-repeat,
+    linear-gradient(var(--bc), var(--bc)) left bottom / 12px 1.5px no-repeat, linear-gradient(var(--bc), var(--bc)) left bottom / 1.5px 12px no-repeat,
+    linear-gradient(var(--bc), var(--bc)) right bottom / 12px 1.5px no-repeat, linear-gradient(var(--bc), var(--bc)) right bottom / 1.5px 12px no-repeat;
+}
+.mm-node.sel { border-color: var(--ink-2); }
+.mm-node.sel::after { opacity: 1; }
+
+.mm-nhead {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 9px 0 11px;
+  font: 500 9.5px var(--f-mono);
+  text-transform: uppercase;
+  letter-spacing: .11em;
+  color: var(--ink-3);
+}
+.mm-nhead [data-slot="badge"] { text-transform: none; letter-spacing: normal; }
+.mm-nhead [data-variant="status"] { margin-left: auto; }
+
+/* ---------- connection points: ● continuity (right), ◆ reference (bottom) ---------- */
+.mm-port.react-flow__handle {
+  width: 11px;
+  height: 11px;
+  min-width: 0;
+  min-height: 0;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1.5px solid var(--edge);
+  box-sizing: border-box;
+  --rot: 0deg;
+  transition: transform .12s, background .12s, border-color .12s, box-shadow .12s;
+}
+.mm-port.p-cont.react-flow__handle-right { right: 0; transform: translate(50%, -50%); }
+.mm-port.p-ref.react-flow__handle-bottom {
+  width: 10px;
+  height: 10px;
+  border-radius: 1px;
+  --rot: 45deg;
+  transform: translate(-50%, 50%) rotate(45deg);
+}
+/* Public mode never shows editing affordances. The handles stay in the DOM (React Flow attaches edges to them). */
+.mm-public .mm-port { visibility: hidden; }
+
+/* ---------- thumbnails ---------- */
+.mm-thumb {
+  position: relative;
+  height: 108px;
+  margin: 0 10px;
+  border-radius: 2px;
+  overflow: hidden;
+  background: var(--thumb-bg);
+}
+.mm-thumb svg { display: block; width: 100%; height: 100%; }
+.mm-thumb.lg { height: 156px; margin: 0; border-radius: 6px; }
+.mm-dur {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 5px 3px 4px;
+  border-radius: 2px;
+  font: 500 9.5px/1 var(--f-mono);
+  letter-spacing: .06em;
+  background: var(--thumb-ink);
+  color: var(--thumb-bg);
+}
+.mm-dur::before {
+  content: "";
+  border-left: 5px solid var(--thumb-bg);
+  border-top: 3.5px solid transparent;
+  border-bottom: 3.5px solid transparent;
+}
+.mm-thumb.empty {
+  background: var(--surface-2);
+  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 16px 16px;
+  background-position: -1px -1px;
+}
+.mm-thumb.empty span {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font: 500 9.5px var(--f-mono);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.mm-thumb.empty span b { font-weight: 500; background: var(--surface-2); padding: 2px 6px; }
+.mm-thumb.empty::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  background:
+    linear-gradient(var(--ink-3), var(--ink-3)) left top / 10px 1px no-repeat, linear-gradient(var(--ink-3), var(--ink-3)) left top / 1px 10px no-repeat,
+    linear-gradient(var(--ink-3), var(--ink-3)) right top / 10px 1px no-repeat, linear-gradient(var(--ink-3), var(--ink-3)) right top / 1px 10px no-repeat,
+    linear-gradient(var(--ink-3), var(--ink-3)) left bottom / 10px 1px no-repeat, linear-gradient(var(--ink-3), var(--ink-3)) left bottom / 1px 10px no-repeat,
+    linear-gradient(var(--ink-3), var(--ink-3)) right bottom / 10px 1px no-repeat, linear-gradient(var(--ink-3), var(--ink-3)) right bottom / 1px 10px no-repeat;
+}
+
+/* ---------- card body ---------- */
+.mm-nbody { padding: 10px 12px 12px; display: grid; gap: 6px; }
+.mm-ntitle {
+  font: 600 14.5px/1.22 var(--f-title);
+  font-stretch: 96%;
+  letter-spacing: -.005em;
+  text-wrap: balance;
+  color: var(--ink);
+}
+.mm-ntitle.empty { color: var(--ink-3); font-weight: 500; }
+.mm-nmeta {
+  font: 400 10px/1.3 var(--f-mono);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mm-tags { display: flex; flex-wrap: wrap; gap: 4px 10px; }
+.mm-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font: 500 9.5px var(--f-mono);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--ink-2);
+}
+.mm-tag::before { content: ""; width: 7px; height: 7px; background: var(--tc); }
+
+/* ---------- people: the only round entities ---------- */
+.mm-node.t-person { border-radius: 999px; display: flex; align-items: center; gap: 11px; padding: 8px 20px 8px 8px; }
+.mm-node.t-person::after { inset: -8px -6px; }
+.mm-avatar {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font: 700 15px var(--f-title);
+  font-stretch: 110%;
+  color: #fff;
+  background: var(--av);
+}
+.mm-avatar.lg { width: 76px; height: 76px; font-size: 26px; }
+.mm-pbody { min-width: 0; display: grid; gap: 2px; }
+.mm-pkind { font: 500 9px var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+
+/* ---------- edges ---------- */
+.mm-canvas .react-flow__edge { pointer-events: none; }
+.mm-edge { fill: none; stroke: var(--edge); stroke-width: 1.4; transition: opacity .2s; }
+.mm-edge.cont { stroke: var(--ink-2); stroke-width: 2.2; }
+.mm-edge.ref { stroke-dasharray: 5 4; }
+.mm-edge.k-attachment { stroke-dasharray: 3 4; }
+.mm-edge.k-references { stroke-dasharray: .5 5; stroke-linecap: round; stroke-width: 2.2; }
+.mm-edge.k-inspired-by { stroke-dasharray: 9 5; }
+.mm-edge.hl { stroke: var(--ink); stroke-width: 2; }
+.mm-edge.dim { opacity: .12; }
+.mm-elabel {
+  font: 500 9.5px var(--f-mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  fill: var(--ink);
+  paint-order: stroke;
+  stroke: var(--bg);
+  stroke-width: 6px;
+  stroke-linejoin: round;
+  text-anchor: middle;
+}
+.mm-markers { position: absolute; width: 0; height: 0; overflow: hidden; }
+#mm-arrow path { fill: var(--edge); }
+#mm-arrow-c path { fill: var(--ink-2); }
+#mm-arrow-hl path { fill: var(--ink); }
+
+/* ---------- layout backgrounds (behind edges and nodes) ---------- */
+.mm-bg { position: absolute; left: 0; top: 0; z-index: -1; pointer-events: none; }
+.mm-halos { position: absolute; left: 0; top: 0; width: 1px; height: 1px; overflow: visible; }
+.mm-halo { opacity: .11; transition: opacity .2s; }
+:root.paper .mm-halo { opacity: .16; }
+.mm-halo rect { fill: var(--tc); }
+.mm-halo.off { opacity: .03; }
+.mm-cl-label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font: 650 46px/1 var(--f-title);
+  font-stretch: 112%;
+  text-transform: uppercase;
+  letter-spacing: .005em;
+  color: var(--tc);
+  transition: opacity .2s;
+}
+:root.paper .mm-cl-label { color: color-mix(in srgb, var(--tc) 70%, var(--ink)); }
+.mm-cl-label small { font: 500 13px var(--f-mono); color: var(--ink-3); letter-spacing: .08em; }
+.mm-cl-label.off { opacity: .22; }
+.mm-lane { position: absolute; border-top: 1px solid var(--line-2); }
+.mm-lane h3 { margin: 14px 0 0 20px; font: 650 26px/1 var(--f-title); font-stretch: 112%; text-transform: uppercase; color: var(--ink-2); }
+.mm-tick { position: absolute; border-left: 1px dashed var(--line); }
+.mm-tick span {
+  position: absolute;
+  top: 0;
+  left: 6px;
+  font: 500 10px var(--f-mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.mm-tick.month span { color: var(--ink); }
+.mm-tick.today { border-left: 1.5px solid var(--hot); }
+.mm-tick.today span { color: #fff; background: var(--hot); padding: 2px 6px; left: -1px; top: -4px; border-radius: 3px; }
+.mm-backlog { position: absolute; border-left: 1px dashed var(--ink-3); }
+.mm-backlog span {
+  position: absolute;
+  top: -40px;
+  left: 10px;
+  font: 500 10px var(--f-mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mm-node, .mm-edge, .mm-node::after { transition: none; }
+}
+
+/* React Flow's attribution, in the chrome's quiet mono style */
+.mm-canvas .react-flow__attribution { background: transparent; margin: 0 8px 4px 0; font: 500 9.5px var(--f-mono); letter-spacing: .06em; }
+.mm-canvas .react-flow__attribution a { color: var(--ink-3); text-decoration: none; }

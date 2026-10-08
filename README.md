@@ -2,15 +2,22 @@
 
 A canvas-based, explorable map of everything published while building in public. Videos from YouTube, Instagram and X sit on a node canvas next to the links, bookmarks, people and notes around them. Entries connect through **continuity** (series, sequels) and **reference** (context) links. Visitors browse it like a mind map instead of a feed. The same canvas is the private workflow tool for planning and publishing.
 
-This repository starts as a **handoff package**: a spec, a working single-file prototype, a design-system skill for Claude Code, a seed dataset, a database schema and a hosting plan. The production app (Next.js on Vercel) gets built on top of it.
+This repository started as a **handoff package**: a spec, a working single-file prototype, a design-system skill for Claude Code, a seed dataset, a database schema and a hosting plan. The production app (Next.js on Vercel) is built on top of it. Milestone M1, the read-only public map running on the seed data, is in place.
 
 ## What's here
 
 ```
 .
 ├── README.md                  this file
-├── CLAUDE.md                  instructions Claude Code reads first
+├── CLAUDE.md                  instructions Claude Code reads first (AGENTS.md: Next.js 16 notes)
 ├── SPEC.md                    product spec: data model, connection model, views, interactions, integrations
+├── app/                       Next.js App Router: layout (fonts, theme), page, globals.css (design tokens)
+├── components/
+│   ├── map/                   the canvas: React Flow nodes and edges, layouts' backgrounds, filters, inspector
+│   └── ui/                    shadcn/ui components themed with the tokens
+├── lib/
+│   ├── map/                   pure logic with tests: types, visibility rule, filters, layouts, edge geometry, thumbnails
+│   └── data/map.ts            where the public map comes from (seed now, Supabase in M2)
 ├── prototype/
 │   ├── index.html             the working demo (open it in a browser, no build step)
 │   └── versions/              snapshots of earlier demo versions + colour history
@@ -32,6 +39,17 @@ Open `prototype/index.html` in a browser. Everything works offline except the we
 
 Keyboard: `1` `2` `3` switch views, `F` fits the map, `T` tidies the Free view, `Esc` closes panels.
 
+## Run the app
+
+Node 22 (`.nvmrc`).
+
+```bash
+npm install
+npm run dev          # http://localhost:3000
+```
+
+Before pushing: `npm run lint && npm run typecheck && npm test && npm run build`.
+
 ## Get the code
 
 The repository is [Studio-Stereogram/andraspop](https://github.com/Studio-Stereogram/andraspop). `main` deploys to production on Vercel; work happens on branches and merges into `main`.
@@ -43,9 +61,9 @@ cd andraspop
 
 ## Build it with Claude Code
 
-Open the folder in Claude Code. `CLAUDE.md` and the `meta-map-design` skill load automatically. A good first prompt:
+Open the folder in Claude Code. `CLAUDE.md` and the `meta-map-design` skill load automatically. A good next prompt:
 
-> Read CLAUDE.md and SPEC.md, then do milestone M1: scaffold the Next.js app, set up shadcn/ui with our design tokens, and port the prototype canvas to React Flow using data/seed.json. Keep prototype/index.html as the visual reference.
+> Read CLAUDE.md and SPEC.md, then start milestone M2: Supabase persistence behind lib/data/map.ts, the host routing and edit gate from docs/snippets/proxy.ts, and the editor (dock, connecting, inspector editing, Tidy, status). Keep prototype/index.html as the reference for editing behaviour.
 
 ## Deploy
 

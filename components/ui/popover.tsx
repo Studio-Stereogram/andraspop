@@ -33,8 +33,9 @@ function PopoverContent({
       >
         {children}
         {caret && (
+          // Radix flips the arrow towards the trigger; the 1px shift lets it cover the panel's border.
           <PopoverPrimitive.Arrow asChild width={12} height={7}>
-            <span className="block h-[7px] w-3 overflow-hidden">
+            <span className="block h-[7px] w-3 -translate-y-px overflow-hidden">
               <span className="mx-auto block size-3 -translate-y-1.5 rotate-45 rounded-br-[2px] border-r border-b border-line-2 bg-surface" />
             </span>
           </PopoverPrimitive.Arrow>
