@@ -1,10 +1,12 @@
-/* Meta Map design tokens
-   Dark ("graphite") is the default on :root. Paper is opt-in via .paper on <html>.
-   Copy into app/globals.css. Components read the semantic tokens; shadcn/ui reads the mapping at the bottom.
-   The Next.js app loads fonts with next/font (app/fonts.ts) instead of the @import below, and points --f-* at its
-   variables; lib/tokens.test.ts checks every other value here matches app/globals.css. */
+@import "tailwindcss";
 
-@import url("https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
+/* ---------------------------------------------------------------------------
+   Meta Map design tokens.
+   Source of truth: .claude/skills/meta-map-design/references/tokens.css.
+   Change tokens there first, then here; lib/tokens.test.ts fails if they drift.
+   Only difference: fonts load through next/font (app/fonts.ts) instead of the
+   Google Fonts @import, so the --f-* tokens point at its CSS variables.
+   --------------------------------------------------------------------------- */
 
 :root {
   /* surfaces */
@@ -42,9 +44,9 @@
   --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px color-mix(in srgb, var(--hot) 70%, transparent); /* box-shadow for :focus-visible; --ring below is shadcn's ring colour */
   --r-node: 4px; --r-sm: 6px; --r: 8px; --r-panel: 10px; --r-dialog: 12px;
   /* type */
-  --f-ui: "Archivo", "Helvetica Neue", Arial, sans-serif;
-  --f-title: "Archivo", "Helvetica Neue", Arial, sans-serif;
-  --f-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --f-ui: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
+  --f-title: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
+  --f-mono: var(--font-plex-mono), ui-monospace, "SF Mono", Menlo, monospace;
   /* motion */
   --dur-fast: 120ms; --dur-pop: 140ms; --dur-layout: 520ms;
   --ease-layout: cubic-bezier(.65,0,.35,1);
@@ -86,6 +88,60 @@
   --radius: 0.5rem;
 }
 
+/* ---- Tailwind theme: expose the tokens as utilities (bg-surface, text-ink-3, border-line-2, …) ---- */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-edge: var(--edge);
+  --color-hot: var(--hot);
+
+  --font-sans: var(--f-ui);
+  --font-mono: var(--f-mono);
+
+  --radius-sm: calc(var(--radius) - 4px);   /* 4px */
+  --radius-md: calc(var(--radius) - 2px);   /* 6px: buttons, inputs, toggles */
+  --radius-lg: var(--radius);               /* 8px: cards, tabs track, popovers */
+  --radius-xl: calc(var(--radius) + 4px);   /* 12px: dialogs */
+}
+
+@layer base {
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font: 14px/1.45 var(--f-ui);
+    -webkit-font-smoothing: antialiased;
+  }
+  :focus-visible { outline: none; box-shadow: var(--focus-ring); }
+  button { cursor: pointer; }
+}
+
 /* canvas background */
 .canvas-grid {
   background-color: var(--bg);
@@ -93,4 +149,21 @@
     linear-gradient(var(--grid-2) 1px, transparent 1px), linear-gradient(90deg, var(--grid-2) 1px, transparent 1px),
     linear-gradient(var(--grid) 1px, transparent 1px),   linear-gradient(90deg, var(--grid) 1px, transparent 1px);
   background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px; /* scale with zoom */
+}
+
+/* Meta labels: IBM Plex Mono, uppercase, letterspaced (skill: "Meta" type role) */
+.lbl {
+  font: 500 10.5px var(--f-mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+@keyframes pop-in {
+  from { opacity: 0; transform: translateY(-4px) scale(.985); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; }
 }

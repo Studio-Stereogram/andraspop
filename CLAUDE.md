@@ -7,6 +7,8 @@
 
 ## Stack (decided)
 - Next.js (App Router, TypeScript, latest stable), Tailwind, shadcn/ui re-themed with `references/tokens.css`.
+  - Next.js 16.4 with Cache Components is newer than most training data: read the bundled guide in `node_modules/next/dist/docs/` before using an API (see `AGENTS.md`).
+  - The shadcn registry may be unreachable from cloud sessions; `components/ui/*` follow shadcn's source style, so `npx shadcn add` works where the registry is reachable (`components.json`).
 - Canvas: React Flow (`@xyflow/react`) with custom node and edge components that match the prototype.
 - Data: Supabase Postgres (`supabase/schema.sql`). Seed from `data/seed.json`.
 - Hosting: Vercel, GitHub `main` → production. See `docs/hosting.md`.

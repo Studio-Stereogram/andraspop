@@ -30,3 +30,7 @@ Thumbs.db
 
 # claude code local settings (shared settings and skills stay tracked)
 .claude/settings.local.json
+
+# testing / misc
+/coverage
+*.pem
