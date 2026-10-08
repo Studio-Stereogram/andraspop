@@ -44,7 +44,7 @@ Visitors never see nodes with status `idea` or `draft`, nodes marked private, or
 | topics | topic id[] | all topics are equal; a node pulls towards every topic it carries |
 | handle | text | people only: X handle (also parsed from an x.com URL) |
 | private | bool | hidden from visitors regardless of status; notes default to private |
-| position | {x, y} | free-layout position, saved per node; Tidy rewrites it |
+| fx, fy | number | free-layout position, saved per node; Tidy rewrites it. `fx`/`fy` in the JSON format and the app, `pos_x`/`pos_y` in the database (see §8) |
 | createdBy / updatedAt | | audit |
 
 ### Edge (relation)
@@ -131,7 +131,14 @@ idea → draft → scheduled → published
 - **Tables:** `nodes`, `edges`, `topics`, `node_topics`, `profiles`.
 - **Public page:** server-render the published graph as JSON + static HTML list of titles/links for SEO and no-JS readers.
 - **Hosting:** GitHub + Vercel, one project, two domains: the public map on the main domain, the editor on an `edit.` subdomain behind a password gate. Full plan in `docs/hosting.md`. OG image per node for sharing.
-- **Import/export:** keep the demo's JSON shape (`{topics, nodes, edges}`) as the seed format.
+- **Import/export:** keep the demo's JSON shape (`{topics, nodes, edges}`) as the seed format. Field names follow the JSON everywhere in app code; only the database differs:
+
+  | JSON / app | Database |
+  |---|---|
+  | `node.id` (stable string, e.g. `v1`) | `nodes.slug` (`nodes.id` is a generated uuid) |
+  | `node.fx`, `node.fy` | `nodes.pos_x`, `nodes.pos_y` |
+  | `node.topics[]` | `node_topics` rows |
+  | `edge.from`, `edge.to` (node ids) | `edges.from_id`, `edges.to_id` (uuids, resolved via slug) |
 
 ## 9. Milestones
 

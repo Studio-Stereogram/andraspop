@@ -49,7 +49,7 @@ Rules: never uppercase UI controls; mono only for metadata and labels; balance h
 1. Two connection points per node: **● continuity** on the right edge, **◆ reference** on the bottom edge. Same shapes everywhere (handles, inspector headings, legends).
 2. Continuity lines are solid, heavier and have arrows. Reference lines are thinner and dashed (dash varies by kind).
 3. Exactly one primary (filled) button per view region. The rest use outline, secondary or ghost.
-4. Every interactive element has hover, focus-visible (accent ring) and pressed/selected states.
+4. Every interactive element has hover, focus-visible (accent ring, `box-shadow: var(--focus-ring)`) and pressed/selected states. `--ring` is shadcn's ring *colour* (= `--hot`), not a shadow.
 5. Public mode never shows editing affordances: no handles, dock, Tidy or Data.
 6. Respect `prefers-reduced-motion`: drop the lock-on pulse and layout tweens.
 

@@ -32,16 +32,13 @@ Open `prototype/index.html` in a browser. Everything works offline except the we
 
 Keyboard: `1` `2` `3` switch views, `F` fits the map, `T` tidies the Free view, `Esc` closes panels.
 
-## Start the repository
+## Get the code
+
+The repository is [Studio-Stereogram/andraspop](https://github.com/Studio-Stereogram/andraspop). `main` deploys to production on Vercel; work happens on branches and merges into `main`.
 
 ```bash
-unzip meta-map.zip && cd meta-map
-git init -b main
-git add -A
-git commit -m "Initial handoff: spec, prototype, design skill, schema, hosting plan"
-# create an empty repo on GitHub first (private or public), then:
-git remote add origin git@github.com:<you>/meta-map.git
-git push -u origin main
+git clone git@github.com:Studio-Stereogram/andraspop.git
+cd andraspop
 ```
 
 ## Build it with Claude Code

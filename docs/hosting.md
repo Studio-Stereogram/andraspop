@@ -5,7 +5,7 @@
 ## Recommended setup: one app, two domains, in-app gate
 
 ```
-github.com/<you>/meta-map  ──push main──▶  Vercel project "meta-map"
+github.com/Studio-Stereogram/andraspop  ──push main──▶  Vercel project "andraspop"
                                               ├── andraspop.com        public, read-only, cached
                                               └── edit.andraspop.com   editor, password-gated
                                                         │
@@ -41,9 +41,9 @@ Start with the password gate (`docs/snippets/proxy.ts`). The schema already cont
 
 ## Step by step
 
-1. **GitHub.** Create the repo (see README). Private is simplest; public also works since secrets live only in Vercel.
+1. **GitHub.** The repo is `Studio-Stereogram/andraspop`. Set its default branch to `main` (Settings → General → Default branch); Vercel deploys that branch to production.
 2. **Supabase.** Create a project in an EU region (Frankfurt) and run `supabase/schema.sql` in the SQL editor. Import `data/seed.json` with the seed script the app will include in M1.
-3. **Vercel.** "Add New Project" → import the GitHub repo → framework Next.js. Add the env vars from `.env.example` for Production and Preview.
+3. **Vercel.** "Add New Project" → import the GitHub repo → Application Preset **Next.js**, Root Directory `./`. Check Settings → Git → Production Branch is `main`. Add the env vars from `.env.example` for Production and Preview once the features that read them land (M2, M3).
 4. **Domains.** In the Vercel project: Settings → Domains → add `andraspop.com` and `edit.andraspop.com`. At your DNS provider, add the records Vercel shows (usually a `CNAME` to `cname.vercel-dns.com` for each subdomain, or `A` records for an apex domain).
 5. **Env:** set `PUBLIC_HOST=andraspop.com` and `EDIT_HOST=edit.andraspop.com` so the proxy knows which is which.
 6. **Publish flow.** When you mark a video Published in the editor, the server action saves it and calls `revalidateTag('map')`, so the public page updates within seconds while staying cached.

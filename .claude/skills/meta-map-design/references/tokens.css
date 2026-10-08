@@ -37,7 +37,7 @@
   --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 26px rgba(0,0,0,.35);
   --shadow-sm: 0 1px 2px rgba(0,0,0,.45);
   --shadow-pop: 0 18px 48px rgba(0,0,0,.45), 0 2px 6px rgba(0,0,0,.3);
-  --ring: 0 0 0 2px var(--bg), 0 0 0 4px color-mix(in srgb, var(--hot) 70%, transparent);
+  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px color-mix(in srgb, var(--hot) 70%, transparent); /* box-shadow for :focus-visible; --ring below is shadcn's ring colour */
   --r-node: 4px; --r-sm: 6px; --r: 8px; --r-panel: 10px; --r-dialog: 12px;
   /* type */
   --f-ui: "Archivo", "Helvetica Neue", Arial, sans-serif;
@@ -80,7 +80,7 @@
   --destructive: var(--hot);
   --border: var(--line);
   --input: var(--line-2);
-  --ring: var(--hot);
+  --ring: var(--hot);                    /* a colour; our focus box-shadow is --focus-ring */
   --radius: 0.5rem;
 }
 

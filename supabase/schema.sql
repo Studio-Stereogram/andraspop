@@ -31,7 +31,7 @@ create table public.nodes (
   duration    text,
   thumbnail   text,
   private     boolean not null default false,
-  pos_x       real not null default 0,       -- Free layout position
+  pos_x       real not null default 0,       -- Free layout position (fx / fy in the JSON format)
   pos_y       real not null default 0,
   external_id text,                          -- platform media id for sync
   created_at  timestamptz not null default now(),
