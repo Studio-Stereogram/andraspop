@@ -1,0 +1,32 @@
+# deps / build
+node_modules/
+.next/
+out/
+build/
+dist/
+.turbo/
+*.tsbuildinfo
+next-env.d.ts
+
+# env
+.env
+.env*.local
+!.env.example
+
+# vercel / supabase local
+.vercel/
+supabase/.temp/
+supabase/.branches/
+
+# logs / os / editors
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# claude code local settings (shared settings and skills stay tracked)
+.claude/settings.local.json

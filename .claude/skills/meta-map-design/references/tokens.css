@@ -1,0 +1,94 @@
+/* Meta Map design tokens
+   Dark ("graphite") is the default on :root. Paper is opt-in via .paper on <html>.
+   Copy into app/globals.css. Components read the semantic tokens; shadcn/ui reads the mapping at the bottom. */
+
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
+
+:root {
+  /* surfaces */
+  --bg: #101215;          /* canvas ground */
+  --grid: #171A1F;        /* 24px grid */
+  --grid-2: #20242B;      /* 120px major grid */
+  --surface: #1A1D22;     /* cards, panels */
+  --surface-2: #22262D;   /* tracks, hover, inputs */
+  --surface-3: #2A2F37;   /* strong hover, meter off */
+  --line: #2F343C;        /* borders */
+  --line-2: #3B414B;      /* control borders */
+  /* text */
+  --ink: #EDF0F4;
+  --ink-2: #B2B9C4;
+  --ink-3: #7D8693;
+  /* canvas */
+  --edge: #59626E;        /* reference lines; continuity uses --ink-2 */
+  --note: #2A2717;        /* note cards */
+  --thumb-bg: #0C0E11;    /* generated thumbnails (same in both themes) */
+  --thumb-ink: #EDF0F4;
+  /* accent: interaction and "now" only */
+  --hot: #E5553A;
+  /* status */
+  --st-idea: #8E98A6;
+  --st-draft: #E0A53C;
+  --st-sched: #6795F2;
+  --st-pub: #4DC07E;
+  /* topics (assign in order; data stores the hex) */
+  --topic-1: #3E63DD; --topic-2: #12A594; --topic-3: #F76B15; --topic-4: #D6409F; --topic-5: #8E4EC6;
+  --topic-6: #A18072; --topic-7: #46A758; --topic-8: #0090FF; --topic-9: #E5484D; --topic-10: #FFB224;
+  /* elevation, focus, radius */
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 26px rgba(0,0,0,.35);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.45);
+  --shadow-pop: 0 18px 48px rgba(0,0,0,.45), 0 2px 6px rgba(0,0,0,.3);
+  --ring: 0 0 0 2px var(--bg), 0 0 0 4px color-mix(in srgb, var(--hot) 70%, transparent);
+  --r-node: 4px; --r-sm: 6px; --r: 8px; --r-panel: 10px; --r-dialog: 12px;
+  /* type */
+  --f-ui: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --f-title: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  /* motion */
+  --dur-fast: 120ms; --dur-pop: 140ms; --dur-layout: 520ms;
+  --ease-layout: cubic-bezier(.65,0,.35,1);
+  color-scheme: dark;
+}
+
+:root.paper {
+  --bg: #ECECE9; --grid: #E2E2DE; --grid-2: #D5D5D0;
+  --surface: #FBFBF9; --surface-2: #F1F1ED; --surface-3: #E6E6E1;
+  --line: #DADAD4; --line-2: #C3C2BB;
+  --ink: #151514; --ink-2: #4F4E49; --ink-3: #7E7C75;
+  --edge: #A3A19A; --note: #F6F0DC; --hot: #D9472C;
+  --st-idea: #7E7C75; --st-draft: #A8721A; --st-sched: #337493; --st-pub: #557426;
+  --shadow: 0 10px 26px rgba(21,21,20,.10); --shadow-sm: 0 1px 2px rgba(21,21,20,.08);
+  --shadow-pop: 0 18px 40px rgba(21,21,20,.14), 0 2px 6px rgba(21,21,20,.08);
+  color-scheme: light;
+}
+
+/* ---- shadcn/ui variable mapping (hex works with current shadcn/Tailwind v4) ---- */
+:root, :root.paper {
+  --background: var(--bg);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: var(--ink);                 /* filled button = ink on bg */
+  --primary-foreground: var(--bg);
+  --secondary: var(--surface-2);
+  --secondary-foreground: var(--ink);
+  --muted: var(--surface-2);
+  --muted-foreground: var(--ink-3);
+  --accent: var(--surface-2);            /* shadcn "accent" = hover wash, NOT our --hot */
+  --accent-foreground: var(--ink);
+  --destructive: var(--hot);
+  --border: var(--line);
+  --input: var(--line-2);
+  --ring: var(--hot);
+  --radius: 0.5rem;
+}
+
+/* canvas background */
+.canvas-grid {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--grid-2) 1px, transparent 1px), linear-gradient(90deg, var(--grid-2) 1px, transparent 1px),
+    linear-gradient(var(--grid) 1px, transparent 1px),   linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px; /* scale with zoom */
+}

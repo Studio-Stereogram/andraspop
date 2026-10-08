@@ -1,0 +1,638 @@
+{
+  "topics": [
+    {
+      "id": "craft",
+      "name": "Design craft",
+      "color": "#3E63DD"
+    },
+    {
+      "id": "ai",
+      "name": "AI workflows",
+      "color": "#12A594"
+    },
+    {
+      "id": "biz",
+      "name": "Studio business",
+      "color": "#F76B15"
+    },
+    {
+      "id": "art",
+      "name": "Art",
+      "color": "#D6409F"
+    },
+    {
+      "id": "framer",
+      "name": "Framer",
+      "color": "#8E4EC6"
+    },
+    {
+      "id": "tools",
+      "name": "Tools",
+      "color": "#A18072"
+    },
+    {
+      "id": "vibe",
+      "name": "Vibecoding",
+      "color": "#46A758"
+    }
+  ],
+  "nodes": [
+    {
+      "topics": [
+        "framer",
+        "biz"
+      ],
+      "summary": "Speed of iteration beats pixel control for most marketing sites. What we hand over, and where Framer still breaks.",
+      "url": "https://www.youtube.com/",
+      "handle": "",
+      "duration": "12:40",
+      "date": "2026-08-19",
+      "private": false,
+      "fx": 0,
+      "fy": 0,
+      "id": "v1",
+      "type": "video",
+      "title": "Why our studio builds client sites in Framer",
+      "platform": "youtube",
+      "status": "published"
+    },
+    {
+      "topics": [
+        "framer",
+        "craft"
+      ],
+      "summary": "The short cut of the long video: collections, references and one template page.",
+      "url": "https://www.instagram.com/",
+      "handle": "",
+      "duration": "0:58",
+      "date": "2026-08-22",
+      "private": false,
+      "fx": 330,
+      "fy": -190,
+      "id": "v2",
+      "type": "video",
+      "title": "Framer CMS in 60 seconds",
+      "platform": "instagram",
+      "status": "published"
+    },
+    {
+      "topics": [
+        "framer"
+      ],
+      "summary": "Duplicate-able Framer project with the CMS setup from the walkthrough.",
+      "url": "https://www.framer.com/",
+      "handle": "",
+      "duration": "",
+      "date": "2026-08-19",
+      "private": false,
+      "fx": 330,
+      "fy": 150,
+      "id": "l1",
+      "type": "link",
+      "title": "Starter site template shown in the video",
+      "platform": null,
+      "status": null
+    },
+    {
+      "topics": [
+        "biz"
+      ],
+      "summary": "No investors, no growth targets. The three rules that kept the studio small on purpose.",
+      "url": "https://x.com/",
+      "handle": "",
+      "duration": "2:10",
+      "date": "2026-08-28",
+      "private": false,
+      "fx": 0,
+      "fy": 420,
+      "id": "v3",
+      "type": "video",
+      "title": "Five years profitable with nine people",
+      "platform": "x",
+      "status": "published"
+    },
+    {
+      "topics": [
+        "biz"
+      ],
+      "summary": "Fixed scopes, weekly retainers and when we still bill by the hour.",
+      "url": "https://www.youtube.com/",
+      "handle": "",
+      "duration": "18:05",
+      "date": "2026-09-09",
+      "private": false,
+      "fx": 330,
+      "fy": 440,
+      "id": "v4",
+      "type": "video",
+      "title": "Pricing design work without hourly rates",
+      "platform": "youtube",
+      "status": "published"
+    },
+    {
+      "topics": [
+        "biz"
+      ],
+      "summary": "The spreadsheet from the video, cleaned up.",
+      "url": "https://example.com/pricing-sheet",
+      "handle": "",
+      "duration": "",
+      "date": "2026-09-09",
+      "private": false,
+      "fx": 680,
+      "fy": 610,
+      "id": "l2",
+      "type": "link",
+      "title": "Project pricing calculator (sheet)",
+      "platform": null,
+      "status": null
+    },
+    {
+      "topics": [
+        "biz",
+        "craft"
+      ],
+      "summary": "Walk through an anonymised pitch deck: audit, scope, rollout plan.",
+      "url": "",
+      "handle": "",
+      "duration": "",
+      "date": "",
+      "private": false,
+      "fx": 680,
+      "fy": 330,
+      "id": "v9",
+      "type": "video",
+      "title": "What a design system pitch actually contains",
+      "platform": "youtube",
+      "status": "draft"
+    },
+    {
+      "topics": [
+        "ai",
+        "biz"
+      ],
+      "summary": "Short take: tools got faster, the expensive part is still deciding what to make.",
+      "url": "",
+      "handle": "",
+      "duration": "",
+      "date": "",
+      "private": false,
+      "fx": 330,
+      "fy": 800,
+      "id": "v10",
+      "type": "video",
+      "title": "AI won’t replace the brief",
+      "platform": "x",
+      "status": "draft"
+    },
+    {
+      "topics": [
+        "tools",
+        "ai",
+        "craft"
+      ],
+      "summary": "Weave, C4D, Houdini, ComfyUI: why design tools keep converging on graphs, and what that means for how we work.",
+      "url": "https://www.youtube.com/",
+      "handle": "",
+      "duration": "14:22",
+      "date": "2026-09-16",
+      "private": false,
+      "fx": 1040,
+      "fy": 0,
+      "id": "v5",
+      "type": "video",
+      "title": "Node editors are the new artboards",
+      "platform": "youtube",
+      "status": "published"
+    },
+    {
+      "topics": [
+        "tools"
+      ],
+      "summary": "The talk that keeps coming back whenever tools come up.",
+      "url": "https://vimeo.com/36579366",
+      "handle": "",
+      "duration": "",
+      "date": "2026-09-14",
+      "private": false,
+      "fx": 1040,
+      "fy": -250,
+      "id": "b1",
+      "type": "bookmark",
+      "title": "Bret Victor: Inventing on Principle",
+      "platform": null,
+      "status": null
+    },
+    {
+      "topics": [
+        "ai",
+        "art"
+      ],
+      "summary": "One graph, six image models, a moodboard in four minutes.",
+      "url": "https://www.instagram.com/",
+      "handle": "",
+      "duration": "1:12",
+      "date": "2026-09-18",
+      "private": false,
+      "fx": 1380,
+      "fy": -150,
+      "id": "v6",
+      "type": "video",
+      "title": "Moodboarding with generative nodes",
+      "platform": "instagram",
+      "status": "published"
+    },
+    {
+      "topics": [
+        "art",
+        "vibe"
+      ],
+      "summary": "Maybe a series. How to brief motion and shaders when nobody can draw them.",
+      "url": "",
+      "handle": "",
+      "duration": "",
+      "date": "",
+      "private": false,
+      "fx": 1040,
+      "fy": -520,
+      "id": "v11",
+      "type": "video",
+      "title": "Art direction for three.js experiments",
+      "platform": "youtube",
+      "status": "idea"
+    },
+    {
+      "topics": [
+        "art",
+        "vibe"
+      ],
+      "summary": "Ten posters in an evening by describing rules instead of drawing shapes.",
+      "url": "https://www.instagram.com/",
+      "handle": "",
+      "duration": "1:05",
+      "date": "2026-09-27",
+      "private": false,
+      "fx": 1380,
+      "fy": -560,
+      "id": "v12",
+      "type": "video",
+      "title": "Vibecoding a generative poster series",
+      "platform": "instagram",
+      "status": "published"
+    },
+    {
+      "topics": [
+        "vibe",
+        "tools"
+      ],
+      "summary": "Prompt, break, fix, ship. The unedited version.",
+      "url": "",
+      "handle": "",
+      "duration": "",
+      "date": "",
+      "private": false,
+      "fx": 1720,
+      "fy": 620,
+      "id": "v13",
+      "type": "video",
+      "title": "Shipping a three.js toy in one evening",
+      "platform": "youtube",
+      "status": "draft"
+    },
+    {
+      "topics": [
+        "tools"
+      ],
+      "summary": "Author of the talk that frames how I think about tools.",
+      "url": "https://worrydream.com/",
+      "handle": "",
+      "duration": "",
+      "date": "2026-09-14",
+      "private": false,
+      "fx": 640,
+      "fy": -330,
+      "id": "p1",
+      "type": "person",
+      "title": "Bret Victor",
+      "platform": null,
+      "status": null
+    },
+    {
+      "topics": [
+        "art",
+        "vibe"
+      ],
+      "summary": "Daily creative-code sketches. The reference point for the art + code posts.",
+      "url": "",
+      "handle": "zachlieberman",
+      "duration": "",
+      "date": "2026-09-27",
+      "private": false,
+      "fx": 1040,
+      "fy": -760,
+      "id": "p2",
+      "type": "person",
+      "title": "Zach Lieberman",
+      "platform": null,
+      "status": null
+    },
+    {
+      "topics": [
+        "art",
+        "craft"
+      ],
+      "summary": "Lettering I keep stealing from the 7th and 8th district.",
+      "url": "https://www.instagram.com/",
+      "handle": "",
+      "duration": "0:47",
+      "date": "2026-09-24",
+      "private": false,
+      "fx": 1720,
+      "fy": -210,
+      "id": "v7",
+      "type": "video",
+      "title": "Hand-painted shop signs of Budapest",
+      "platform": "instagram",
+      "status": "published"
+    },
+    {
+      "topics": [
+        "art"
+      ],
+      "summary": "Full set of photos from the walk.",
+      "url": "https://www.are.na/",
+      "handle": "",
+      "duration": "",
+      "date": "2026-09-24",
+      "private": false,
+      "fx": 2060,
+      "fy": -300,
+      "id": "l3",
+      "type": "link",
+      "title": "Sign photo set (Are.na channel)",
+      "platform": null,
+      "status": null
+    },
+    {
+      "topics": [
+        "art",
+        "craft"
+      ],
+      "summary": "Good reference archive for street lettering.",
+      "url": "https://fontsinuse.com/",
+      "handle": "",
+      "duration": "",
+      "date": "2026-09-22",
+      "private": false,
+      "fx": 2060,
+      "fy": -80,
+      "id": "b3",
+      "type": "bookmark",
+      "title": "Fonts in Use: vernacular lettering",
+      "platform": null,
+      "status": null
+    },
+    {
+      "topics": [
+        "tools",
+        "ai",
+        "craft"
+      ],
+      "summary": "Why a portfolio of videos should be a graph and not a feed. Shows this tool.",
+      "url": "",
+      "handle": "",
+      "duration": "",
+      "date": "2026-10-06",
+      "private": false,
+      "fx": 1380,
+      "fy": 260,
+      "id": "v8",
+      "type": "video",
+      "title": "Building this canvas in public, episode 1",
+      "platform": "youtube",
+      "status": "scheduled"
+    },
+    {
+      "topics": [
+        "tools"
+      ],
+      "summary": "Every episode adds its own node live on screen. The map becomes the show notes.",
+      "url": "",
+      "handle": "",
+      "duration": "",
+      "date": "2026-09-30",
+      "private": true,
+      "fx": 1040,
+      "fy": 380,
+      "id": "n1",
+      "type": "note",
+      "title": "Series idea: one canvas, every video",
+      "platform": null,
+      "status": null
+    },
+    {
+      "topics": [
+        "tools"
+      ],
+      "summary": "Likely base for the real build.",
+      "url": "https://reactflow.dev/",
+      "handle": "",
+      "duration": "",
+      "date": "2026-09-29",
+      "private": false,
+      "fx": 1720,
+      "fy": 330,
+      "id": "b2",
+      "type": "bookmark",
+      "title": "React Flow docs",
+      "platform": null,
+      "status": null
+    },
+    {
+      "topics": [
+        "craft"
+      ],
+      "summary": "Where the videos get made. No links, it just exists.",
+      "url": "https://www.instagram.com/",
+      "handle": "",
+      "duration": "0:39",
+      "date": "2026-09-12",
+      "private": false,
+      "fx": -340,
+      "fy": 180,
+      "id": "v14",
+      "type": "video",
+      "title": "A tour of the studio desk",
+      "platform": "instagram",
+      "status": "published"
+    },
+    {
+      "topics": [
+        "art",
+        "tools"
+      ],
+      "summary": "Interactive essays as a standard for explaining things.",
+      "url": "https://ciechanow.ski/sound/",
+      "handle": "",
+      "duration": "",
+      "date": "2026-10-01",
+      "private": false,
+      "fx": 2060,
+      "fy": 420,
+      "id": "b4",
+      "type": "bookmark",
+      "title": "Bartosz Ciechanowski: Sound",
+      "platform": null,
+      "status": null
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "from": "v1",
+      "to": "v2",
+      "kind": "follow-up",
+      "type": "continuity"
+    },
+    {
+      "id": "e2",
+      "from": "v1",
+      "to": "l1",
+      "kind": "attachment",
+      "type": "reference"
+    },
+    {
+      "id": "e3",
+      "from": "v3",
+      "to": "v4",
+      "kind": "follow-up",
+      "type": "continuity"
+    },
+    {
+      "id": "e4",
+      "from": "v4",
+      "to": "l2",
+      "kind": "attachment",
+      "type": "reference"
+    },
+    {
+      "id": "e5",
+      "from": "v4",
+      "to": "v9",
+      "kind": "related",
+      "type": "reference"
+    },
+    {
+      "id": "e6",
+      "from": "v3",
+      "to": "v10",
+      "kind": "related",
+      "type": "reference"
+    },
+    {
+      "id": "e7",
+      "from": "b1",
+      "to": "v5",
+      "kind": "inspired-by",
+      "type": "reference"
+    },
+    {
+      "id": "e8",
+      "from": "v5",
+      "to": "v6",
+      "kind": "follow-up",
+      "type": "continuity"
+    },
+    {
+      "id": "e9",
+      "from": "v5",
+      "to": "v8",
+      "kind": "follow-up",
+      "type": "continuity"
+    },
+    {
+      "id": "e10",
+      "from": "v6",
+      "to": "v7",
+      "kind": "related",
+      "type": "reference"
+    },
+    {
+      "id": "e11",
+      "from": "v7",
+      "to": "l3",
+      "kind": "attachment",
+      "type": "reference"
+    },
+    {
+      "id": "e12",
+      "from": "v7",
+      "to": "b3",
+      "kind": "references",
+      "type": "reference"
+    },
+    {
+      "id": "e13",
+      "from": "v11",
+      "to": "v6",
+      "kind": "inspired-by",
+      "type": "reference"
+    },
+    {
+      "id": "e14",
+      "from": "n1",
+      "to": "v8",
+      "kind": "inspired-by",
+      "type": "reference"
+    },
+    {
+      "id": "e15",
+      "from": "v8",
+      "to": "b2",
+      "kind": "references",
+      "type": "reference"
+    },
+    {
+      "id": "e16",
+      "from": "v1",
+      "to": "v5",
+      "kind": "related",
+      "type": "reference"
+    },
+    {
+      "id": "e17",
+      "from": "b1",
+      "to": "p1",
+      "kind": "made-by",
+      "type": "reference"
+    },
+    {
+      "id": "e18",
+      "from": "p2",
+      "to": "v12",
+      "kind": "inspired-by",
+      "type": "reference"
+    },
+    {
+      "id": "e19",
+      "from": "v12",
+      "to": "v11",
+      "kind": "follow-up",
+      "type": "continuity"
+    },
+    {
+      "id": "e20",
+      "from": "v8",
+      "to": "v13",
+      "kind": "follow-up",
+      "type": "continuity"
+    },
+    {
+      "id": "e21",
+      "from": "v6",
+      "to": "v12",
+      "kind": "related",
+      "type": "reference"
+    }
+  ]
+}
