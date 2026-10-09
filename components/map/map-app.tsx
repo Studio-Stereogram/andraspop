@@ -14,6 +14,7 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 import { KIND_LABEL, VIEWS } from "@/lib/map/constants";
+import { displayTitle } from "@/lib/map/format";
 import { computeLayout, layoutBounds, type Sized } from "@/lib/map/layouts";
 import type { MapData, Rect, View } from "@/lib/map/types";
 import { applyFilters, type Filters, NO_FILTERS, neighbourMap } from "@/lib/map/visibility";
@@ -97,7 +98,7 @@ function toFlowNodes(map: MapData): FlowNode[] {
     type: "entry",
     position: { x: n.fx, y: n.fy },
     data: { node: n },
-    ariaLabel: `${KIND_LABEL[n.type]}: ${n.title || "Untitled"}`,
+    ariaLabel: `${KIND_LABEL[n.type]}: ${displayTitle(n)}`,
   }));
 }
 

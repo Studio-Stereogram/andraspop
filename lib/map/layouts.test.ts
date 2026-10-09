@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import seed from "@/data/seed.json";
+import seed from "./__fixtures__/sample-map.json";
 import { NODE_HEIGHT_ESTIMATE, NODE_WIDTH } from "./constants";
 import { facing, link } from "./geometry";
 import { clusterLayout, layoutBounds, timelineLayout, type Sized } from "./layouts";

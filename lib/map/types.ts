@@ -30,6 +30,8 @@ export interface MapNode {
   /** ISO date (YYYY-MM-DD) or "" when not set. */
   date: string;
   url: string;
+  /** Real thumbnail (https). Empty: videos get a generated pattern instead. */
+  thumbnail: string;
   /** People only: X handle. */
   handle: string;
   duration: string;

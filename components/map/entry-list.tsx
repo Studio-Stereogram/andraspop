@@ -1,5 +1,5 @@
 import { KIND_LABEL, PLATFORMS } from "@/lib/map/constants";
-import { formatDate, safeHref } from "@/lib/map/format";
+import { displayTitle, formatDate, safeHref } from "@/lib/map/format";
 import type { MapData } from "@/lib/map/types";
 
 /**
@@ -22,7 +22,7 @@ export function EntryList({ map }: { map: MapData }) {
           const kind = n.type === "video" && n.platform ? `Video on ${PLATFORMS[n.platform].label}` : KIND_LABEL[n.type];
           return (
             <li key={n.id}>
-              {href ? <a href={href}>{n.title || "Untitled"}</a> : n.title || "Untitled"}
+              {href ? <a href={href}>{displayTitle(n)}</a> : displayTitle(n)}
               {` (${kind}${n.date ? `, ${formatDate(n.date)}` : ""})`}
               {n.summary && <p>{n.summary}</p>}
             </li>

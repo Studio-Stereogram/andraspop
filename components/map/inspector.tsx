@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { toggleVariants } from "@/components/ui/toggle";
 import { EDGE_KIND_LABEL, EDGE_TYPE_LABEL, KIND_LABEL, PLATFORMS, STATUS_LABEL } from "@/lib/map/constants";
-import { formatDate, handleOf, hostOf, isXUrl, personMeta, safeHref } from "@/lib/map/format";
+import { displayTitle, formatDate, handleOf, hostOf, isXUrl, personMeta, safeHref } from "@/lib/map/format";
 import type { EdgeType, MapData, MapNode, Topic } from "@/lib/map/types";
 import { Avatar, PortGlyph, Thumb } from "./pieces";
 
@@ -37,7 +37,7 @@ function Connections({ node, map, onGo }: { node: MapNode; map: MapData; onGo: (
               className="truncate text-left text-[13.5px] font-medium text-ink hover:underline hover:underline-offset-3"
               onClick={() => onGo(other.id)}
             >
-              {other.title || "Untitled"}
+              {displayTitle(other)}
             </button>
             <span className="font-mono text-[11px] font-medium tracking-[.06em] text-ink-3 uppercase">
               {EDGE_KIND_LABEL[e.kind]}
@@ -112,7 +112,7 @@ export function Inspector({
         {isVideo && <Thumb node={node} topicById={topicById} large />}
         {isPerson && <Avatar node={node} large />}
         <h2 className="m-0 text-[26px] leading-[1.08] font-[650] tracking-[-.01em] text-balance [font-stretch:104%]">
-          {node.title || (isPerson ? "Unnamed person" : "Untitled")}
+          {displayTitle(node)}
         </h2>
         <div className="flex flex-wrap items-center gap-2.5 font-mono text-[11px] font-medium tracking-[.06em] text-ink-3 uppercase">
           {isPerson ? (

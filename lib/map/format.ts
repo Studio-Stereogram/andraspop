@@ -1,4 +1,4 @@
-import { TOPIC_PALETTE } from "./constants";
+import { KIND_LABEL, PLATFORMS, TOPIC_PALETTE } from "./constants";
 import { h32 } from "./thumbnail";
 import type { MapNode } from "./types";
 
@@ -66,4 +66,12 @@ export function safeHref(url: string): string | null {
   } catch {
     return null;
   }
+}
+
+/** What to call an entry: its title, or a readable stand-in ("YouTube video", "Instagram reel", "Untitled link"). */
+export function displayTitle(n: Pick<MapNode, "title" | "type" | "platform">): string {
+  if (n.title) return n.title;
+  if (n.type === "person") return "Unnamed person";
+  if (n.type === "video" && n.platform) return n.platform === "instagram" ? "Instagram reel" : `${PLATFORMS[n.platform].label} video`;
+  return `Untitled ${KIND_LABEL[n.type].toLowerCase()}`;
 }

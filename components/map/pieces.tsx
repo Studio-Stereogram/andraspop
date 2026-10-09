@@ -1,12 +1,17 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { avatarColor, initials } from "@/lib/map/format";
+import { isAllowedThumbnail } from "@/lib/map/links";
 import { thumbSVG } from "@/lib/map/thumbnail";
 import type { MapNode, Topic } from "@/lib/map/types";
 
-/** Generated sequencer thumbnail; ideas and drafts show an empty bracketed grid instead. */
+/**
+ * The video's real thumbnail when it has one, otherwise (or if it fails to load) the generated sequencer pattern.
+ * Ideas and drafts show an empty bracketed grid instead.
+ */
 export function Thumb({
   node,
   topicById,
@@ -16,12 +21,28 @@ export function Thumb({
   topicById: ReadonlyMap<string, Topic>;
   large?: boolean;
 }) {
+  const [failed, setFailed] = useState(false);
   if (node.status === "idea" || node.status === "draft") {
     return (
       <div className={cn("mm-thumb empty", large && "lg")}>
         <span>
           <b>Not published</b>
         </span>
+      </div>
+    );
+  }
+  if (node.thumbnail && isAllowedThumbnail(node.thumbnail) && !failed) {
+    return (
+      <div className={cn("mm-thumb", large && "lg")}>
+        <Image
+          src={node.thumbnail}
+          alt=""
+          fill
+          sizes={large ? "320px" : "232px"}
+          className="object-cover"
+          onError={() => setFailed(true)}
+        />
+        {node.duration && <span className="mm-dur">{node.duration}</span>}
       </div>
     );
   }

@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import seed from "@/data/seed.json";
+import seed from "./__fixtures__/sample-map.json";
 import { normalizeMap } from "./normalize";
 import type { MapData, MapNode } from "./types";
 import { applyFilters, hiddenFromPublic, NO_FILTERS, toPublicMap } from "./visibility";
 
 const node = (id: string, over: Partial<MapNode> = {}): MapNode => ({
-  id, type: "link", title: id, summary: "", platform: null, status: null, date: "", url: "",
+  id, type: "link", title: id, summary: "", platform: null, status: null, date: "", url: "", thumbnail: "",
   handle: "", duration: "", topics: [], private: false, fx: 0, fy: 0, ...over,
 });
 const video = (id: string, status: MapNode["status"], over: Partial<MapNode> = {}) =>

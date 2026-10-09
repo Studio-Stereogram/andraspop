@@ -4,7 +4,7 @@ import { memo } from "react";
 import { Handle, Position, type Node, type NodeProps } from "@xyflow/react";
 import { Badge } from "@/components/ui/badge";
 import { KIND_LABEL, NODE_WIDTH, PLATFORMS, STATUS_LABEL } from "@/lib/map/constants";
-import { formatDate, hostOf, personMeta } from "@/lib/map/format";
+import { displayTitle, formatDate, hostOf, personMeta } from "@/lib/map/format";
 import type { MapNode, Topic } from "@/lib/map/types";
 import { cn } from "@/lib/utils";
 import { useMapVisual, useNodeState } from "./map-context";
@@ -37,7 +37,7 @@ function PersonCard({ n, state }: { n: MapNode; state: string }) {
       <Avatar node={n} />
       <div className="mm-pbody">
         <span className="mm-pkind">Person{n.private ? " · private" : ""}</span>
-        <div className={cn("mm-ntitle", !n.title && "empty")}>{n.title || "Unnamed person"}</div>
+        <div className={cn("mm-ntitle", !n.title && "empty")}>{displayTitle(n)}</div>
         <div className="mm-nmeta">{personMeta(n)}</div>
       </div>
     </div>
@@ -62,7 +62,7 @@ function EntryCard({ n, state, topicById }: { n: MapNode; state: string; topicBy
       </div>
       {isVideo && <Thumb node={n} topicById={topicById} />}
       <div className="mm-nbody">
-        <div className={cn("mm-ntitle", !n.title && "empty")}>{n.title || `Untitled ${KIND_LABEL[n.type].toLowerCase()}`}</div>
+        <div className={cn("mm-ntitle", !n.title && "empty")}>{displayTitle(n)}</div>
         {meta.length > 0 && <div className="mm-nmeta">{meta.join(" · ")}</div>}
         <TopicTags topics={topicsOf(n, topicById)} />
       </div>

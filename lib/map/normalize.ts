@@ -9,6 +9,13 @@ const HEX = /^#[0-9a-f]{3}(?:[0-9a-f]{3})?$/i;
 type Raw = Record<string, unknown>;
 const str = (v: unknown) => (typeof v === "string" ? v : "");
 const num = (v: unknown) => (typeof v === "number" && Number.isFinite(v) ? v : 0);
+const httpsUrl = (v: string) => {
+  try {
+    return new URL(v).protocol === "https:" ? v : "";
+  } catch {
+    return "";
+  }
+};
 const oneOf = <T extends string>(v: unknown, list: readonly T[]): T | null =>
   list.includes(v as T) ? (v as T) : null;
 
@@ -49,6 +56,7 @@ export function normalizeMap(input: unknown): MapData {
         status: isVideo ? (oneOf(n.status, STATUSES) ?? "draft") : null,
         date: str(n.date),
         url: str(n.url),
+        thumbnail: httpsUrl(str(n.thumbnail)),
         handle: str(n.handle),
         duration: str(n.duration),
         topics: (Array.isArray(n.topics) ? n.topics : []).filter((id): id is string => topicIds.has(id as string)),

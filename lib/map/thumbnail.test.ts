@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import seed from "@/data/seed.json";
+import seed from "./__fixtures__/sample-map.json";
 // The design skill's reference implementation; the port must match it exactly.
 import { thumbSVG as reference } from "../../.claude/skills/meta-map-design/references/thumbnail.js";
 import { normalizeMap } from "./normalize";
