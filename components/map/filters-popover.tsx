@@ -7,8 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
 import { Toggle, ToggleCount } from "@/components/ui/toggle";
-import { PLATFORMS } from "@/lib/map/constants";
-import type { MapData, Platform } from "@/lib/map/types";
+import { PLATFORMS, STATUS_LABEL } from "@/lib/map/constants";
+import type { MapData, Platform, Status } from "@/lib/map/types";
 import { activeFilterCount, type Filters, NO_FILTERS } from "@/lib/map/visibility";
 
 function toggled<T>(set: ReadonlySet<T>, v: T): Set<T> {
@@ -19,9 +19,9 @@ function toggled<T>(set: ReadonlySet<T>, v: T): Set<T> {
 }
 
 /**
- * Filters as a mega-menu popover under its button: search and the hide switch across the top, then Topics and
- * Platform columns, and a footer with the result count. Stays open while toggling; Esc or an outside click closes it.
- * (Status filters arrive with the editor in M2; visitors only ever see published and scheduled videos.)
+ * Filters as a mega-menu popover under its button: search and the hide switch across the top, then Topics, Platform
+ * and Status columns, and a footer with the result count. Stays open while toggling; Esc or an outside click closes it.
+ * Status lists only what the map holds; visitors never get drafts.
  */
 export function FiltersPopover({
   map,
@@ -42,6 +42,8 @@ export function FiltersPopover({
   const count = activeFilterCount(filters);
   const shown = map.nodes.length - excluded;
   const platforms = Object.keys(PLATFORMS) as Platform[];
+  const statusCount = (s: Status) => map.nodes.filter((n) => n.type === "video" && n.status === s).length;
+  const statuses = (Object.keys(STATUS_LABEL) as Status[]).filter((s) => statusCount(s) > 0);
 
   return (
     <Popover open={open} onOpenChange={onOpenChange}>
@@ -83,7 +85,7 @@ export function FiltersPopover({
           </label>
         </div>
 
-        <div className="grid max-h-[calc(100dvh-230px)] grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)] overflow-auto max-[720px]:grid-cols-1">
+        <div className="grid max-h-[calc(100dvh-230px)] grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)_minmax(0,1fr)] overflow-auto max-[720px]:grid-cols-1">
           <section className="grid min-w-0 content-start gap-2.5 p-4" aria-label="Topics">
             <span className="lbl">Topics</span>
             <p className="m-0 text-[12.5px] leading-[1.4] text-ink-3">Show content tagged with any of these.</p>
@@ -115,6 +117,23 @@ export function FiltersPopover({
                 >
                   {PLATFORMS[p].label}{" "}
                   <ToggleCount>{map.nodes.filter((n) => n.type === "video" && n.platform === p).length}</ToggleCount>
+                </Toggle>
+              ))}
+            </div>
+          </section>
+          <section
+            className="grid min-w-0 content-start gap-2.5 border-l border-line p-4 max-[720px]:border-t max-[720px]:border-l-0"
+            aria-label="Status"
+          >
+            <span className="lbl">Status</span>
+            <div className="flex flex-wrap gap-1.5">
+              {statuses.map((s) => (
+                <Toggle
+                  key={s}
+                  pressed={filters.statuses.has(s)}
+                  onPressedChange={() => onChange({ ...filters, statuses: toggled(filters.statuses, s) })}
+                >
+                  {STATUS_LABEL[s]} <ToggleCount>{statusCount(s)}</ToggleCount>
                 </Toggle>
               ))}
             </div>

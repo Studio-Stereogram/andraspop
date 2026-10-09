@@ -95,10 +95,10 @@ language sql stable security definer set search_path = public as $$
 $$;
 
 -- Visibility rule ----------------------------------------------------------
--- A node is public if it isn't private and (for videos) is published or scheduled.
+-- A node is public if it isn't private and (for videos) is an idea, scheduled or published. Drafts stay private.
 create or replace function public.node_is_public(n public.nodes) returns boolean
 language sql stable as $$
-  select not n.private and (n.type <> 'video' or n.status in ('published','scheduled'));
+  select not n.private and (n.type <> 'video' or n.status in ('idea','scheduled','published'));
 $$;
 
 -- Row-level security --------------------------------------------------------

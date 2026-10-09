@@ -63,6 +63,17 @@ describe("timelineLayout", () => {
     for (let i = 1; i < bg.lanes.length; i++) expect(bg.lanes[i].y).toBe(bg.lanes[i - 1].y + bg.lanes[i - 1].h);
   });
 
+  it("puts ideas without a platform in their own lane, in the backlog", () => {
+    const idea = { ...sized[0], node: { ...sized[0].node, id: "idea", platform: null, status: "idea" as const, date: "" } };
+    const l = timelineLayout([...sized, idea], "2026-10-08");
+    if (l.background?.type !== "timeline") throw new Error("expected timeline");
+    const lane = l.background.lanes.find((x) => x.label === "Ideas")!;
+    const p = l.positions.get("idea")!;
+    expect(p.y).toBeGreaterThanOrEqual(lane.y);
+    expect(p.y).toBeLessThan(lane.y + lane.h);
+    expect(p.x).toBe(l.background.backlogX + 30);
+  });
+
   it("marks month starts and today", () => {
     expect(bg.ticks.some((t) => t.month && t.label === "1 Sept")).toBe(true);
     expect(bg.today).toBeGreaterThan(layout.positions.get("v12")!.x);

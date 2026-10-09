@@ -23,7 +23,7 @@ Non-goals for v1: hosting video, comments, analytics dashboards, multi-tenant (o
 | Editor | Studio teammates ("by us") | Create/edit nodes, edges, topics; change status |
 | Visitor | Public, no login | Read published nodes, filter, switch layouts, open links |
 
-Visitors never see nodes with status `idea` or `draft`, nodes marked private, or attachments whose only connections are hidden nodes.
+Visitors never see nodes with status `draft`, nodes marked private, or attachments whose only connections are hidden nodes. Ideas are public: they show with an Idea badge, as a roadmap of what is coming (decided 2026-10-09; the v7 prototype predates this and still hides them).
 
 ## 3. Core objects
 
@@ -101,7 +101,7 @@ The same data, three layouts, animated transitions between them:
 ```
 idea → draft → scheduled → published
 ```
-- Ideas and drafts are visible only to editors.
+- Ideas are public, shown with an Idea badge, so visitors can see what is coming. Drafts are visible only to editors.
 - v1: manual. Paste the URL, set status.
 - v2: paste a YouTube / Instagram / X URL → fetch title, thumbnail, duration, publish date (see §7).
 - v3: auto-ingest — a scheduled job lists new uploads per channel and drops them into an "Inbox" as drafts to be placed and linked.
@@ -127,7 +127,7 @@ idea → draft → scheduled → published
 
 - **Frontend:** Next.js (App Router) + TypeScript. Canvas on **React Flow (@xyflow/react)** — custom node components per type, custom edges per kind, built-in pan/zoom/minimap. Port the demo's visual language into those components.
 - **Layouts:** layout functions are pure `(nodes, edges, topics) → positions`; animate with React Flow node updates. Clusters v2: `d3-force` with topic-centre attraction.
-- **Data:** Supabase (Postgres + row-level security). Starter schema in `supabase/schema.sql`. Visitors read only what is public (published or scheduled videos, non-private entries); writes happen on the editor domain only.
+- **Data:** Supabase (Postgres + row-level security). Starter schema in `supabase/schema.sql`. Visitors read only what is public (ideas, scheduled and published videos, non-private entries); writes happen on the editor domain only.
 - **Tables:** `nodes`, `edges`, `topics`, `node_topics`, `profiles`.
 - **Public page:** server-render the published graph as JSON + static HTML list of titles/links for SEO and no-JS readers.
 - **Hosting:** GitHub + Vercel, one project, two domains: the public map on the main domain, the editor on an `edit.` subdomain behind a password gate. Full plan in `docs/hosting.md`. OG image per node for sharing.

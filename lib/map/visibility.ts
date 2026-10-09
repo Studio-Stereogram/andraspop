@@ -1,4 +1,4 @@
-import type { MapData, MapEdge, MapNode, Platform } from "./types";
+import type { MapData, MapEdge, MapNode, Platform, Status } from "./types";
 
 export function neighbourMap(edges: MapEdge[]): Map<string, string[]> {
   const m = new Map<string, string[]>();
@@ -9,9 +9,12 @@ export function neighbourMap(edges: MapEdge[]): Map<string, string[]> {
   return m;
 }
 
-/** A node is public if it isn't private and, for videos, is published or scheduled (schema.sql: node_is_public). */
+/**
+ * A node is public if it isn't private and, for videos, isn't a draft: ideas, scheduled and published videos
+ * are all shown (ideas as a roadmap). Mirrors node_is_public in supabase/schema.sql.
+ */
 export function isPublicNode(n: MapNode): boolean {
-  return !n.private && (n.type !== "video" || n.status === "published" || n.status === "scheduled");
+  return !n.private && (n.type !== "video" || n.status !== "draft");
 }
 
 /**
@@ -50,15 +53,17 @@ export function toPublicMap(map: MapData): MapData {
 export interface Filters {
   topics: ReadonlySet<string>;
   platforms: ReadonlySet<Platform>;
+  /** Video statuses (visitors see idea, scheduled and published). */
+  statuses: ReadonlySet<Status>;
   q: string;
   /** "Hide non-matching": hide instead of dim. */
   hide: boolean;
 }
 
-export const NO_FILTERS: Filters = { topics: new Set(), platforms: new Set(), q: "", hide: false };
+export const NO_FILTERS: Filters = { topics: new Set(), platforms: new Set(), statuses: new Set(), q: "", hide: false };
 
 export function activeFilterCount(f: Filters): number {
-  return f.topics.size + f.platforms.size + (f.q.trim() ? 1 : 0);
+  return f.topics.size + f.platforms.size + f.statuses.size + (f.q.trim() ? 1 : 0);
 }
 
 /** Matching nodes stay sharp; the rest dim, or hide with "Hide non-matching". */
@@ -71,6 +76,7 @@ export function applyFilters(nodes: MapNode[], f: Filters): { hidden: Set<string
     const ok =
       (!f.topics.size || n.topics.some((t) => f.topics.has(t))) &&
       (!f.platforms.size || (n.type === "video" && n.platform !== null && f.platforms.has(n.platform))) &&
+      (!f.statuses.size || (n.type === "video" && n.status !== null && f.statuses.has(n.status))) &&
       (!q || `${n.title} ${n.summary}`.toLowerCase().includes(q));
     if (!ok) (f.hide ? hidden : dim).add(n.id);
   }

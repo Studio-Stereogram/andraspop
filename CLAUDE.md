@@ -27,7 +27,7 @@
 
 ## Architecture rules
 - **Two hosts, one app.** The public domain is read-only. The `edit.` domain is the editor and is password-gated by `proxy.ts` (see `docs/snippets/proxy.ts`). Every server action and write route must re-check the editor gate itself; never rely on the proxy alone.
-- **Public data rule** (enforced in SQL/RLS and in server queries): show a node only if it is not private and, for videos, its status is `published` or `scheduled`. Hide reference-only nodes (links, bookmarks, people, notes) whose every connection points to a hidden node. Standalone nodes with no connections are allowed and shown.
+- **Public data rule** (enforced in SQL/RLS and in server queries): show a node only if it is not private and, for videos, its status is `idea`, `scheduled` or `published` (drafts stay hidden; ideas are a public roadmap). Hide reference-only nodes (links, bookmarks, people, notes) whose every connection points to a hidden node. Standalone nodes with no connections are allowed and shown.
 - **Edges** have `type` = `continuity` | `reference` and a `kind` from that type's list. Each node renders exactly two handles: ● continuity (right edge) and ◆ reference (bottom edge). Lines float (attach to the facing side).
 - **Layouts are pure functions:** `(nodes, edges, topics) → positions` for Free (stored), Clusters (topic gravity) and Timeline (date × platform lanes). Port the algorithms from the prototype (`clusterLayout`, `timelineLayout`, `tidy`).
 - Keep the JSON import/export format `{ topics, nodes, edges }` working at all times.

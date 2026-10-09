@@ -12,9 +12,18 @@ const video = (id: string, status: MapNode["status"], over: Partial<MapNode> = {
   node(id, { type: "video", platform: "youtube", status, ...over });
 
 describe("public visibility", () => {
-  it("hides ideas, drafts and private entries from the seed", () => {
+  it("hides drafts and private entries from the seed, and keeps ideas", () => {
     const hidden = hiddenFromPublic(normalizeMap(seed));
-    expect([...hidden].sort()).toEqual(["n1", "v10", "v11", "v13", "v9"]);
+    expect([...hidden].sort()).toEqual(["n1", "v10", "v13", "v9"]);
+  });
+
+  it("shows ideas, scheduled and published videos, and hides drafts", () => {
+    const map: MapData = {
+      topics: [],
+      nodes: [video("i", "idea", { platform: null }), video("s", "scheduled"), video("p", "published"), video("d", "draft")],
+      edges: [],
+    };
+    expect([...hiddenFromPublic(map)]).toEqual(["d"]);
   });
 
   it("keeps scheduled videos and standalone entries", () => {
@@ -84,6 +93,11 @@ describe("filters", () => {
     const f = { ...NO_FILTERS, topics: new Set(["art"]) };
     expect([...applyFilters(nodes, f).dim]).toEqual(["b"]);
     expect([...applyFilters(nodes, { ...f, hide: true }).hidden]).toEqual(["b"]);
+  });
+
+  it("filters by video status", () => {
+    const withIdea = [...nodes, video("i", "idea", { platform: null })];
+    expect([...applyFilters(withIdea, { ...NO_FILTERS, statuses: new Set(["idea"] as const) }).dim]).toEqual(["a", "b", "c"]);
   });
 
   it("matches platform on videos only and searches titles and takes", () => {

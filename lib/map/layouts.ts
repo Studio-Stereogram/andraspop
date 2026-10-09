@@ -163,11 +163,15 @@ const LANES: [string, string][] = [
   ["youtube", "YouTube"],
   ["instagram", "Instagram"],
   ["x", "X"],
+  ["ideas", "Ideas"],
   ["other", "Links, bookmarks & notes"],
   ["people", "People"],
 ];
 
-/** Timeline: x = date (30px a day), one lane per platform plus links/notes and people; undated items in a Backlog. */
+/**
+ * Timeline: x = date (30px a day), one lane per platform, plus Ideas (videos without a platform yet), links/notes
+ * and people; undated items in a Backlog.
+ */
 export function timelineLayout(nodes: Sized[], today: string): Layout {
   const PX = 30;
   const dated = nodes.filter((s) => s.node.date),
@@ -177,8 +181,11 @@ export function timelineLayout(nodes: Sized[], today: string): Layout {
     t1 = Math.max(...times) + 5 * DAY;
   const xOf = (t: number) => ((t - t0) / DAY) * PX;
   const backlogX = xOf(t1) + 120;
-  const laneOf = ({ node }: Sized) =>
-    node.type === "person" ? "people" : node.type === "video" && node.platform && PLATFORMS[node.platform] ? node.platform : "other";
+  const laneOf = ({ node }: Sized) => {
+    if (node.type === "person") return "people";
+    if (node.type !== "video") return "other";
+    return node.platform && PLATFORMS[node.platform] ? node.platform : "ideas";
+  };
 
   const positions = new Map<string, XY>();
   const lanes: TimelineBackground["lanes"] = [];

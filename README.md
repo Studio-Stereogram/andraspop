@@ -73,4 +73,4 @@ GitHub + Vercel, one project, two domains: the public map on the main domain and
 
 - **Non-destructive changes.** Commit before every redesign. When the prototype's look changes, add a snapshot to `prototype/versions/` and a line to its README.
 - **One source of truth for style.** Visual decisions live in the `meta-map-design` skill and `references/tokens.css`. Change them there first, then in code.
-- **Public by default, private by flag.** Ideas, drafts and anything marked private never reach the public domain, which is enforced in the database, not just the UI.
+- **Public by default, private by flag.** Drafts and anything marked private never reach the public domain (ideas are public, as a roadmap), which is enforced in the database, not just the UI.
