@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mind-map mark explorations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Exploration only: candidate marks for the "mind-map" wordmark. Not used by the app.
+   Tokens are copied from .claude/skills/meta-map-design/references/tokens.css. */
+:root{
+  --bg:#101215; --grid:#171A1F; --grid-2:#20242B; --surface:#1A1D22; --surface-2:#22262D; --surface-3:#2A2F37;
+  --line:#2F343C; --line-2:#3B414B; --ink:#EDF0F4; --ink-2:#B2B9C4; --ink-3:#7D8693; --hot:#E5553A;
+  --f-ui:"Archivo","Helvetica Neue",Arial,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --focus-ring:0 0 0 2px var(--bg),0 0 0 4px color-mix(in srgb,var(--hot) 70%,transparent);
+  color-scheme:dark;
+}
+:root.paper{
+  --bg:#ECECE9; --grid:#E2E2DE; --grid-2:#D5D5D0; --surface:#FBFBF9; --surface-2:#F1F1ED; --surface-3:#E6E6E1;
+  --line:#DADAD4; --line-2:#C3C2BB; --ink:#151514; --ink-2:#4F4E49; --ink-3:#7E7C75; --hot:#D9472C; color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 var(--f-ui);-webkit-font-smoothing:antialiased;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px}
+:focus-visible{outline:none;box-shadow:var(--focus-ring)}
+.wrap{max-width:1240px;margin:0 auto;padding:28px 16px 64px}
+.lbl{font:500 10.5px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+h1{font:650 26px/1.1 var(--f-ui);font-stretch:112%;margin:6px 0 8px;text-wrap:balance}
+.intro{color:var(--ink-2);max-width:72ch;margin:0}
+.controls{position:sticky;top:0;z-index:5;margin:22px 0 22px;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px;
+  background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 26px rgba(0,0,0,.25)}
+.readout{font:500 12px var(--f-mono);letter-spacing:.06em;padding:0 10px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.readout b{color:var(--ink);font-weight:600}
+.btn{height:30px;padding:0 11px;border-radius:6px;border:1px solid var(--line-2);background:transparent;color:var(--ink);font:500 13px var(--f-ui);cursor:pointer}
+.btn:hover{background:var(--surface-2);border-color:var(--ink-3)}
+.btn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.spacer{flex:1}
+.range{display:flex;align-items:center;gap:8px;font:500 11px var(--f-mono);color:var(--ink-3);letter-spacing:.06em}
+.range input{accent-color:var(--hot);width:140px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.stage{position:relative;display:grid;place-items:center;height:220px;border-bottom:1px solid var(--line);
+  background-image:linear-gradient(var(--grid-2) 1px,transparent 1px),linear-gradient(90deg,var(--grid-2) 1px,transparent 1px);background-size:20px 20px;background-position:center}
+.stage .big{width:144px;height:144px}
+.stage .tag{position:absolute;left:12px;top:10px}
+.stage .num{position:absolute;right:12px;top:10px}
+.sizes{display:flex;align-items:center;gap:18px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.sizes figure{margin:0;display:grid;justify-items:center;gap:6px}
+.sizes figcaption{font:500 9.5px var(--f-mono);letter-spacing:.1em;color:var(--ink-3)}
+.tab{display:flex;align-items:center;gap:6px;height:26px;padding:0 10px 0 8px;border-radius:7px 7px 0 0;background:var(--surface-2);border:1px solid var(--line);border-bottom:0;font:500 11px var(--f-ui);color:var(--ink-2)}
+.bar{display:flex;align-items:center;gap:10px;padding:10px 12px;margin:12px 16px 0;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+.bar .logo{width:22px;height:22px;color:var(--ink);flex:none}
+.bar .div{width:1px;height:16px;background:var(--line-2)}
+.bar b{font:650 15px var(--f-ui);font-stretch:112%;letter-spacing:.01em}
+.bar .sub{font:500 10px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.body{padding:14px 16px 16px;display:grid;gap:8px}
+.body h2{margin:0;font:600 17px/1.2 var(--f-ui)}
+.body p{margin:0;color:var(--ink-2);font-size:13.5px}
+dl{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin:4px 0 0;font-size:12.5px}
+dt{font:500 10px/1.9 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+dd{margin:0;color:var(--ink-2)}
+.verdict{font:500 11px var(--f-mono);letter-spacing:.06em;color:var(--ink-3);border-top:1px dashed var(--line-2);padding-top:8px;margin-top:4px}
+.verdict b{color:var(--ink);font-weight:500}
+svg.mark{display:block;overflow:visible}
+.hair{vector-effect:non-scaling-stroke}
+footer{margin-top:28px;color:var(--ink-3);font-size:12.5px;max-width:72ch}
+@media (max-width:520px){.grid{grid-template-columns:1fr}.sizes{gap:12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="lbl">Exploration · not implemented</span>
+  <h1>A mark for mind-map</h1>
+  <p class="intro">Five candidate marks in a micrographic style: hairlines, ticks, tiny readouts. Each one is drawn from the map itself, so it changes as the map grows: the number of entries, how many are published versus still ideas, and how many connections there are. The one accent colour, terracotta, is the moving part, which matches its role in the app as the colour of "now". Use the controls to grow the map and compare how each mark scales.</p>
+
+  <div class="controls" role="toolbar" aria-label="Map simulation">
+    <span class="readout" id="readout"></span>
+    <button class="btn" id="add-node">Add idea</button>
+    <button class="btn" id="publish">Publish one</button>
+    <button class="btn" id="add-edge">Connect two</button>
+    <label class="range">GROW <input type="range" id="grow" min="8" max="48" value="8" aria-label="Grow the map to this many entries"></label>
+    <button class="btn" id="reset">Reset to today</button>
+    <span class="spacer"></span>
+    <button class="btn" id="motion" aria-pressed="true">Motion</button>
+    <button class="btn" id="theme" aria-pressed="false">Paper</button>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <footer>Today's map: the Instagram reel, two YouTube videos and five ideas, with two connections. Sizes shown: 144 px (detail), 48 px, the app bar's 18 px next to the wordmark, and a 16 px browser tab. Hairlines stay one pixel at every size (non-scaling strokes), which keeps the micrographic feel when the mark is large.</footer>
+</div>
+
+<script>
+(() => {
+const LOGO = "M127.684,27.819 C72.619,27.819 27.819,72.618 27.819,127.684 C27.819,182.75 72.619,227.549 127.684,227.549 C182.749,227.549 227.549,182.75 227.549,127.684 C227.549,72.618 182.749,27.819 127.684,27.819 L127.684,27.819 Z M127.684,252.367 C58.934,252.367 3,196.435 3,127.684 C3,58.933 58.934,3 127.684,3 C196.435,3 252.368,58.933 252.368,127.684 C252.368,196.435 196.435,252.367 127.684,252.367 L127.684,252.367 Z M142.989,126.313 L127.341,83.554 L108.054,135.743 C111.33,134.681 114.68,133.86 118.076,133.285 L125.829,131.962 C133.924,130.449 139.408,128.558 143,126.289 L142.989,126.313 Z M163.978,183.23 L151.309,148.956 C146.581,151.414 139.963,153.494 130.508,155.196 L119.73,157.087 C103.847,159.924 97.795,164.273 92.69,177.698 L90.621,183.23 L63.959,183.23 L112.746,50.864 L142.622,50.864 L191.409,183.23 L163.978,183.23 Z";
+
+// ---------- the map being visualised: today's seed, plus simulated growth ----------
+function rng(a){ return ()=>{ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+const TODAY = () => ({ nodes:[1,1,1,0,0,0,0,0].map(p=>({pub:!!p})), edges:[[5,6],[6,7]], fresh:-1 });
+let G = TODAY(), rand = rng(7);
+const hasEdge = (a,b) => G.edges.some(([x,y]) => (x===a&&y===b)||(x===b&&y===a));
+function addNode(){ G.nodes.push({pub:false}); G.fresh=G.nodes.length-1;
+  if(G.nodes.length>2 && rand()<.7){ const a=G.nodes.length-1, b=Math.floor(rand()*(G.nodes.length-1)); if(!hasEdge(a,b)) G.edges.push([a,b]); } }
+function addEdge(){ const n=G.nodes.length; for(let k=0;k<50;k++){ const a=Math.floor(rand()*n), b=Math.floor(rand()*n); if(a!==b&&!hasEdge(a,b)){ G.edges.push([a,b]); G.fresh=a; return; } } }
+function publish(){ const i=G.nodes.findIndex(n=>!n.pub); if(i>=0){ G.nodes[i].pub=true; G.fresh=i; } }
+
+// ---------- drawing helpers (viewBox 0 0 24 24) ----------
+const f = v => +v.toFixed(2);
+const C = { ink:'var(--ink)', ink2:'var(--ink-2)', ink3:'var(--ink-3)', hot:'var(--hot)', bg:'var(--bg)' };
+const line = (x1,y1,x2,y2,c,o=1,w=1) => `<line class="hair" x1="${f(x1)}" y1="${f(y1)}" x2="${f(x2)}" y2="${f(y2)}" stroke="${c}" stroke-width="${w}" opacity="${o}"/>`;
+const dot = (x,y,r,pub,c=C.ink) => pub ? `<circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}" fill="${c}"/>` : `<circle class="hair" cx="${f(x)}" cy="${f(y)}" r="${f(r)}" fill="${C.bg}" stroke="${c}" stroke-width="1"/>`;
+const sq = (x,y,s,pub,c=C.ink) => pub ? `<rect x="${f(x-s/2)}" y="${f(y-s/2)}" width="${f(s)}" height="${f(s)}" fill="${c}"/>` : `<rect class="hair" x="${f(x-s/2)}" y="${f(y-s/2)}" width="${f(s)}" height="${f(s)}" fill="${C.bg}" stroke="${c}" stroke-width="1"/>`;
+const brackets = (c=C.ink3, a=3, i=.5) => { const e=24-i; return `<path class="hair" d="M${i} ${i+a}V${i}H${i+a}M${e-a} ${i}H${e}V${i+a}M${i} ${e-a}V${e}H${i+a}M${e-a} ${e}H${e}V${e-a}" fill="none" stroke="${c}" stroke-width="1"/>`; };
+const text = (x,y,s,anchor='start',c=C.ink3) => `<text x="${x}" y="${y}" font-family="IBM Plex Mono, monospace" font-size="2.6" font-weight="500" letter-spacing=".15" fill="${c}" text-anchor="${anchor}">${s}</text>`;
+const pad2 = n => String(n).padStart(2,'0');
+
+// ---------- the five concepts: draw(graph, t seconds, size px) → SVG markup ----------
+const CONCEPTS = [
+  { id:'orbit', name:'Orbit', idea:'Entries sit on a ring; connections are chords across it. A radar arm sweeps the ring and lights each entry as it passes.',
+    nodes:'ticks on the ring: filled = published, hollow = idea', edges:'hairline chords', motion:'one sweep every 7 s; passed entries glow terracotta', small:'<b>Reads at 16 px</b> as a ring with a moving hand; individual entries blur past ~30.',
+    draw(g,t,size){ const N=g.nodes.length, R=8.6, cx=12, cy=12, arm=(t*0.9)%(Math.PI*2)-Math.PI/2;
+      const P=g.nodes.map((_,i)=>{ const a=-Math.PI/2+i*2*Math.PI/N; return [cx+Math.cos(a)*R, cy+Math.sin(a)*R, a]; });
+      let s=`<circle class="hair" cx="12" cy="12" r="${R}" fill="none" stroke="${C.ink3}" stroke-width="1" opacity=".55"/>`;
+      if(size>=40) [0,1,2,3].forEach(k=>{ const a=k*Math.PI/2; s+=line(cx+Math.cos(a)*10.4,cy+Math.sin(a)*10.4,cx+Math.cos(a)*11.6,cy+Math.sin(a)*11.6,C.ink3); });
+      g.edges.forEach(([a,b])=>{ s+=line(P[a][0],P[a][1],P[b][0],P[b][1],C.ink2,.9); });
+      s+=line(cx,cy,cx+Math.cos(arm)*R,cy+Math.sin(arm)*R,C.hot,1,1.2)+`<circle cx="12" cy="12" r=".9" fill="${C.hot}"/>`;
+      const r=Math.max(.55,Math.min(1.25,5.5/N));
+      P.forEach(([x,y,a],i)=>{ let d=((arm-a)%(Math.PI*2)+Math.PI*2)%(Math.PI*2); const lit=d<.9; s+=dot(x,y,r,g.nodes[i].pub,lit?C.hot:C.ink); });
+      if(size>=120) s+=text(24,24,`${pad2(N)}·${pad2(g.edges.length)}`,'end');
+      return s; } },
+
+  { id:'sequencer', name:'Sequencer', idea:'The map as a step sequencer: one step per entry, in rows of four to eight. A terracotta playhead steps through; connections are short ties above the steps.',
+    nodes:'steps: filled = published, outlined = idea', edges:'ties between steps', motion:'playhead steps at 120 bpm, like the canvas’s sequencer heritage', small:'<b>Strong at 16 px</b> while the map is small; it turns into a texture as rows stack up.',
+    draw(g,t,size){ const N=g.nodes.length, cols=Math.min(8,Math.max(4,Math.ceil(Math.sqrt(N*2)))), rows=Math.ceil(N/cols);
+      const cell=Math.min(20/cols,(16)/rows), w=cell*cols, h=cell*rows, x0=12-w/2, y0=13-h/2+ (rows===1?1:0), s0=cell*.62;
+      const pos=i=>[x0+(i%cols+.5)*cell, y0+(Math.floor(i/cols)+.5)*cell];
+      const step=Math.floor(t*4)%cols; let s='';
+      s+=`<rect x="${f(x0+step*cell)}" y="${f(y0-1)}" width="${f(cell)}" height="${f(h+2)}" fill="${C.hot}" opacity=".16"/>`;
+      g.edges.forEach(([a,b])=>{ const [x1,y1]=pos(a),[x2,y2]=pos(b), lift=Math.max(1.6,Math.abs(x2-x1)*.35)+cell*.4;
+        s+=`<path class="hair" d="M${f(x1)} ${f(y1-s0/2)}Q${f((x1+x2)/2)} ${f(Math.min(y1,y2)-lift)} ${f(x2)} ${f(y2-s0/2)}" fill="none" stroke="${C.ink2}" stroke-width="1"/>`; });
+      g.nodes.forEach((n,i)=>{ const [x,y]=pos(i); const on=(i%cols)===step; s+=sq(x,y,s0,n.pub,on?C.hot:C.ink); });
+      s+=line(x0+(step+.5)*cell, y0+h+1.2, x0+(step+.5)*cell, y0+h+2.6, C.hot, 1, 1.4);
+      if(size>=40) for(let c=0;c<=cols;c++) s+=line(x0+c*cell,y0+h+1.4,x0+c*cell,y0+h+(c%4===0?2.6:2),C.ink3,.8);
+      return s; } },
+
+  { id:'constellation', name:'Constellation', idea:'The actual graph, drawn small inside the canvas’s corner brackets. Entries drift slightly, so the map looks alive; the newest one pulses.',
+    nodes:'small squares on a golden-angle spiral', edges:'hairlines between them', motion:'slow drift; the latest change pulses terracotta', small:'<b>Weakest at 16 px</b>: a speck cloud. Best as a hero or loading mark.',
+    draw(g,t,size){ const N=g.nodes.length; const P=g.nodes.map((_,i)=>{ const r=8*Math.sqrt((i+.5)/N), a=i*2.39996+.6;
+        return [12+Math.cos(a)*r+.45*Math.sin(t*.8+i*1.7), 12+Math.sin(a)*r+.45*Math.cos(t*.7+i*1.3)]; });
+      let s=brackets(C.ink3, size>=40?3:4);
+      g.edges.forEach(([a,b])=>{ s+=line(P[a][0],P[a][1],P[b][0],P[b][1],C.ink2,.85); });
+      const z=Math.max(.9,Math.min(1.9,9/Math.sqrt(N)));
+      P.forEach(([x,y],i)=>{ s+=sq(x,y,z,g.nodes[i].pub); });
+      const fi = g.fresh>=0 && g.fresh<N ? g.fresh : N-1, pulse=(t*1.2)%1;
+      s+=`<circle class="hair" cx="${f(P[fi][0])}" cy="${f(P[fi][1])}" r="${f(z*.8+pulse*3)}" fill="none" stroke="${C.hot}" stroke-width="1" opacity="${f(1-pulse)}"/>`;
+      return s; } },
+
+  { id:'matrix', name:'Matrix', idea:'An adjacency matrix: one row and one column per entry. The diagonal shows each entry; a lit dot off the diagonal is a connection. A scan line reads it row by row.',
+    nodes:'the diagonal: filled = published, ring = idea', edges:'lit dots, mirrored across the diagonal', motion:'a scan line steps down the rows; its connections flash terracotta', small:'<b>Reads at 16 px</b> as a dotted square with a diagonal; detail appears as you zoom.',
+    draw(g,t,size){ const N=g.nodes.length, cell=20/N, o=2, row=Math.floor(t*5)%N; let s='';
+      s+=`<rect x="${o}" y="${f(o+row*cell)}" width="20" height="${f(cell)}" fill="${C.hot}" opacity=".13"/>`;
+      const rr=Math.max(.18,cell*.2);
+      for(let i=0;i<N;i++) for(let j=0;j<N;j++){ const x=o+(j+.5)*cell, y=o+(i+.5)*cell;
+        if(i===j) s+=dot(x,y,Math.max(.32,cell*.3),g.nodes[i].pub);
+        else if(hasEdge(i,j)) s+=`<circle cx="${f(x)}" cy="${f(y)}" r="${f(Math.max(.28,cell*.26))}" fill="${i===row||j===row?C.hot:C.ink2}"/>`;
+        else if(size>=40 || N<=12) s+=`<circle cx="${f(x)}" cy="${f(y)}" r="${f(rr*.6)}" fill="${C.ink3}" opacity=".45"/>`; }
+      s+=`<rect class="hair" x="${o}" y="${o}" width="20" height="20" fill="none" stroke="${C.ink3}" stroke-width="1" opacity=".7"/>`;
+      return s; } },
+
+  { id:'readout', name:'Readout', idea:'A two-channel meter: the top channel has one bar per entry (tall = published, short = idea), the bottom one bar per connection. Bars breathe like a VU meter.',
+    nodes:'top bars', edges:'bottom bars, terracotta', motion:'bars breathe; at large sizes a mono counter reads N·E', small:'<b>Reads at 16 px</b> as a barcode; the most literal of the five.',
+    draw(g,t,size){ const N=g.nodes.length, E=g.edges.length, W=20, x0=2, gap=W/Math.max(N,1); let s='';
+      s+=line(x0,13,x0+W,13,C.ink3,.8);
+      g.nodes.forEach((n,i)=>{ const h=(n.pub?7.4:4.2)*(.86+.14*Math.sin(t*3.1+i*.9)); const x=x0+(i+.5)*gap; s+=line(x,12.4,x,12.4-h,C.ink,1,Math.min(1.6,gap*2.2)); });
+      const egap=W/Math.max(E,1);
+      g.edges.forEach((_,i)=>{ const h=3.2*(.8+.2*Math.sin(t*2.3+i*1.4)); const x=x0+(i+.5)*Math.min(egap,gap); s+=line(x,13.6,x,13.6+h,C.hot,1,Math.min(1.6,gap*2.2)); });
+      if(size>=40){ s+=text(x0,22.4,`N${pad2(N)}`); s+=text(x0+W,22.4,`E${pad2(E)}`,'end'); }
+      return s; } },
+];
+
+// ---------- page ----------
+const grid = document.getElementById('grid');
+const SIZES = [{px:48,label:'48'}, {px:18,label:'BAR 18'}];
+const svgs = [];
+CONCEPTS.forEach((c,ix) => {
+  const card = document.createElement('article'); card.className='card';
+  card.innerHTML = `<div class="stage"><span class="lbl tag">${c.name}</span><span class="lbl num">0${ix+1}</span><svg class="mark big" viewBox="0 0 24 24" aria-label="${c.name} mark"></svg></div>
+    <div class="sizes">${SIZES.map(s=>`<figure><svg class="mark" viewBox="0 0 24 24" style="width:${s.px}px;height:${s.px}px" aria-hidden="true"></svg><figcaption>${s.label}</figcaption></figure>`).join('')}
+      <figure><span class="tab"><svg class="mark" viewBox="0 0 24 24" style="width:16px;height:16px" aria-hidden="true"></svg>mind-map</span><figcaption>TAB 16</figcaption></figure></div>
+    <div class="bar"><svg class="logo" viewBox="3 3 249.368 249.367" aria-label="András Pop"><path fill="currentColor" fill-rule="evenodd" d="${LOGO}"/></svg><span class="div"></span>
+      <svg class="mark" viewBox="0 0 24 24" style="width:18px;height:18px" aria-hidden="true"></svg><b>mind-map</b><span class="sub">Building in public</span></div>
+    <div class="body"><h2>${c.name}</h2><p>${c.idea}</p>
+      <dl><dt>Entries</dt><dd>${c.nodes}</dd><dt>Connections</dt><dd>${c.edges}</dd><dt>Motion</dt><dd>${c.motion}</dd></dl>
+      <div class="verdict">${c.small}</div></div>`;
+  grid.appendChild(card);
+  const marks=[...card.querySelectorAll('svg.mark')];
+  const sizeOf = el => el.classList.contains('big') ? 144 : parseFloat(el.style.width);
+  marks.forEach(el => svgs.push({ el, c, size:sizeOf(el) }));
+});
+
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let moving = !reduced, t0 = performance.now(), frozen = 1.2;
+const readout = document.getElementById('readout');
+function render(now){
+  const t = moving ? (now - t0)/1000 : frozen;
+  for (const s of svgs) s.el.innerHTML = s.c.draw(G, t, s.size);
+  const pub=G.nodes.filter(n=>n.pub).length;
+  readout.innerHTML = `<b>${pad2(G.nodes.length)}</b> ENTRIES · <b>${pad2(pub)}</b> PUBLISHED · <b>${pad2(G.edges.length)}</b> CONNECTIONS`;
+}
+let last=0;
+function loop(now){ if(now-last>33){ render(now); last=now; } if(moving) requestAnimationFrame(loop); }
+render(performance.now()); if(moving) requestAnimationFrame(loop);
+
+const $ = id => document.getElementById(id);
+const after = () => { if(!moving) render(performance.now()); $('grow').value = Math.min(48, G.nodes.length); };
+$('add-node').onclick = () => { addNode(); after(); };
+$('add-edge').onclick = () => { addEdge(); after(); };
+$('publish').onclick = () => { publish(); after(); };
+$('reset').onclick = () => { G = TODAY(); rand = rng(7); after(); };
+$('grow').oninput = e => { const n=+e.target.value; if(n<G.nodes.length){ G=TODAY(); rand=rng(7); } while(G.nodes.length<n){ addNode(); if(rand()<.35) publish(); } after(); };
+$('motion').onclick = e => { moving=!moving; e.currentTarget.setAttribute('aria-pressed', moving); if(moving){ t0=performance.now()-frozen*1000; requestAnimationFrame(loop); } else { frozen=(performance.now()-t0)/1000; } };
+$('motion').setAttribute('aria-pressed', moving);
+$('theme').onclick = e => { const p=document.documentElement.classList.toggle('paper'); e.currentTarget.setAttribute('aria-pressed', p); if(!moving) render(performance.now()); };
+})();
+</script>
+</body>
+</html>

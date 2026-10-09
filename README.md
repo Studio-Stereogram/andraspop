@@ -25,6 +25,7 @@ This repository started as a **handoff package**: a spec, a working single-file 
 ├── supabase/schema.sql        starter Postgres schema with row-level security
 ├── docs/
 │   ├── hosting.md             GitHub + Vercel setup, public domain + password-protected edit subdomain
+│   ├── explorations/          design explorations, not used by the app (mind-map-mark.html: brandmark concepts)
 │   └── snippets/proxy.ts      host-based routing and password gate for the edit subdomain
 ├── .claude/skills/meta-map-design/
 │   ├── SKILL.md               design system skill (tokens, type, components, canvas rules)
