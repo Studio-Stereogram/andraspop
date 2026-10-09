@@ -125,6 +125,13 @@ create policy "edges between public nodes" on public.edges for select
 create policy "stats of public nodes" on public.stats_snapshots for select
   using (exists (select 1 from public.nodes n where n.id = node_id and (public.node_is_public(n) or public.is_editor())));
 
+-- Table privileges, explicit so the anon key works however the project's defaults are set.
+-- RLS still decides which rows: visitors read public rows only, and only editors can write.
+grant usage on schema public to anon, authenticated;
+grant select on public.topics, public.nodes, public.node_topics, public.edges, public.stats_snapshots to anon, authenticated;
+grant insert, update, delete on public.topics, public.nodes, public.node_topics, public.edges to authenticated;
+revoke all on public.integrations, public.editors from anon, authenticated;  -- service role only
+
 -- editor writes (magic-link mode). With the password gate, writes use the service role key server-side.
 create policy "editors write topics" on public.topics      for all using (public.is_editor()) with check (public.is_editor());
 create policy "editors write nodes"  on public.nodes       for all using (public.is_editor()) with check (public.is_editor());
