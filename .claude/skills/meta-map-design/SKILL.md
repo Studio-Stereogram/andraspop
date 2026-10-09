@@ -35,7 +35,7 @@ When in doubt: content can be expressive, controls must be trivial to read.
 |---|---|---|
 | UI | Archivo 400/500, 13–14px, sentence case | buttons, tabs, inputs, menus, inspector body |
 | Titles | Archivo 600, 14.5px on cards, 26px in inspector | node titles, dialog titles |
-| Display | Archivo 650, width 112, UPPERCASE | cluster labels (46px), timeline lanes (26px), brand |
+| Display | Archivo 650, width 112 | cluster labels (46px) and timeline lanes (26px) in UPPERCASE; the "mind-map" wordmark (15px) in lowercase |
 | Meta | IBM Plex Mono 500, 9.5–11px, UPPERCASE, letter-spacing .06–.12em | node headers, dates, tags, section labels, counts, kbd, stats |
 
 Rules: never uppercase UI controls; mono only for metadata and labels; balance headings (`text-wrap: balance`); tabular numbers wherever digits line up.

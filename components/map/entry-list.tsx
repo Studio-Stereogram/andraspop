@@ -14,7 +14,7 @@ export function EntryList({ map }: { map: MapData }) {
       aria-labelledby="entries-title"
     >
       <h1 id="entries-title" className="lbl mb-2">
-        Meta Map: everything András publishes while building in public
+        mind-map: everything András publishes while building in public
       </h1>
       <ul>
         {map.nodes.map((n) => {

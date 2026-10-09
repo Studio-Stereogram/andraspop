@@ -4,7 +4,7 @@ import { themeScript } from "@/lib/theme";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Meta Map · András Pop",
+  title: "mind-map · András Pop",
   description:
     "An explorable map of everything published while building in public: videos, links, bookmarks and people, connected by meaning.",
 };

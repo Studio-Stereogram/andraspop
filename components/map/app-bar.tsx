@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import { Moon, Sun } from "lucide-react";
+import { AndrasLogo } from "@/components/brand/andras-logo";
 import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
 import { ActiveMarker, ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -40,16 +41,14 @@ function ThemeToggle() {
   );
 }
 
+/** András Pop's logo as the main brand, then the "mind-map" wordmark (lowercase, as the name is written). */
 function Brand() {
   return (
     <div className="flex min-w-0 items-center gap-2.5">
-      <svg width="26" height="14" viewBox="0 0 26 14" aria-hidden className="flex-none">
-        <circle cx="5" cy="7" r="4" fill="none" stroke="currentColor" strokeWidth="1.5" />
-        <path d="M9 7h8" stroke="currentColor" strokeWidth="1.5" />
-        <rect x="17" y="2" width="9" height="10" fill="var(--hot)" />
-      </svg>
-      <b className="text-[15px] font-[650] tracking-[.01em] whitespace-nowrap uppercase [font-stretch:112%]">Meta Map</b>
-      <span className="lbl whitespace-nowrap max-[1100px]:hidden">Building in public · sample data</span>
+      <AndrasLogo className="size-[22px] flex-none" />
+      <span aria-hidden className="h-4 w-px flex-none bg-line-2" />
+      <b className="text-[15px] font-[650] tracking-[.01em] whitespace-nowrap [font-stretch:112%]">mind-map</b>
+      <span className="lbl whitespace-nowrap max-[1100px]:hidden">Building in public</span>
     </div>
   );
 }

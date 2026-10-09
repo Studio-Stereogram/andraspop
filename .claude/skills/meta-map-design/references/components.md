@@ -5,7 +5,7 @@ Install shadcn/ui and keep its components, then theme them through `tokens.css`.
 ## Layout of the screen
 | Region | Contents |
 |---|---|
-| App bar, left | Brand mark + "META MAP" (display face) + mono subtitle |
+| App bar, left | András Pop logo (22px, `currentColor`) · 1px `--line-2` divider · "mind-map" wordmark (display face, lowercase as written) · mono subtitle. The mind-map's own mark is still being explored (`docs/explorations/`) |
 | App bar, centre | **Tabs**: Free · Clusters · Timeline (with `kbd` 1/2/3) |
 | App bar, right | **Data** (outline button, editor only) · **Tabs**: Edit · Public (editor domain only) · theme **icon button** |
 | Canvas top-left | Panel with ghost buttons: **Filters** (sliders icon + active-count badge) · **Tidy** (grid icon; editor only) |
