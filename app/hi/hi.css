@@ -1,0 +1,139 @@
+/* /hi is a deliberate exception to the design system's "colour carries meaning only" rule (approved 2026-11-05):
+   a warmer, more illustrated landing page. Its extra colours live here, scoped to .hi, for both themes.
+   Everything else (fonts, ink, surfaces, lines, focus ring) still comes from the tokens in app/globals.css. */
+.hi {
+  --hi-sun: #FFC53D;           /* the wave hand and the open Wednesday slots */
+  --hi-sun-ink: #1F1A0B;       /* outlines and text on --hi-sun, both themes */
+  --hi-sun-soft: color-mix(in srgb, var(--hi-sun) 16%, var(--surface));
+  --hi-cream: #FFF3D1;         /* the wave's speech-bubble, both themes */
+  --hi-card: var(--surface);
+  --hi-portrait-a: #F76B15;    /* monogram gradient until the photo is in */
+  --hi-portrait-b: #D6409F;
+}
+:root.paper .hi {
+  --hi-sun: #F7B500;
+  --hi-sun-soft: color-mix(in srgb, var(--hi-sun) 20%, var(--surface));
+}
+
+/* ---------- wave ---------- */
+.hi-wave {
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--hi-cream);
+  color: color-mix(in srgb, var(--hi-sun-ink) 55%, var(--hi-cream));
+}
+.hi-hand {
+  transform-box: view-box;
+  transform-origin: 32px 56px;
+  animation: hi-wave 2.2s ease-in-out .5s 1 both;
+}
+.hi-wave:hover .hi-hand { animation: hi-wave-again 1.6s ease-in-out 1; }
+@keyframes hi-wave {
+  0%, 100% { transform: rotate(0); }
+  15% { transform: rotate(16deg); }
+  30% { transform: rotate(-8deg); }
+  45% { transform: rotate(16deg); }
+  60% { transform: rotate(-4deg); }
+  75% { transform: rotate(10deg); }
+}
+@keyframes hi-wave-again {
+  0%, 100% { transform: rotate(0); }
+  20% { transform: rotate(16deg); }
+  45% { transform: rotate(-8deg); }
+  70% { transform: rotate(12deg); }
+}
+
+/* ---------- portrait ---------- */
+.hi-portrait {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--hi-portrait-a), var(--hi-portrait-b));
+  color: #fff;
+  font-family: var(--f-title);
+  font-weight: 700;
+  font-stretch: 110%;
+  box-shadow: 0 0 0 2px var(--bg);
+}
+
+/* ---------- the week ---------- */
+.hi-week {
+  display: grid;
+  grid-template-columns: .8fr .8fr 3.4fr .8fr .8fr .6fr .6fr; /* Wednesday gets the room */
+  gap: 4px;
+}
+.hi-day { display: grid; grid-template-rows: auto 1fr; gap: 6px; min-width: 0; }
+.hi-day-name {
+  font: 500 10px var(--f-mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  text-align: center;
+}
+.hi-day-body {
+  min-height: 176px;
+  border-radius: 6px;
+  background:
+    repeating-linear-gradient(to bottom, transparent 0 21px, var(--line) 21px 22px),
+    var(--surface-2);
+  opacity: .7;
+}
+.hi-day.weekend .hi-day-body { opacity: .4; }
+.hi-day.wed .hi-day-name { color: var(--ink); font-weight: 600; }
+.hi-day.wed .hi-day-body {
+  opacity: 1;
+  display: grid;
+  align-content: center;
+  gap: 6px;
+  padding: 8px 6px;
+  background: var(--hi-sun-soft);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--hi-sun) 70%, transparent);
+}
+.hi-slot {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 6px 7px;
+  border-radius: 5px;
+  background: var(--hi-sun);
+  color: var(--hi-sun-ink);
+  font: 600 10.5px/1 var(--f-mono);
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+.hi-slot .hi-you {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-left: -10px;
+  border-radius: 999px;
+  border: 1.5px dashed var(--hi-sun-ink);
+  background: var(--hi-sun);
+}
+
+/* ---------- cards ---------- */
+.hi-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--hi-card);
+}
+.hi-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--tc) 18%, var(--surface));
+  color: color-mix(in srgb, var(--tc) 70%, var(--ink));
+}
+.hi-icon svg { width: 17px; height: 17px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hi-hand, .hi-wave:hover .hi-hand { animation: none; }
+}

@@ -30,6 +30,9 @@ When in doubt: content can be expressive, controls must be trivial to read.
   - **Accent `--hot` (#E5553A):** reserved for interaction and "now": active tab marker, connect thread, drop target, focus ring, Today line, filter count badge. Never decorative, never a topic.
 - Text on tints uses `color-mix(in srgb, var(--sc) 55%, var(--ink))`, not raw colour.
 
+## Exception: /hi
+The "Say hi" landing page (`app/hi`) is a deliberate, approved exception (2026-11-05): warmer and illustrated, with a sun-yellow accent, a waving-hand illustration, topic-coloured icon tiles and a week visual. Its extra colours are scoped to `.hi` in `app/hi/hi.css`. It still uses the site's fonts, ink, surfaces, lines and focus ring. Don't carry its palette into the map or the chrome.
+
 ## Type
 | Role | Face | Use |
 |---|---|---|
