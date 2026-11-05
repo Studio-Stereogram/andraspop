@@ -1,4 +1,5 @@
-import { KIND_LABEL, PLATFORMS, TOPIC_PALETTE } from "./constants";
+import { FRAME_WIDTH, KIND_LABEL, NODE_WIDTH, PLATFORMS, TOPIC_PALETTE } from "./constants";
+import { videoFrame } from "./links";
 import { h32 } from "./thumbnail";
 import type { MapNode } from "./types";
 
@@ -74,4 +75,9 @@ export function displayTitle(n: Pick<MapNode, "title" | "type" | "platform">): s
   if (n.type === "person") return "Unnamed person";
   if (n.type === "video" && n.platform) return n.platform === "instagram" ? "Instagram reel" : `${PLATFORMS[n.platform].label} video`;
   return `Untitled ${KIND_LABEL[n.type].toLowerCase()}`;
+}
+
+/** A node's card width: per type, and for videos per thumbnail frame. */
+export function nodeWidth(n: Pick<MapNode, "type" | "status" | "platform" | "url">): number {
+  return n.type === "video" ? FRAME_WIDTH[videoFrame(n)] : NODE_WIDTH[n.type];
 }

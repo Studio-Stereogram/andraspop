@@ -27,8 +27,8 @@
     {
       "id": "yt-76CJ_CMCfs0",
       "type": "video",
-      "title": "",
-      "summary": "",
+      "title": "Ai Crafts — Denver",
+      "summary": "How AI is elevating designers to consultants.",
       "platform": "youtube",
       "status": "published",
       "date": "",
@@ -36,16 +36,16 @@
       "thumbnail": "",
       "handle": "",
       "duration": "",
-      "topics": [],
+      "topics": ["ai", "work"],
       "private": false,
-      "fx": 300,
+      "fx": 228,
       "fy": 0
     },
     {
       "id": "yt-K2yXm-u9e0s",
       "type": "video",
-      "title": "",
-      "summary": "",
+      "title": "Ai Crafts — Lisbon",
+      "summary": "How AI is elevating designers to consultants.",
       "platform": "youtube",
       "status": "published",
       "date": "",
@@ -53,9 +53,9 @@
       "thumbnail": "",
       "handle": "",
       "duration": "",
-      "topics": [],
+      "topics": ["ai", "work"],
       "private": false,
-      "fx": 600,
+      "fx": 576,
       "fy": 0
     },
     {
@@ -72,8 +72,8 @@
       "duration": "",
       "topics": ["web"],
       "private": false,
-      "fx": 900,
-      "fy": 0
+      "fx": 228,
+      "fy": 528
     },
     {
       "id": "idea-techno-album-covers",
@@ -89,8 +89,8 @@
       "duration": "",
       "topics": ["music"],
       "private": false,
-      "fx": 0,
-      "fy": 336
+      "fx": 504,
+      "fy": 528
     },
     {
       "id": "idea-what-is-ai",
@@ -106,7 +106,7 @@
       "duration": "",
       "topics": ["ai", "community"],
       "private": false,
-      "fx": 300,
+      "fx": 228,
       "fy": 336
     },
     {
@@ -123,7 +123,7 @@
       "duration": "",
       "topics": ["ai", "work"],
       "private": false,
-      "fx": 600,
+      "fx": 504,
       "fy": 336
     },
     {
@@ -140,11 +140,12 @@
       "duration": "",
       "topics": ["ai", "work"],
       "private": false,
-      "fx": 900,
+      "fx": 780,
       "fy": 336
     }
   ],
   "edges": [
+    { "id": "e-aicrafts", "from": "yt-76CJ_CMCfs0", "to": "yt-K2yXm-u9e0s", "type": "continuity", "kind": "series" },
     { "id": "e1", "from": "idea-what-is-ai", "to": "idea-ai-adoption-survey", "type": "reference", "kind": "related" },
     { "id": "e2", "from": "idea-ai-adoption-survey", "to": "idea-ai-workflows", "type": "reference", "kind": "related" }
   ]

@@ -2,10 +2,12 @@ import { describe, expect, it } from "vitest";
 import {
   canonicalInstagramUrl,
   decodeEntities,
+  embedUrl,
   instagramPreview,
   isAllowedThumbnail,
   parseOpenGraph,
   titleFromCaption,
+  videoFrame,
   youtubeId,
   youtubeOEmbedTitle,
 } from "./links";
@@ -82,6 +84,45 @@ describe("titleFromCaption", () => {
     expect(t.length).toBeLessThanOrEqual(90);
     expect(t.endsWith("…")).toBe(true);
     expect(t).not.toMatch(/\s…$/);
+  });
+
+  it("keeps only the first sentence, without its full stop", () => {
+    expect(titleFromCaption("End of an era. You can check out the report below:")).toBe("End of an era");
+    expect(titleFromCaption("Is this the end? Maybe not.")).toBe("Is this the end?");
+    expect(titleFromCaption("Made with v2.5 of the tool")).toBe("Made with v2.5 of the tool");
+    expect(titleFromCaption("Wait for it...")).toBe("Wait for it...");
+    expect(titleFromCaption("e.g. this one stays whole")).toBe("e.g. this one stays whole");
+  });
+});
+
+describe("videoFrame", () => {
+  const v = (platform: string | null, url: string, status = "published") => ({ type: "video", status, platform, url });
+  it("matches each platform's own shape", () => {
+    expect(videoFrame(v("youtube", "https://www.youtube.com/watch?v=76CJ_CMCfs0"))).toBe("wide");
+    expect(videoFrame(v("youtube", "https://www.youtube.com/shorts/76CJ_CMCfs0"))).toBe("tall");
+    expect(videoFrame(v("instagram", "https://www.instagram.com/reel/DeKVLAEoUI3/"))).toBe("tall");
+    expect(videoFrame(v("instagram", "https://www.instagram.com/p/DeKVLAEoUI3/"))).toBe("post");
+    expect(videoFrame(v("instagram", ""))).toBe("tall");
+    expect(videoFrame(v("x", "https://x.com/a/status/1"))).toBe("wide");
+  });
+
+  it("gives ideas, drafts and non-videos no frame", () => {
+    expect(videoFrame(v(null, "", "idea"))).toBe("none");
+    expect(videoFrame(v("youtube", "https://youtu.be/76CJ_CMCfs0", "draft"))).toBe("none");
+    expect(videoFrame({ type: "link", status: null, platform: null, url: "https://a.b" })).toBe("none");
+  });
+});
+
+describe("embedUrl", () => {
+  it("builds privacy-enhanced YouTube and Instagram embed links from parsed ids", () => {
+    expect(embedUrl("https://youtu.be/76CJ_CMCfs0?t=3")).toBe(
+      "https://www.youtube-nocookie.com/embed/76CJ_CMCfs0?autoplay=1&rel=0&playsinline=1",
+    );
+    expect(embedUrl("https://www.instagram.com/reel/DeKVLAEoUI3/?igsh=abc")).toBe(
+      "https://www.instagram.com/reel/DeKVLAEoUI3/embed/",
+    );
+    expect(embedUrl("https://example.com/video")).toBeNull();
+    expect(embedUrl("javascript:alert(1)")).toBeNull();
   });
 });
 

@@ -21,6 +21,11 @@
 }
 .mm-node:hover { border-color: var(--line-2); }
 .mm-node.t-note { background: var(--note); }
+/* ideas and drafts: nothing made yet, so a dashed outline and no thumbnail */
+.mm-node.compact { border-style: dashed; border-color: var(--line-2); }
+.mm-node.compact:hover { border-color: var(--ink-3); }
+.mm-node.compact.sel { border-color: var(--ink-2); }
+.mm-node.compact .mm-nbody { padding-top: 2px; }
 .mm-node.dim { opacity: .16; }
 .mm-node.fade { opacity: .42; }
 .mm-node.dim.nb, .mm-node.fade.nb { opacity: .9; }
@@ -80,17 +85,21 @@
 /* Public mode never shows editing affordances. The handles stay in the DOM (React Flow attaches edges to them). */
 .mm-public .mm-port { visibility: hidden; }
 
-/* ---------- thumbnails ---------- */
+/* ---------- thumbnails: each keeps its platform's frame ---------- */
 .mm-thumb {
   position: relative;
-  height: 108px;
+  aspect-ratio: 16 / 9;
   margin: 0 10px;
   border-radius: 2px;
   overflow: hidden;
   background: var(--thumb-bg);
 }
+.mm-thumb.f-post { aspect-ratio: 4 / 5; }
+.mm-thumb.f-tall { aspect-ratio: 9 / 16; }
 .mm-thumb svg { display: block; width: 100%; height: 100%; }
-.mm-thumb.lg { height: 156px; margin: 0; border-radius: 6px; }
+.mm-thumb.lg { margin: 0; border-radius: 6px; }
+/* Tall frames would fill the inspector: cap the height and centre them. */
+.mm-thumb.lg.f-tall { height: min(568px, 56vh); width: auto; margin-inline: auto; }
 .mm-dur {
   position: absolute;
   right: 6px;
@@ -111,33 +120,67 @@
   border-top: 3.5px solid transparent;
   border-bottom: 3.5px solid transparent;
 }
-.mm-thumb.empty {
-  background: var(--surface-2);
-  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
-  background-size: 16px 16px;
-  background-position: -1px -1px;
+/* ▶ on card hover; the card click still selects, playback happens in the inspector */
+.mm-play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  translate: -50% -50%;
+  background: color-mix(in srgb, var(--thumb-bg) 80%, transparent);
+  box-shadow: 0 0 0 1.5px var(--thumb-ink);
+  opacity: 0;
+  transition: opacity .12s;
+  pointer-events: none;
 }
-.mm-thumb.empty span {
+.mm-play::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  top: 11px;
+  border-left: 11px solid var(--thumb-ink);
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+}
+.mm-node:hover .mm-play { opacity: 1; }
+/* inspector: the whole thumbnail is the Play button */
+.mm-playbtn {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
-  font: 500 9.5px var(--f-mono);
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--ink-3);
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  border-radius: inherit;
 }
-.mm-thumb.empty span b { font-weight: 500; background: var(--surface-2); padding: 2px 6px; }
-.mm-thumb.empty::after {
+.mm-playbtn span {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--thumb-bg) 80%, transparent);
+  box-shadow: 0 0 0 1.5px var(--thumb-ink);
+  transition: scale .12s, background .12s;
+}
+.mm-playbtn span::before {
   content: "";
   position: absolute;
-  inset: 8px;
-  background:
-    linear-gradient(var(--ink-3), var(--ink-3)) left top / 10px 1px no-repeat, linear-gradient(var(--ink-3), var(--ink-3)) left top / 1px 10px no-repeat,
-    linear-gradient(var(--ink-3), var(--ink-3)) right top / 10px 1px no-repeat, linear-gradient(var(--ink-3), var(--ink-3)) right top / 1px 10px no-repeat,
-    linear-gradient(var(--ink-3), var(--ink-3)) left bottom / 10px 1px no-repeat, linear-gradient(var(--ink-3), var(--ink-3)) left bottom / 1px 10px no-repeat,
-    linear-gradient(var(--ink-3), var(--ink-3)) right bottom / 10px 1px no-repeat, linear-gradient(var(--ink-3), var(--ink-3)) right bottom / 1px 10px no-repeat;
+  left: 20px;
+  top: 16px;
+  border-left: 16px solid var(--thumb-ink);
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
 }
+.mm-playbtn:hover span { background: var(--thumb-bg); scale: 1.06; }
+.mm-playbtn:active span { scale: .97; }
+.mm-playbtn:focus-visible { box-shadow: none; }
+.mm-playbtn:focus-visible span { box-shadow: 0 0 0 1.5px var(--thumb-ink), 0 0 0 4px var(--hot); }
+/* Instagram's embed adds its own header and footer around the media, so it gets a fixed, taller box. */
+.mm-player.ig, .mm-player.ig.f-tall { aspect-ratio: auto; width: 100%; height: min(640px, 76vh); background: var(--surface-2); }
 
 /* ---------- card body ---------- */
 .mm-nbody { padding: 10px 12px 12px; display: grid; gap: 6px; }
@@ -149,6 +192,15 @@
   color: var(--ink);
 }
 .mm-ntitle.empty { color: var(--ink-3); font-weight: 500; }
+.mm-nsum {
+  margin: 0;
+  font: 400 12.5px/1.4 var(--f-ui);
+  color: var(--ink-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 .mm-nmeta {
   font: 400 10px/1.3 var(--f-mono);
   letter-spacing: .06em;
@@ -269,7 +321,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mm-node, .mm-edge, .mm-node::after { transition: none; }
+  .mm-node, .mm-edge, .mm-node::after, .mm-play, .mm-playbtn span { transition: none; }
 }
 
 /* React Flow's attribution, in the chrome's quiet mono style */

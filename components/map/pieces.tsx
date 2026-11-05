@@ -1,57 +1,62 @@
 "use client";
 
-import { useState, type CSSProperties } from "react";
+import { useState, type CSSProperties, type ReactNode } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { avatarColor, initials } from "@/lib/map/format";
-import { isAllowedThumbnail } from "@/lib/map/links";
+import { avatarColor, initials, nodeWidth } from "@/lib/map/format";
+import { isAllowedThumbnail, videoFrame } from "@/lib/map/links";
 import { thumbSVG } from "@/lib/map/thumbnail";
 import type { MapNode, Topic } from "@/lib/map/types";
 
 /**
- * The video's real thumbnail when it has one, otherwise (or if it fails to load) the generated sequencer pattern.
- * Ideas and drafts show an empty bracketed grid instead.
+ * A published video's thumbnail in its platform's own frame (16:9, 4:5 or 9:16): the real image when it has one,
+ * otherwise (or if it fails to load) the generated sequencer pattern, cropped to the frame either way.
+ * `play` adds the ▶ shown on card hover; the inspector's Player adds a real button instead.
  */
 export function Thumb({
   node,
   topicById,
   large = false,
+  play = false,
+  children,
 }: {
   node: MapNode;
   topicById: ReadonlyMap<string, Topic>;
   large?: boolean;
+  play?: boolean;
+  children?: ReactNode;
 }) {
   const [failed, setFailed] = useState(false);
-  if (node.status === "idea" || node.status === "draft") {
-    return (
-      <div className={cn("mm-thumb empty", large && "lg")}>
-        <span>
-          <b>Not published</b>
-        </span>
-      </div>
-    );
-  }
+  const frame = videoFrame(node);
+  const cls = cn("mm-thumb", `f-${frame}`, large && "lg");
+  const extras = (
+    <>
+      {play && <span className="mm-play" aria-hidden />}
+      {node.duration && <span className="mm-dur">{node.duration}</span>}
+      {children}
+    </>
+  );
   if (node.thumbnail && isAllowedThumbnail(node.thumbnail) && !failed) {
     return (
-      <div className={cn("mm-thumb", large && "lg")}>
+      <div className={cls}>
         <Image
           src={node.thumbnail}
           alt=""
           fill
-          sizes={large ? "320px" : "232px"}
+          sizes={large ? "320px" : `${nodeWidth(node)}px`}
           className="object-cover"
           onError={() => setFailed(true)}
         />
-        {node.duration && <span className="mm-dur">{node.duration}</span>}
+        {extras}
       </div>
     );
   }
   // thumbSVG only interpolates numbers and hex colours (normalizeMap rejects anything else).
   const svg = thumbSVG(node, (id) => topicById.get(id));
   return (
-    <div className={cn("mm-thumb", large && "lg")}>
+    <div className={cls}>
       <div className="h-full" dangerouslySetInnerHTML={{ __html: svg }} />
-      {node.duration && <span className="mm-dur">{node.duration}</span>}
+      {extras}
     </div>
   );
 }

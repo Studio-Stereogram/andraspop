@@ -81,10 +81,16 @@ export function parseOpenGraph(html: string): Record<string, string> {
   return out;
 }
 
-/** A card title from a caption: its first line, without trailing hashtags or mentions, at most ~90 characters. */
+/**
+ * A card title from a caption: its first sentence (or first line, if that is shorter), without trailing hashtags or
+ * mentions or a closing full stop, at most ~90 characters.
+ */
 export function titleFromCaption(caption: string): string {
   const line = caption.split(/\r?\n/).map((l) => l.trim()).find(Boolean) ?? "";
-  const clean = line.replace(/(\s*[#@][\p{L}\p{N}_.]+)+\s*$/u, "").replace(/\s+/g, " ").trim();
+  const tidy = line.replace(/(\s*[#@][\p{L}\p{N}_.]+)+\s*$/u, "").replace(/\s+/g, " ").trim();
+  // A sentence ends at . ! ? or … followed by a space and a capital letter, digit or opening quote.
+  const sentence = tidy.match(/^(.{3,}?[.!?…])\s+(?=[\p{Lu}\p{N}"“'‘])/u)?.[1] ?? tidy;
+  const clean = sentence.replace(/(?<!\.)\.$/, "");
   if (clean.length <= 90) return clean;
   const cut = clean.slice(0, 88);
   return `${cut.slice(0, cut.lastIndexOf(" ") > 40 ? cut.lastIndexOf(" ") : 88).replace(/[\s,.;:–—-]+$/, "")}…`;
@@ -113,4 +119,29 @@ export function instagramPreview(og: Record<string, string>): LinkPreview {
 export function youtubeOEmbedTitle(json: unknown): string {
   const t = (json as { title?: unknown } | null)?.title;
   return typeof t === "string" ? t.trim() : "";
+}
+
+/**
+ * The frame a video's thumbnail keeps, so its card has the platform's own shape: wide (16:9) for YouTube and X,
+ * post (4:5) for Instagram feed posts, tall (9:16) for reels and Shorts. Ideas and drafts have nothing to frame yet.
+ */
+export type VideoFrame = "wide" | "post" | "tall" | "none";
+
+export function videoFrame(n: { type: string; status: string | null; platform: string | null; url: string }): VideoFrame {
+  if (n.type !== "video") return "none";
+  if (n.status === "idea" || n.status === "draft") return "none";
+  if (n.platform === "instagram") return /instagram\.com\/p\//.test(n.url) ? "post" : "tall";
+  if (n.platform === "youtube" && /youtube\.com\/shorts\//.test(n.url)) return "tall";
+  return "wide";
+}
+
+/**
+ * Where the inspector's player loads a video from, or null if it can't be played on the page. YouTube uses its
+ * privacy-enhanced domain; Instagram uses the post's own embed page. Only built from parsed ids, never raw input.
+ */
+export function embedUrl(url: string): string | null {
+  const yt = youtubeId(url);
+  if (yt) return `https://www.youtube-nocookie.com/embed/${yt}?autoplay=1&rel=0&playsinline=1`;
+  const ig = canonicalInstagramUrl(url);
+  return ig ? `${ig}embed/` : null;
 }

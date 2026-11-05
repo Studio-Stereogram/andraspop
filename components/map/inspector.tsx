@@ -8,7 +8,9 @@ import { toggleVariants } from "@/components/ui/toggle";
 import { EDGE_KIND_LABEL, EDGE_TYPE_LABEL, KIND_LABEL, PLATFORMS, STATUS_LABEL } from "@/lib/map/constants";
 import { displayTitle, formatDate, handleOf, hostOf, isXUrl, personMeta, safeHref } from "@/lib/map/format";
 import type { EdgeType, MapData, MapNode, Topic } from "@/lib/map/types";
-import { Avatar, PortGlyph, Thumb } from "./pieces";
+import { videoFrame } from "@/lib/map/links";
+import { Avatar, PortGlyph } from "./pieces";
+import { Player } from "./player";
 
 function Connections({ node, map, onGo }: { node: MapNode; map: MapData; onGo: (id: string) => void }) {
   const byId = new Map(map.nodes.map((n) => [n.id, n]));
@@ -109,7 +111,7 @@ export function Inspector({
       </div>
 
       <div className="grid gap-4 p-4">
-        {isVideo && <Thumb node={node} topicById={topicById} large />}
+        {isVideo && videoFrame(node) !== "none" && <Player key={node.id} node={node} topicById={topicById} />}
         {isPerson && <Avatar node={node} large />}
         <h2 className="m-0 text-[26px] leading-[1.08] font-[650] tracking-[-.01em] text-balance [font-stretch:104%]">
           {displayTitle(node)}

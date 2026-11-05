@@ -4,7 +4,8 @@ import { memo } from "react";
 import { Handle, Position, type Node, type NodeProps } from "@xyflow/react";
 import { Badge } from "@/components/ui/badge";
 import { KIND_LABEL, NODE_WIDTH, PLATFORMS, STATUS_LABEL } from "@/lib/map/constants";
-import { displayTitle, formatDate, hostOf, personMeta } from "@/lib/map/format";
+import { displayTitle, formatDate, hostOf, nodeWidth, personMeta } from "@/lib/map/format";
+import { embedUrl, videoFrame } from "@/lib/map/links";
 import type { MapNode, Topic } from "@/lib/map/types";
 import { cn } from "@/lib/utils";
 import { useMapVisual, useNodeState } from "./map-context";
@@ -46,13 +47,15 @@ function PersonCard({ n, state }: { n: MapNode; state: string }) {
 
 function EntryCard({ n, state, topicById }: { n: MapNode; state: string; topicById: ReadonlyMap<string, Topic> }) {
   const isVideo = n.type === "video";
+  const frame = videoFrame(n);
+  const compact = isVideo && frame === "none"; // ideas and drafts: nothing to show yet
   const meta: string[] = [];
   if (!isVideo && n.url) meta.push(hostOf(n.url));
   if (n.date) meta.push(formatDate(n.date));
-  else if (isVideo) meta.push("No date yet");
+  else if (isVideo && !compact) meta.push("No date yet");
 
   return (
-    <div className={cn("mm-node", `t-${n.type}`, state)} style={{ width: NODE_WIDTH[n.type] }}>
+    <div className={cn("mm-node", `t-${n.type}`, compact && "compact", state)} style={{ width: nodeWidth(n) }}>
       <Ports />
       <div className="mm-nhead">
         <span>{KIND_LABEL[n.type]}</span>
@@ -60,9 +63,10 @@ function EntryCard({ n, state, topicById }: { n: MapNode; state: string; topicBy
         {isVideo && n.status && <Badge tone={n.status}>{STATUS_LABEL[n.status]}</Badge>}
         {!isVideo && n.private && <Badge tone="private">Private</Badge>}
       </div>
-      {isVideo && <Thumb node={n} topicById={topicById} />}
+      {isVideo && !compact && <Thumb node={n} topicById={topicById} play={embedUrl(n.url) !== null} />}
       <div className="mm-nbody">
         <div className={cn("mm-ntitle", !n.title && "empty")}>{displayTitle(n)}</div>
+        {compact && n.summary && <p className="mm-nsum">{n.summary}</p>}
         {meta.length > 0 && <div className="mm-nmeta">{meta.join(" · ")}</div>}
         <TopicTags topics={topicsOf(n, topicById)} />
       </div>

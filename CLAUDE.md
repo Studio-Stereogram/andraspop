@@ -22,7 +22,7 @@
 - `app/page.tsx`: server component. Loads the public map (`lib/data/map.ts`), renders the canvas and a plain list of entries for screen readers and search engines.
 - `components/map/map-app.tsx`: the client shell. React Flow state, view switching with tweened layouts, fit/zoom, wheel and keyboard handling, selection.
 - `components/map/{nodes,edges,layout-background}.tsx`: canvas pieces; styles in `components/map/canvas.css` (editorial register).
-- `components/map/{app-bar,filters-popover,inspector,zoom-controls}.tsx` and `components/ui/*`: chrome (product register).
+- `components/map/{app-bar,filters-popover,inspector,player,zoom-controls}.tsx` and `components/ui/*`: chrome (product register).
 - `lib/map/*`: pure, tested logic ported from the prototype (`visibility`, `layouts`, `geometry`, `thumbnail`, `normalize`). `lib/tokens.test.ts` keeps `app/globals.css` in sync with the skill's `tokens.css`.
 
 ## Architecture rules
