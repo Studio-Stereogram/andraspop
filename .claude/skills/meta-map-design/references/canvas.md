@@ -4,24 +4,35 @@
 24px minor grid (`--grid`) + 120px major grid (`--grid-2`) on `--bg`; both scale and pan with the view. Zoom range 15–250%.
 
 ## Node anatomy
-Widths: video 252, link/bookmark/note 224, person 236.
+Widths: link/bookmark/note 224, person 236. Videos take the width of their **frame**, so a card's shape says what it holds before you read it:
+
+| Frame | Ratio | Card | Used for |
+|---|---|---|---|
+| Wide | 16:9 | 252 | YouTube videos, X videos |
+| Post | 4:5 | 216 | Instagram feed posts (`/p/` links) |
+| Tall | 9:16 | 180 | Instagram reels (`/reel/`, `/tv/`), YouTube Shorts |
+| Idea | none | 224 | videos with status idea or draft (nothing to show yet) |
 
 ```
-┌──────────────────────────────────────┐
-│ VIDEO  [YT]               ● Published│  header 32px, mono 9.5px uppercase --ink-3; platform outline badge; status badge right
-│ ┌──────────────────────────────────┐ │
-│ │  generated thumbnail 108px       │ ●  continuity handle (right edge, vertical centre)
-│ │                          ▶ 12:40 │ │
-│ └──────────────────────────────────┘ │
-│ Title in Archivo 600 14.5px          │  balanced, up to 3 lines
-│ 16 SEPT 2026 · host.com              │  mono 10px uppercase --ink-3
-│ ■ TOOLS  ■ AI WORKFLOWS              │  7px topic squares + mono 9.5px
-└──────────────────◆───────────────────┘  reference handle (bottom edge, horizontal centre)
+Wide (YouTube)                          Tall (reel)        Idea
+┌──────────────────────────────────────┐ ┌────────────────┐ ┌┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┐
+│ VIDEO  [YT]               ● Published│ │ VIDEO [IG] ●Pub│ ┆ VIDEO              ● Idea┆
+│ ┌──────────────────────────────────┐ │ │ ┌────────────┐ │ ┆ Title in Archivo 600     ┆
+│ │  thumbnail 16:9        ▶ on hover│ ● │ │            │ ● ┆ The take, 2 lines max, ink-2 ●
+│ │                          ▶ 12:40 │ │ │ │  9:16  ▶   │ │ ┆ ■ AI  ■ WORK             ┆
+│ └──────────────────────────────────┘ │ │ │            │ │ └┄┄┄┄┄┄┄┄┄┄┄◆┄┄┄┄┄┄┄┄┄┄┄┄┘
+│ Title in Archivo 600 14.5px          │ │ └────────────┘ │
+│ 16 SEPT 2026 · host.com              │ │ Title          │
+│ ■ TOOLS  ■ AI WORKFLOWS              │ │ 6 OCT 2026     │
+└──────────────────◆───────────────────┘ └───────◆────────┘
 ```
 - Card: `--surface`, 1px `--line`, 4px radius, no shadow (flat on the grid). Notes use `--note`.
+- Header 32px, mono 9.5px uppercase `--ink-3`; platform outline badge; status badge right. Title balanced, up to 3 lines; meta mono 10px uppercase `--ink-3`; topic squares 7px + mono 9.5px.
+- **Thumbnails keep the platform's own frame** (16:9, 4:5, 9:16) on the card and in the inspector; the image is cropped to fill (`object-fit: cover`), never letterboxed. In the inspector, tall frames are capped at 56vh and centred.
+- **Play affordance:** a published video with a playable link shows a 36px round ▶ (`--thumb-ink` on `--thumb-bg` at 85%) centred on the thumbnail on card hover. Clicking the card still selects it; playback happens in the inspector, where the ▶ is a real button ("Play video"). Nothing from YouTube or Instagram loads until it is pressed (YouTube uses youtube-nocookie.com).
+- **Ideas and drafts** have nothing to show yet, so they are compact: no thumbnail, a **dashed** 1px `--line-2` border, the take (summary) under the title in `--ink-2`, clamped to 2 lines. The status badge says Idea or Draft.
 - **People** are pills (999px) with a 44px round avatar (topic-palette colour by name hash, white initials), kind label, name, `@handle · site`.
-- **Unpublished videos** (idea/draft) show an empty bracketed grid with "NOT PUBLISHED" instead of a thumbnail.
-- Thumbnail: `references/thumbnail.js`. 14×7 cell sequencer pattern seeded by id + title, glyphs (solid, dot, ring, x, quad, bars, hatch, dots9) in the node's topic colours on `--thumb-bg`, cream-white corner brackets, duration chip bottom-right. Same in both themes.
+- Generated thumbnail (no real image, or it fails to load): `references/thumbnail.js`. 14×7 cell sequencer pattern seeded by id + title, glyphs (solid, dot, ring, x, quad, bars, hatch, dots9) in the node's topic colours on `--thumb-bg`, cream-white corner brackets, duration chip bottom-right. Same in both themes; cropped to the frame like a real image.
 
 ## Connection points (handles)
 | | ● Continuity | ◆ Reference |
