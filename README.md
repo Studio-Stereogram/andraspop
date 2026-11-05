@@ -38,7 +38,7 @@ This repository started as a **handoff package**: a spec, a working single-file 
 
 Open `prototype/index.html` in a browser. Everything works offline except the web fonts. Edits are kept in your browser's local storage. **Data → Copy JSON** exports the map in the same format as `data/seed.json`.
 
-Keyboard: `1` `2` `3` switch views, `F` fits the map, `T` tidies the Free view, `Esc` closes panels.
+Keyboard: `1` `2` `3` switch views, `F` fits the map, `T` tidies the Freeform view, `Esc` closes panels.
 
 ## Run the app
 

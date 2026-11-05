@@ -43,7 +43,7 @@ export const EDGE_TYPE_LABEL: Record<EdgeType, string> = {
 };
 
 export const VIEWS: { id: View; label: string; key: string }[] = [
-  { id: "free", label: "Free", key: "1" },
+  { id: "free", label: "Freeform", key: "1" },
   { id: "cluster", label: "Clusters", key: "2" },
   { id: "timeline", label: "Timeline", key: "3" },
 ];

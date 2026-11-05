@@ -71,7 +71,7 @@ A bookmark is a single piece of work (a talk, an article). A person is the recur
 
 The same data, three layouts, animated transitions between them:
 
-1. **Free** — hand-arranged mind map. The editor's working surface; positions persist.
+1. **Freeform** — hand-arranged mind map. The editor's working surface; positions persist.
    - **Tidy** (button / `T`, undo for 8 s or Cmd/Ctrl+Z): a soft grid, not a table. Positions snap to the 24 px canvas grid; left edges that are within ~4 grid units of each other share one column x; tops within 2 units across columns share one row y; neighbours that are close (< 2.5 gutters apart) get exactly one 48 px gutter, vertically within a column and horizontally between columns; any remaining overlap is cleared by moving whole columns sideways or the rest of a column down. Far-apart groups stay where they were, so the map keeps its shape.
 2. **Clusters** — topic gravity. Each topic gets an anchor on a ring (topics that are often tagged together sit next to each other). Every node is pulled equally towards all of its topics, so an Art + Vibecoding piece lands between the two, and overlaps are resolved without moving the labels. Each topic draws a soft region around all of its members; where regions overlap, the shared items are visibly in both. Untagged nodes settle next to whatever they connect to. Filtering by a topic fades the other regions.
    - Alternatives considered: (a) primary-topic boxes with "echo" ghost cards in secondary clusters (clear, but duplicates items); (b) one dedicated cluster per topic combination, e.g. "Art × Vibecoding" (precise, explodes with more topics); (c) true bubble sets / metaball contours (nicest look, heavier to build — a good M4 upgrade of the current soft regions).
@@ -87,13 +87,13 @@ The same data, three layouts, animated transitions between them:
 
 **Editors**
 - Dock: + Video, + Link, + Bookmark, + Person, + Note (created at viewport centre, inspector focused on title).
-- Drag nodes (Free layout).
+- Drag nodes (Freeform layout).
 - Connecting: drag from the **●** (continuity) or the **◆** (reference) point. Hovering the node grows both; hovering a point fills it. Pressing it immediately draws a dashed thread to the pointer. While dragging, candidate nodes show faint corner brackets and already-connected nodes fade. The nearest node within ~80 screen px captures the thread: it turns solid, attaches to that node, the node's brackets lock on in the accent colour and pulse, and a label names the relation that will be created. Release to connect (the connection gets the type of the point you dragged from); release on empty canvas to create a new, already-connected node. Only connections of the same type block a second link between the same two entries.
 - Inspector: edit all fields; status segmented control (setting Published with no date stamps today); toggle/create topics; see connections grouped as Continuity (prev / next) and Reference, change their kind or remove them; attach a link or bookmark (creates a connected node); delete with inline confirm.
 - "Public view" toggle previews exactly what visitors see.
 
 **Screen layout**
-- App bar: brand left; **view tabs (Free / Clusters / Timeline) centred**; right side: **Data** (JSON, edit mode only), **Edit / Public** tabs, theme toggle. In production the Edit/Public tabs only exist on the editor domain (see §8); the public domain shows the view tabs and theme toggle only.
+- App bar: brand left; **view tabs (Freeform / Clusters / Timeline) centred**; right side: **Data** (JSON, edit mode only), **Edit / Public** tabs, theme toggle. In production the Edit/Public tabs only exist on the editor domain (see §8); the public domain shows the view tabs and theme toggle only.
 - Canvas, top left: **Filters** (mega-menu popover) and **Tidy** (edit only). Canvas, bottom left: zoom. Bottom centre: add dock (edit only). Right: inspector.
 
 ## 6. Publishing workflow

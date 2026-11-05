@@ -37,7 +37,7 @@ export interface MapNode {
   duration: string;
   topics: string[];
   private: boolean;
-  /** Free-layout position. */
+  /** Freeform-layout position. */
   fx: number;
   fy: number;
 }
