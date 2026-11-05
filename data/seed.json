@@ -8,6 +8,23 @@
   ],
   "nodes": [
     {
+      "id": "say-hi",
+      "type": "link",
+      "title": "Say hi",
+      "summary": "Open Wednesday conversations: three 45-minute slots, no agenda.",
+      "platform": null,
+      "status": null,
+      "date": "2026-11-05",
+      "url": "https://andraspop.com/hi",
+      "thumbnail": "",
+      "handle": "",
+      "duration": "",
+      "topics": ["community"],
+      "private": false,
+      "fx": -272,
+      "fy": 0
+    },
+    {
       "id": "ig-DeKVLAEoUI3",
       "type": "video",
       "title": "",
