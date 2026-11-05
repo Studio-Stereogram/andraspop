@@ -35,6 +35,8 @@ export interface MapNode {
   /** People only: X handle. */
   handle: string;
   duration: string;
+  /** From the platform at build time (YouTube only for now). Not part of the JSON import/export format. */
+  views?: number | null;
   topics: string[];
   private: boolean;
   /** Freeform-layout position. */

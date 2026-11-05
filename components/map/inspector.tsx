@@ -9,6 +9,7 @@ import { EDGE_KIND_LABEL, EDGE_TYPE_LABEL, KIND_LABEL, PLATFORMS, STATUS_LABEL }
 import { displayTitle, formatDate, handleOf, hostOf, isXUrl, personMeta, safeHref } from "@/lib/map/format";
 import type { EdgeType, MapData, MapNode, Topic } from "@/lib/map/types";
 import { videoFrame } from "@/lib/map/links";
+import { formatViews } from "@/lib/map/youtube";
 import { Avatar, PortGlyph } from "./pieces";
 import { Player } from "./player";
 
@@ -127,6 +128,8 @@ export function Inspector({
                 </Badge>
               )}
               {node.date && <span>{formatDate(node.date)}</span>}
+              {isVideo && node.duration && <span>{node.duration}</span>}
+              {isVideo && typeof node.views === "number" && <span className="tabular-nums">{formatViews(node.views)}</span>}
               {!isVideo && node.url && <span>{hostOf(node.url)}</span>}
             </>
           )}

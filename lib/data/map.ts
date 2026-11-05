@@ -2,6 +2,7 @@ import seed from "@/data/seed.json";
 import { normalizeMap } from "@/lib/map/normalize";
 import type { MapData, MapNode } from "@/lib/map/types";
 import { toPublicMap } from "@/lib/map/visibility";
+import { persistCover } from "./covers";
 import { getLinkPreview } from "./link-preview";
 
 /**
@@ -14,9 +15,21 @@ export async function getPublicMap(): Promise<MapData> {
   return { ...map, nodes: await Promise.all(map.nodes.map(withLinkPreview)) };
 }
 
-/** Fills a video's missing title, thumbnail and date from its link. Values in the data always win. */
+/**
+ * Fills a video's title, thumbnail, date, duration and views from its link. Values written in the data always win.
+ * Instagram covers are copied to Vercel Blob, because Instagram's own image links expire.
+ */
 async function withLinkPreview(n: MapNode): Promise<MapNode> {
-  if (n.type !== "video" || !n.url || (n.title && n.thumbnail && n.date)) return n;
+  if (n.type !== "video" || !n.url) return n;
   const p = await getLinkPreview(n.url);
-  return { ...n, title: n.title || p.title, thumbnail: n.thumbnail || p.thumbnail, date: n.date || p.date };
+  let thumbnail = n.thumbnail || p.thumbnail;
+  if (!n.thumbnail && n.platform === "instagram") thumbnail = await persistCover(n.id, thumbnail);
+  return {
+    ...n,
+    title: n.title || p.title,
+    thumbnail,
+    date: n.date || p.date,
+    duration: n.duration || p.duration || "",
+    views: p.views ?? null,
+  };
 }

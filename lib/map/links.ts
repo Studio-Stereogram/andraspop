@@ -6,12 +6,21 @@ export interface LinkPreview {
   thumbnail: string;
   /** ISO date (YYYY-MM-DD) or "". */
   date: string;
+  /** "12:40"; only the YouTube Data API knows it. */
+  duration?: string;
+  /** Only the YouTube Data API knows it; null when hidden. */
+  views?: number | null;
 }
 
 export const EMPTY_PREVIEW: LinkPreview = { title: "", thumbnail: "", date: "" };
 
 /** Hosts real thumbnails may come from. next.config.ts allows the same list for next/image. */
-export const THUMBNAIL_HOSTS = ["i.ytimg.com", "*.cdninstagram.com", "*.fbcdn.net"] as const;
+export const THUMBNAIL_HOSTS = [
+  "i.ytimg.com",
+  "*.cdninstagram.com",
+  "*.fbcdn.net",
+  "*.public.blob.vercel-storage.com", // covers copied to Vercel Blob (lib/data/covers.ts)
+] as const;
 
 export function isAllowedThumbnail(url: string): boolean {
   try {
