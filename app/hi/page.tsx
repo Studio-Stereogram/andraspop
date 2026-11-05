@@ -20,7 +20,8 @@ import {
 import { AndrasLogo } from "@/components/brand/andras-logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
-import { Portrait, Wave, Week } from "./illustrations";
+import { Hand, Portrait, Week } from "./illustrations";
+import { MOTION_SCRIPT, RevealObserver, StickyBook } from "./motion";
 import "./hi.css";
 
 const BOOKING_URL = "https://calendly.com/stereogram/andraspop-45min";
@@ -84,7 +85,7 @@ const ELSEWHERE = [
 function BookButton({ variant = "default" }: { variant?: "default" | "outline" }) {
   return (
     <Button asChild variant={variant} className="h-11 w-full px-5 text-[15px] min-[480px]:w-auto [&_svg]:size-[18px]">
-      <a href={BOOKING_URL}>
+      <a href={BOOKING_URL} data-book-inline>
         Pick a Wednesday slot
         <ArrowUpRight aria-hidden />
       </a>
@@ -102,7 +103,7 @@ function Icon({ icon: I, color }: { icon: LucideIcon; color: string }) {
 
 function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
   return (
-    <section aria-labelledby={id} className="grid gap-4">
+    <section aria-labelledby={id} className="hi-reveal grid gap-4">
       <h2 id={id} className="m-0 text-[21px] leading-tight font-[650] tracking-[-.005em] text-ink [font-stretch:104%]">
         {title}
       </h2>
@@ -119,6 +120,8 @@ function Section({ id, title, children }: { id: string; title: string; children:
 export default function SayHiPage() {
   return (
     <div className="hi min-h-dvh bg-bg text-ink">
+      <script dangerouslySetInnerHTML={{ __html: MOTION_SCRIPT }} />
+      <RevealObserver />
       <header className="mx-auto flex w-full max-w-[38rem] items-center gap-3 px-4 pt-3">
         <Link
           href="/"
@@ -134,13 +137,13 @@ export default function SayHiPage() {
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-[38rem] px-4 pt-10 pb-20 max-[480px]:pt-7">
+      <main className="mx-auto w-full max-w-[38rem] px-4 pt-10 pb-20 max-[640px]:pb-32 max-[480px]:pt-7">
         <article className="grid gap-12 text-[17px] leading-[1.6] text-ink-2">
           {/* Hero: photo with a wave, the headline, the hook */}
-          <div className="grid gap-5">
+          <div className="hi-reveal grid gap-5">
             <div className="flex items-end">
-              <Portrait size={88} />
-              <Wave size={64} className="-ml-5 [box-shadow:0_0_0_3px_var(--bg)]" />
+              <Portrait size={96} priority />
+              <Hand size={76} className="-ml-4 -mb-1" />
             </div>
             <h1 className="m-0 text-[52px] leading-none font-[650] tracking-[-.01em] text-ink [font-stretch:112%] max-[480px]:text-[44px]">
               Say hi
@@ -151,7 +154,7 @@ export default function SayHiPage() {
           </div>
 
           {/* The slot: where it lives in the week, then the booking button */}
-          <div className="hi-card grid gap-5 p-5 max-[480px]:p-4">
+          <div className="hi-reveal hi-card grid gap-5 p-5 max-[480px]:p-4">
             <Week />
             <p className="m-0">
               Every Wednesday I keep three 45-minute slots open. No pitch, nothing to prepare. Nothing gets recorded
@@ -204,7 +207,7 @@ export default function SayHiPage() {
           <Section id="topics" title="Happy to talk about">
             <ul className="m-0 grid list-none gap-2 p-0 min-[560px]:grid-cols-2">
               {TOPICS.map((t) => (
-                <li key={t.text} className="hi-card flex items-center gap-3 px-3 py-2.5 text-[15.5px] leading-snug text-ink">
+                <li key={t.text} className="hi-card hi-lift flex items-center gap-3 px-3 py-2.5 text-[15.5px] leading-snug text-ink">
                   <Icon icon={t.icon} color={t.color} />
                   <span>{t.text}</span>
                 </li>
@@ -215,7 +218,7 @@ export default function SayHiPage() {
           <Section id="why" title="Why it might be worth 45 minutes">
             <ul className="m-0 grid list-none gap-2 p-0">
               {WHY.map((w) => (
-                <li key={w.text} className="hi-card flex items-start gap-3 px-4 py-3.5">
+                <li key={w.text} className="hi-card hi-lift flex items-start gap-3 px-4 py-3.5">
                   <Icon icon={w.icon} color={w.color} />
                   <p className="m-0 self-center">{w.text}</p>
                 </li>
@@ -224,16 +227,16 @@ export default function SayHiPage() {
           </Section>
 
           {/* Closing: the same invitation, warmer */}
-          <div className="hi-card grid justify-items-start gap-4 p-5 [background:var(--hi-sun-soft)] max-[480px]:p-4">
+          <div className="hi-reveal hi-card grid justify-items-start gap-4 p-5 [background:var(--hi-sun-soft)] max-[480px]:p-4">
             <div className="flex items-end">
-              <Portrait size={56} />
-              <Wave size={44} className="-ml-3.5 [box-shadow:0_0_0_3px_var(--hi-sun-soft)]" />
+              <Portrait size={60} />
+              <Hand size={50} className="-ml-3 -mb-0.5" />
             </div>
             <p className="m-0 text-[19px] leading-snug font-semibold text-ink">Say hi</p>
             <BookButton />
           </div>
 
-          <nav aria-label="More from András">
+          <nav aria-label="More from András" className="hi-reveal">
             <ul className="m-0 grid list-none gap-1 p-0">
               {ELSEWHERE.map((l) => {
                 const internal = l.href.startsWith("/");
@@ -262,6 +265,7 @@ export default function SayHiPage() {
           </nav>
         </article>
       </main>
+      <StickyBook href={BOOKING_URL} />
     </div>
   );
 }

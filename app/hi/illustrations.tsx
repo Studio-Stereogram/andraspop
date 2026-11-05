@@ -1,57 +1,48 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { HAND_FILL, HAND_INK, HAND_VIEWBOX } from "./hand-paths";
 
-/**
- * András's photo. Until public/hi/andras.jpg is added, a monogram stands in. To use the photo, put a square image at
- * public/hi/andras.jpg and set PHOTO to "/hi/andras.jpg".
- */
-const PHOTO: string | null = null;
+/** András's photo, square-cropped for the round portraits (public/hi/andras-square.jpg, 480×480). */
+const PHOTO = "/hi/andras-square.jpg";
 
-export function Portrait({ size, className }: { size: number; className?: string }) {
+export function Portrait({ size, className, priority = false }: { size: number; className?: string; priority?: boolean }) {
   return (
-    <span
-      className={cn("hi-portrait", className)}
-      style={{ width: size, height: size, fontSize: Math.round(size * 0.36) } as CSSProperties}
-      aria-hidden
-    >
-      {PHOTO ? <Image src={PHOTO} alt="" fill sizes={`${size}px`} className="object-cover" /> : size >= 28 ? "AP" : null}
+    <span className={cn("hi-portrait", className)} style={{ width: size, height: size } as CSSProperties} aria-hidden>
+      <Image src={PHOTO} alt="" fill sizes={`${size}px`} priority={priority} className="object-cover" />
     </span>
   );
 }
 
-/** A hand-drawn-style waving hand: outlined, in the page's sun colour, with two motion arcs. Waves once on load. */
-export function Wave({ size = 56, className }: { size?: number; className?: string }) {
-  const parts = (
-    <>
-      <rect x="18" y="28" width="28.5" height="27" rx="11" />
-      <rect x="18.4" y="12" width="7.8" height="26" rx="3.9" />
-      <rect x="25.7" y="8" width="7.8" height="28" rx="3.9" />
-      <rect x="33" y="10" width="7.8" height="26" rx="3.9" />
-      <rect x="40.2" y="16" width="7.4" height="21" rx="3.7" />
-      <rect x="14.5" y="29" width="8" height="21" rx="4" transform="rotate(-40 19 47)" />
-    </>
-  );
+/**
+ * The ✌ hand, redrawn from András's icon with a brush feel: the outline is warped slightly, its edge roughened with
+ * noise and snapped back to solid ink (so it reads as a dry brush stroke, not a blur). A cream sticker in both themes.
+ */
+export function Hand({ size = 72, className }: { size?: number; className?: string }) {
+  const id = "hi-brush";
   return (
-    <span className={cn("hi-wave", className)} style={{ width: size, height: size }} aria-hidden>
-      <svg viewBox="0 0 64 64" width={size * 0.72} height={size * 0.72} overflow="visible">
-        <g transform="rotate(-10 32 56)">
-          <g className="hi-hand">
-            {/* outline: the same shapes drawn fat in ink underneath, then filled on top, so they read as one hand */}
-            <g fill="var(--hi-sun-ink)" stroke="var(--hi-sun-ink)" strokeWidth="4.4" strokeLinejoin="round">
-              {parts}
-            </g>
-            <g fill="var(--hi-sun)">{parts}</g>
-            <g stroke="var(--hi-sun-ink)" strokeWidth="1.6" strokeLinecap="round" fill="none">
-              <path d="M26.1 16v18M33.4 14.5v19.5M40.6 20.5v13.5" />
-            </g>
-          </g>
-        </g>
-        <g stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" fill="none">
-          <path d="M51 9c4.5 2.8 6.6 7 6.4 12" />
-          <path d="M55.5 2.5c7 4.4 10 11 9.5 19" opacity=".55" />
-          <path d="M10 12c-3.8 2.6-5.6 6.2-5.8 10.4" />
-        </g>
+    <span className={cn("hi-hand-wrap", className)} style={{ width: size * (144 / 208), height: size }} aria-hidden>
+      <svg viewBox={HAND_VIEWBOX} width="100%" height="100%" className="hi-hand">
+        <defs>
+          <filter id={`${id}-ink`} x="-10%" y="-10%" width="120%" height="120%" colorInterpolationFilters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves={2} seed={4} result="warp" />
+            <feDisplacementMap in="SourceAlpha" in2="warp" scale={4.5} xChannelSelector="R" yChannelSelector="G" result="wob" />
+            <feGaussianBlur in="wob" stdDeviation={1} result="soft" />
+            <feTurbulence type="fractalNoise" baseFrequency="0.45" numOctaves={2} seed={11} result="grain" />
+            <feComposite in="soft" in2="grain" operator="arithmetic" k1={0} k2={1.5} k3={0.9} k4={-0.95} result="mix" />
+            <feComponentTransfer in="mix" result="edge">
+              <feFuncA type="discrete" tableValues="0 1" />
+            </feComponentTransfer>
+            <feFlood floodColor="var(--hi-hand-ink)" />
+            <feComposite in2="edge" operator="in" />
+          </filter>
+          <filter id={`${id}-fill`} x="-10%" y="-10%" width="120%" height="120%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves={2} seed={4} result="warp" />
+            <feDisplacementMap in="SourceGraphic" in2="warp" scale={4.5} xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+        </defs>
+        <path d={HAND_FILL} fill="var(--hi-hand-fill)" filter={`url(#${id}-fill)`} />
+        <path d={HAND_INK} fill="#000" fillRule="evenodd" filter={`url(#${id}-ink)`} />
       </svg>
     </span>
   );
@@ -70,7 +61,7 @@ export function Week() {
             <div className="hi-day-body">
               {i === 2 &&
                 [0, 1, 2].map((s) => (
-                  <div key={s} className="hi-slot">
+                  <div key={s} className="hi-slot" style={{ "--i": s } as CSSProperties}>
                     <Portrait size={18} />
                     <span className="hi-you" />
                     <span className="truncate">45 min</span>

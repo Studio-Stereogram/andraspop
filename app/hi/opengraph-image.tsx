@@ -17,6 +17,7 @@ const HOT = "#E5553A";
 
 const archivo = await readFile(join(process.cwd(), "assets/og/Archivo-SemiBold-SemiExpanded.ttf"));
 const plexMono = await readFile(join(process.cwd(), "assets/og/IBMPlexMono-Medium.ttf"));
+const photo = `data:image/jpeg;base64,${(await readFile(join(process.cwd(), "public/hi/andras.jpg"))).toString("base64")}`;
 
 export default async function Image() {
   return new ImageResponse(
@@ -45,14 +46,21 @@ export default async function Image() {
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
           <div style={{ fontSize: 132, lineHeight: 1, letterSpacing: "-0.01em" }}>Say hi</div>
-          <div style={{ fontSize: 40, lineHeight: 1.25, color: INK_2, maxWidth: 900 }}>
-            Open Wednesday conversations. Three 45-minute slots, no agenda.
+          <div style={{ fontSize: 40, lineHeight: 1.25, color: INK_2, maxWidth: 560 }}>
+            Three open slots every Wednesday. 45 minutes, no agenda.
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 14, fontFamily: "Plex Mono", fontSize: 24, color: INK_2 }}>
           <div style={{ width: 12, height: 12, background: HOT }} />
           ANDRASPOP.COM/HI
         </div>
+        <img
+          src={photo}
+          alt=""
+          width={400}
+          height={500}
+          style={{ position: "absolute", right: 80, top: 65, width: 400, height: 500, objectFit: "cover", borderRadius: 20 }}
+        />
       </div>
     ),
     {

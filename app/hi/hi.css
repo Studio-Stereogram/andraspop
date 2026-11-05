@@ -5,44 +5,68 @@
   --hi-sun: #FFC53D;           /* the wave hand and the open Wednesday slots */
   --hi-sun-ink: #1F1A0B;       /* outlines and text on --hi-sun, both themes */
   --hi-sun-soft: color-mix(in srgb, var(--hi-sun) 16%, var(--surface));
-  --hi-cream: #FFF3D1;         /* the wave's speech-bubble, both themes */
+  --hi-hand-fill: #FFF3D1;     /* the ✌ hand: a cream sticker with near-black brush ink, both themes */
+  --hi-hand-ink: #151514;
   --hi-card: var(--surface);
-  --hi-portrait-a: #F76B15;    /* monogram gradient until the photo is in */
-  --hi-portrait-b: #D6409F;
 }
 :root.paper .hi {
   --hi-sun: #F7B500;
   --hi-sun-soft: color-mix(in srgb, var(--hi-sun) 20%, var(--surface));
 }
 
-/* ---------- wave ---------- */
-.hi-wave {
-  display: grid;
-  place-items: center;
-  border-radius: 999px;
-  background: var(--hi-cream);
-  color: color-mix(in srgb, var(--hi-sun-ink) 55%, var(--hi-cream));
+/* ---------- the ✌ hand ---------- */
+.hi-hand-wrap { display: inline-block; flex: none; }
+.hi-hand { display: block; overflow: visible; transform-box: view-box; transform-origin: 50% 90%; }
+.hi-motion .hi-reveal.in .hi-hand { animation: hi-hand-in .9s cubic-bezier(.2, 1.4, .4, 1) .15s both; }
+.hi-hand-wrap:hover .hi-hand { animation: hi-hand-wiggle .7s ease-in-out; }
+@keyframes hi-hand-in {
+  0% { opacity: 0; transform: translateY(14px) rotate(-24deg) scale(.6); }
+  60% { opacity: 1; transform: rotate(8deg) scale(1.04); }
+  100% { opacity: 1; transform: none; }
 }
-.hi-hand {
-  transform-box: view-box;
-  transform-origin: 32px 56px;
-  animation: hi-wave 2.2s ease-in-out .5s 1 both;
-}
-.hi-wave:hover .hi-hand { animation: hi-wave-again 1.6s ease-in-out 1; }
-@keyframes hi-wave {
+@keyframes hi-hand-wiggle {
   0%, 100% { transform: rotate(0); }
-  15% { transform: rotate(16deg); }
-  30% { transform: rotate(-8deg); }
-  45% { transform: rotate(16deg); }
-  60% { transform: rotate(-4deg); }
-  75% { transform: rotate(10deg); }
+  25% { transform: rotate(-9deg); }
+  50% { transform: rotate(7deg); }
+  75% { transform: rotate(-4deg); }
 }
-@keyframes hi-wave-again {
-  0%, 100% { transform: rotate(0); }
-  20% { transform: rotate(16deg); }
-  45% { transform: rotate(-8deg); }
-  70% { transform: rotate(12deg); }
+
+/* ---------- reveal on load and scroll (motion.tsx); without .hi-motion everything simply shows ---------- */
+.hi-motion .hi-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .7s cubic-bezier(.2, .7, .2, 1), transform .7s cubic-bezier(.2, .7, .2, 1);
+  transition-delay: var(--stagger, 0ms);
 }
+.hi-motion .hi-reveal.in { opacity: 1; transform: none; }
+.hi-motion .hi-reveal .hi-slot {
+  opacity: 0;
+  transform: translateY(8px) scale(.94);
+  transition: opacity .45s ease-out, transform .45s cubic-bezier(.2, 1.3, .4, 1);
+  transition-delay: calc(var(--stagger, 0ms) + 350ms + var(--i, 0) * 140ms);
+}
+.hi-motion .hi-reveal.in .hi-slot { opacity: 1; transform: none; }
+
+/* ---------- interactions ---------- */
+.hi-card { transition: transform .25s cubic-bezier(.2, .7, .2, 1), border-color .2s; }
+.hi-lift:hover { transform: translateY(-2px); border-color: var(--line-2); }
+.hi a [data-arrow], .hi a > svg:last-child { transition: transform .2s cubic-bezier(.2, .7, .2, 1); }
+.hi a:hover > svg:last-child { transform: translate(2px, -2px); }
+
+/* ---------- sticky booking button (phones) ---------- */
+.hi-sticky {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 20;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--line);
+  transform: translateY(110%);
+  transition: transform .35s cubic-bezier(.2, .7, .2, 1);
+}
+.hi-sticky.on { transform: none; }
 
 /* ---------- portrait ---------- */
 .hi-portrait {
@@ -52,11 +76,7 @@
   place-items: center;
   overflow: hidden;
   border-radius: 999px;
-  background: linear-gradient(135deg, var(--hi-portrait-a), var(--hi-portrait-b));
-  color: #fff;
-  font-family: var(--f-title);
-  font-weight: 700;
-  font-stretch: 110%;
+  background: var(--surface-2);
   box-shadow: 0 0 0 2px var(--bg);
 }
 
@@ -135,5 +155,7 @@
 .hi-icon svg { width: 17px; height: 17px; }
 
 @media (prefers-reduced-motion: reduce) {
-  .hi-hand, .hi-wave:hover .hi-hand { animation: none; }
+  .hi-hand, .hi-hand-wrap:hover .hi-hand { animation: none !important; }
+  .hi-card, .hi-sticky, .hi a > svg:last-child { transition: none; }
+  .hi-lift:hover { transform: none; }
 }
