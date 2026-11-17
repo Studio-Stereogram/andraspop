@@ -176,6 +176,13 @@
   .topics li:first-child{border-top:1px solid var(--line)}
   .topics .n{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums;padding-top:3px}
   .note{color:var(--soft);font-size:15px;margin-top:18px}
+  /* impact numbers */
+  .stats{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:clamp(28px,4vw,44px)}
+  .stats li{border:1px solid var(--line);border-radius:14px;padding:clamp(18px,2.4vw,26px) 14px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+  .stats b{font:var(--w-display) clamp(28px,3vw,40px)/1 var(--font-display);letter-spacing:-.03em;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .stats .lbl{color:var(--soft);font-size:15px;line-height:1.35}
+  .stats a{font-size:14px;text-underline-offset:3px;margin-top:2px;text-decoration-color:var(--muted);transition:text-decoration-color .2s}
+  .stats a:hover{text-decoration-color:var(--fg)}
   .links{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
   .links li{border-bottom:1px solid var(--line)}
   .links a{display:flex;justify-content:space-between;padding:14px 0;text-decoration:none}
@@ -310,6 +317,12 @@
   <section class="row rule" aria-labelledby="s2">
     <h3 id="s2" data-mask>Who I am</h3>
     <div class="body fade" style="--d:120ms">
+      <ul class="stats stagger" aria-label="In numbers">
+        <li><b>~1B HUF</b><span class="lbl">Stereogram revenue, 6 years</span><a href="https://studiostereogram.com/financial-report">Proof ↗</a></li>
+        <li><b>8+ years</b><span class="lbl">in design</span></li>
+        <li><b>6+ years</b><span class="lbl">teaching design</span></li>
+        <li><b>7,254</b><span class="lbl">meetings so far</span></li>
+      </ul>
       <p>I'm András. Originally from Transylvania, now in Budapest. I started as a freelancer, studied media design, and for the past six years I've run <a href="https://studiostereogram.com">Stereogram</a>, a nine-person design studio. UX/UI, Framer sites, branding, the usual.</p>
       <p>Now I'm changing how the studio works. We keep some of our client work, and more of my time goes into our own products, starting with <a href="https://tendo.sh">Tendo</a> and <a href="https://unwritten.cards">Unwritten</a>. I've also taught design to career changers at <a href="https://uiacademy.hu/">UI Academy</a> for six years and I've been a mentor at <a href="https://www.kreaiskola.hu/kepzesek/ui-ux-designer">Krea</a> for three.</p>
       <p>I have little to no idea how the products will go. I'm posting about it anyway.</p>
@@ -362,7 +375,7 @@
         <li><a href="https://x.com/andraspop">X <span>↗</span></a></li>
         <li><a href="https://www.threads.com/@andraspop">Threads <span>↗</span></a></li>
         <li><a href="https://www.instagram.com/andraspop">Instagram <span>↗</span></a></li>
-        <li><a href="https://studiostereogram.com/financial-report">The annual report <span>↗</span></a></li>
+        <li><a href="https://studiostereogram.com/financial-report">Stereogram financial report <span>↗</span></a></li>
       </ul>
     </div>
   </section>
