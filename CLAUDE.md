@@ -22,9 +22,9 @@
 - `app/page.tsx`: server component. Loads the public map (`lib/data/map.ts`), renders the canvas and a plain list of entries for screen readers and search engines.
 - `components/map/map-app.tsx`: the client shell. React Flow state, view switching with tweened layouts, fit/zoom, wheel and keyboard handling, selection.
 - `components/map/{nodes,edges,layout-background}.tsx`: canvas pieces; styles in `components/map/canvas.css` (editorial register).
-- `components/map/{app-bar,filters-popover,inspector,player,zoom-controls}.tsx` and `components/ui/*`: chrome (product register).
+- `components/map/{app-bar,filters-popover,inspector,overview,player,zoom-controls}.tsx` and `components/ui/*`: chrome (product register).
 - `app/api/keepalive/route.ts` + `vercel.json`: daily cron that keeps the free Supabase project from pausing (a paused database blocks every Vercel deploy). Checks `CRON_SECRET` via `lib/cron.ts`.
-- `lib/map/*`: pure, tested logic ported from the prototype (`visibility`, `layouts`, `geometry`, `thumbnail`, `normalize`). `lib/tokens.test.ts` keeps `app/globals.css` in sync with the skill's `tokens.css`.
+- `lib/map/*`: pure, tested logic ported from the prototype (`visibility`, `layouts`, `viewport`, `geometry`, `thumbnail`, `normalize`). `lib/tokens.test.ts` keeps `app/globals.css` in sync with the skill's `tokens.css`.
 
 ## Architecture rules
 - **Two hosts, one app.** The public domain is read-only. The `edit.` domain is the editor and is password-gated by `proxy.ts` (see `docs/snippets/proxy.ts`). Every server action and write route must re-check the editor gate itself; never rely on the proxy alone.

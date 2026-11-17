@@ -320,6 +320,22 @@
   white-space: nowrap;
 }
 
+/* ---------- timeline overview (picture-in-picture, bottom left) ---------- */
+.mm-ov-bg { fill: var(--bg); }
+.mm-ov-lane { stroke: var(--line); stroke-width: 1; }
+.mm-ov-tick { stroke: var(--grid-2); stroke-width: 1; }
+.mm-ov-backlog { stroke: var(--line-2); stroke-width: 1; stroke-dasharray: 2 2; }
+.mm-ov-node { fill: var(--ink-3); }
+.mm-ov-node.dim { opacity: .3; }
+.mm-ov-node.sel { fill: var(--ink); }
+.mm-ov-today { stroke: var(--hot); stroke-width: 1.5; }
+.mm-ov-view {
+  fill: color-mix(in srgb, var(--ink) 7%, transparent);
+  stroke: var(--ink-2);
+  stroke-width: 1;
+}
+.mm-overview svg:hover .mm-ov-view { stroke: var(--ink); }
+
 @media (prefers-reduced-motion: reduce) {
   .mm-node, .mm-edge, .mm-node::after, .mm-play, .mm-playbtn span { transition: none; }
 }

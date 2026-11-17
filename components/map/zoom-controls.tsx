@@ -1,11 +1,19 @@
 "use client";
 
-import { Minus, Plus, Scan } from "lucide-react";
+import { LocateFixed, Minus, Plus, Scan } from "lucide-react";
 import { useViewport } from "@xyflow/react";
 import { Button } from "@/components/ui/button";
 
-/** Bottom-left zoom panel: − · % · + · Fit. */
-export function ZoomControls({ onZoom, onFit }: { onZoom: (factor: number) => void; onFit: () => void }) {
+/** Bottom-left zoom panel: − · % · + · Fit, plus Today on the Timeline. */
+export function ZoomControls({
+  onZoom,
+  onFit,
+  onToday,
+}: {
+  onZoom: (factor: number) => void;
+  onFit: () => void;
+  onToday?: () => void;
+}) {
   const { zoom } = useViewport();
   return (
     <div className="absolute bottom-3.5 left-3 z-[3] flex items-center gap-0.5 rounded-[var(--r-panel)] border border-line bg-surface p-1 shadow-[var(--shadow)]">
@@ -22,6 +30,12 @@ export function ZoomControls({ onZoom, onFit }: { onZoom: (factor: number) => vo
         <Scan />
         Fit
       </Button>
+      {onToday && (
+        <Button variant="ghost" size="sm" onClick={onToday} title="Go to today">
+          <LocateFixed />
+          Today
+        </Button>
+      )}
     </div>
   );
 }
