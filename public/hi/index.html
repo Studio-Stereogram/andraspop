@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Say hi — András Pop</title>
+<meta name="description" content="Every Wednesday I keep three 45-minute slots open. No pitch, nothing to prepare. Come talk about studios, products, AI in design, or whatever you're making.">
+<link rel="canonical" href="https://andraspop.com/hi">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://andraspop.com/hi">
+<meta property="og:title" content="Say hi — András Pop">
+<meta property="og:description" content="Three 45-minute slots, every Wednesday. No agenda.">
+<meta property="og:image" content="https://andraspop.com/hi/assets/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Say hi — András Pop">
+<meta name="twitter:description" content="Three 45-minute slots, every Wednesday. No agenda.">
+<meta name="twitter:image" content="https://andraspop.com/hi/assets/og.jpg">
+<link rel="preload" href="/hi/fonts/AlloSharp.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+  /* Allo by Josh Puckett (SIL OFL, see fonts/Allo-OFL.txt).
+     "Allo Sharp" = the variable font pinned to ROND 0 (no rounding), keeping wght 100–900 and opsz 9–32.
+     opsz follows font-size automatically (font-optical-sizing:auto): display cut from 32px up. */
+  @font-face{font-family:"Allo Sharp";src:url("/hi/fonts/AlloSharp.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+
+  :root{
+    --bg:#fff; --fg:#0b0b0b; --muted:#a3a3a3; --soft:#6b6b6b; --line:#e8e8e8;
+    --card:#f4f4f3; --accent:#d8392b;
+    --pad:clamp(20px,4vw,48px); --max:1280px;
+    --font-display:"Allo Sharp","Helvetica Neue",Helvetica,Arial,sans-serif;
+    --font-text:"Allo Sharp","Helvetica Neue",Helvetica,Arial,sans-serif;
+    --w-display:600; --w-label:500; --w-text:400; --w-strong:500;
+    --ease:cubic-bezier(.16,1,.3,1);
+  }
+  @media (prefers-color-scheme:dark){
+    :root{ --bg:#0c0c0c; --fg:#f2f2f2; --muted:#5e5e5e; --soft:#9a9a9a; --line:#1f1f1f; --card:#161616; }
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--bg);color:var(--fg);font:var(--w-text) 17px/1.55 var(--font-text);font-optical-sizing:auto;-webkit-font-smoothing:antialiased;font-feature-settings:"kern"}
+  a{color:inherit}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
+
+  /* header + footer share this */
+  .meta{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center;padding-top:22px;padding-bottom:22px;font-size:14px;line-height:1.4}
+  .who{display:flex;align-items:center;gap:12px}
+  .who img{width:36px;height:36px;border-radius:50%;object-fit:cover;flex:none}
+  .who b{font-weight:var(--w-strong)}
+  .muted{color:var(--muted)}
+  .side{display:flex;align-items:center;justify-content:space-between;gap:24px}
+  .tagline{color:var(--muted);max-width:440px}
+  .tagline a{text-underline-offset:3px}
+  .logo{display:block;flex:none;width:22px;height:22px;color:var(--fg)}
+  .logo svg{width:100%;height:100%;display:block}
+  .totop{font-size:14px;text-decoration:none;color:var(--muted);transition:color .2s}
+  .totop:hover{color:var(--fg)}
+  .clock{font-variant-numeric:tabular-nums}
+
+  nav{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line)}
+  nav ul{display:flex;gap:18px;list-style:none;padding:14px 0;font-size:13px;overflow-x:auto;scrollbar-width:none}
+  nav a{text-decoration:none;color:var(--muted);white-space:nowrap;transition:color .2s}
+  nav a:hover,nav a[aria-current]{color:var(--fg)}
+  nav a[aria-current]{font-weight:var(--w-strong)}
+
+  /* hero */
+  .hero{display:grid;grid-template-columns:1fr 1fr;gap:24px;padding:clamp(48px,9vw,120px) 0 clamp(40px,6vw,80px)}
+  h1{grid-column:2;font:var(--w-display) clamp(40px,5.6vw,76px)/1 var(--font-display);letter-spacing:-.03em;color:var(--muted)}
+  h1 .on{color:var(--fg)}
+  .bridge{display:inline-block;width:1.95em;height:.65em;vertical-align:-.02em;color:var(--fg)}
+  .bridge svg{width:100%;height:100%;display:block}
+
+  /* cards: reel + booking */
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .card{border-radius:14px;overflow:hidden;background:var(--card);position:relative;aspect-ratio:4/5}
+  .book{display:flex;flex-direction:column;justify-content:space-between;padding:clamp(24px,3.4vw,44px);background:#111;color:#f2f2f2}
+  @media (prefers-color-scheme:dark){.book{background:#1a1a1a}}
+  .book .eyebrow{font-size:13px;color:#8a8a8a;display:flex;justify-content:space-between;gap:12px}
+  .book h2{font:var(--w-display) clamp(36px,4.6vw,64px)/1 var(--font-display);letter-spacing:-.03em}
+  .book h2 .dim{color:#6f6f6f}
+  .slots{display:flex;gap:8px;margin:22px 0 26px;flex-wrap:wrap}
+  .slot{border:1px solid #333;border-radius:999px;padding:7px 14px;font-size:13px;color:#cfcfcf}
+  .btn{display:inline-flex;align-items:center;gap:10px;background:#f2f2f2;color:#0b0b0b;text-decoration:none;font-weight:var(--w-strong);font-size:16px;padding:15px 22px;border-radius:999px;transition:transform .2s,background .2s}
+  .btn:hover{transform:translateY(-1px);background:#fff}
+  .btn svg{width:16px;height:16px;transition:transform .2s}
+  .btn:hover svg{transform:translateX(3px)}
+  .book small{display:block;margin-top:14px;font-size:13px;color:#8a8a8a}
+
+
+  /* week view inside the booking card */
+  .book{gap:22px}
+  .book h2{font-size:clamp(32px,3.6vw,52px)}
+  .week{--h:clamp(28px,3vw,40px);font-size:11px;line-height:1;color:#8a8a8a;margin-top:auto}
+  .wk-head,.wk-cols{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+  .wk-head{margin-left:24px;margin-bottom:8px}
+  .wk-day{text-align:center;display:flex;flex-direction:column;gap:4px;align-items:center}
+  .wk-day b{font-size:15px;font-weight:500;color:#bdbdbd;display:grid;place-items:center;width:28px;height:28px;border-radius:50%}
+  .wk-day.wed{color:#f2f2f2}
+  .wk-day.wed b{background:#f2f2f2;color:#0b0b0b}
+  .wk-day.today:not(.wed) b{box-shadow:inset 0 0 0 1px #555}
+  .wk-body{display:flex;gap:0}
+  .wk-gutter{position:relative;width:24px;flex:none;height:calc(var(--h)*6)}
+  .wk-gutter span{position:absolute;left:0;top:calc(var(--t)*var(--h));transform:translateY(-50%);font-variant-numeric:tabular-nums;color:#5f5f5f}
+  .wk-cols{flex:1;height:calc(var(--h)*6)}
+  .wk-col{position:relative;border-radius:6px;background:repeating-linear-gradient(to bottom,rgba(255,255,255,.045) 0 1px,transparent 1px calc(var(--h)*2))}
+  .wk-col.wed{background-color:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+  .blk{position:absolute;left:3px;right:3px;border-radius:4px;background:rgba(255,255,255,.065);transform-origin:50% 0}
+  .wk-col.wed .blk{background:rgba(255,255,255,.05)}
+  .open{position:absolute;left:3px;right:3px;border-radius:4px;background:#f2f2f2;color:#0b0b0b;font:500 11.5px/1 var(--font-text);display:flex;align-items:center;padding:0 6px;text-decoration:none;font-variant-numeric:tabular-nums;
+    transition:transform .35s cubic-bezier(.22,1.2,.36,1),box-shadow .25s,background .2s;z-index:1}
+  .open:hover,.open:focus-visible,.open.hot{transform:scale(1.06);box-shadow:0 3px 10px rgba(0,0,0,.35),0 0 0 2px rgba(255,255,255,.22);background:#fff;outline:none;z-index:2}
+  .open .t{white-space:nowrap}
+  .now{position:absolute;left:-2px;right:-2px;height:2px;background:var(--accent);border-radius:2px;z-index:3;pointer-events:none}
+  .now::before{content:"";position:absolute;left:-3px;top:-3px;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+  .wk-legend{display:flex;gap:14px;flex-wrap:wrap;margin:12px 0 0 24px;color:#6f6f6f}
+  .lg{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+  .lg-busy{background:rgba(255,255,255,.12)}.lg-open{background:#f2f2f2}
+  .cta small{display:block;margin-top:12px;font-size:13px;color:#8a8a8a}
+  .anim .week .blk{transform:scaleY(0);opacity:0;transition:transform .7s var(--ease),opacity .4s;transition-delay:calc(var(--i,0) * 28ms + 150ms)}
+  .anim .week .open{opacity:0;transform:translateY(6px) scale(.7);transition:opacity .4s,transform .6s cubic-bezier(.22,1.2,.36,1),box-shadow .25s,background .2s;transition-delay:calc(var(--i,0) * 110ms + 750ms)}
+  .anim .week.in .blk{transform:none;opacity:1}
+  .anim .week.in .open{opacity:1;transform:none}
+  .anim .week.settled .open{transition-delay:0s}
+  .anim .week .wk-col.wed{transition:background-color .6s .55s,box-shadow .6s .55s}
+  .anim .week:not(.in) .wk-col.wed{background-color:transparent;box-shadow:inset 0 0 0 1px transparent}
+
+  /* reel player */
+  .reel{background:#000;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none}
+  .reel video{width:100%;height:100%;object-fit:cover;display:block}
+  .reel::after{content:"";position:absolute;inset:auto 0 0 0;height:38%;background:linear-gradient(transparent,rgba(0,0,0,.55));pointer-events:none}
+  .reel .tag{position:absolute;top:16px;left:16px;z-index:2;font-size:12px;padding:6px 11px;border-radius:999px;background:rgba(0,0,0,.35);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+  .reel .big{position:absolute;inset:0;margin:auto;width:64px;height:64px;border-radius:50%;background:rgba(0,0,0,.4);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:grid;place-items:center;z-index:2;opacity:0;transform:scale(.9);transition:opacity .25s,transform .25s;pointer-events:none}
+  .reel.paused .big{opacity:1;transform:none}
+  .reel .big svg{width:22px;height:22px;margin-left:3px}
+  .reel .bar{position:absolute;left:16px;right:16px;bottom:14px;z-index:3;display:flex;align-items:center;gap:12px}
+  .reel .time{font-size:12px;font-variant-numeric:tabular-nums;opacity:.85;min-width:68px}
+  .scrub{flex:1;height:22px;display:flex;align-items:center;cursor:pointer;touch-action:none}
+  .scrub .track{position:relative;width:100%;height:3px;border-radius:3px;background:rgba(255,255,255,.3);transition:height .15s}
+  .scrub:hover .track,.scrub.drag .track,.scrub:focus-visible .track{height:5px}
+  .scrub .fill{position:absolute;inset:0 auto 0 0;width:0;border-radius:inherit;background:#fff}
+  .scrub .knob{position:absolute;top:50%;left:0;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:#fff;transform:scale(0);transition:transform .15s}
+  .scrub:hover .knob,.scrub.drag .knob,.scrub:focus-visible .knob{transform:scale(1)}
+  .scrub:focus-visible{outline:none}
+  .scrub:focus-visible .track{outline:2px solid #fff;outline-offset:4px}
+  .mute{flex:none;width:34px;height:34px;border:0;border-radius:50%;background:rgba(0,0,0,.35);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;display:grid;place-items:center;cursor:pointer;transition:background .2s}
+  .mute:hover{background:rgba(0,0,0,.6)}
+  .mute svg{width:16px;height:16px}
+  .mute .on{display:none}
+  .reel.unmuted .mute .on{display:block}
+  .reel.unmuted .mute .off{display:none}
+
+  /* info rows */
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:24px;padding:clamp(40px,6vw,72px) 0;border-top:1px solid var(--line)}
+  .cards + .row{border-top:0}
+  .row h3{font:var(--w-label) clamp(22px,2.2vw,28px)/1.1 var(--font-display);letter-spacing:-.02em}
+  .portrait{margin-top:clamp(28px,4vw,44px);width:100%;aspect-ratio:4/5;border-radius:12px;overflow:hidden;background:var(--card)}
+  .portrait img{width:100%;height:100%;object-fit:cover;display:block}
+  .body{max-width:560px}
+  .body p+p{margin-top:1em}
+  .body a{text-decoration:underline;text-decoration-color:var(--muted);text-underline-offset:3px;transition:text-decoration-color .2s}
+  .body a:hover{text-decoration-color:var(--fg)}
+  .lead{font:var(--w-label) clamp(22px,2.3vw,30px)/1.25 var(--font-display);letter-spacing:-.02em}
+  .lead .dim{color:var(--muted)}
+  .topics{list-style:none}
+  .topics li{display:grid;grid-template-columns:36px 1fr;padding:14px 0;border-bottom:1px solid var(--line)}
+  .topics li:first-child{border-top:1px solid var(--line)}
+  .topics .n{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums;padding-top:3px}
+  .note{color:var(--soft);font-size:15px;margin-top:18px}
+  .links{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
+  .links li{border-bottom:1px solid var(--line)}
+  .links a{display:flex;justify-content:space-between;padding:14px 0;text-decoration:none}
+  .links a span{color:var(--muted);transition:color .2s,transform .2s}
+  .links a:hover span{color:var(--fg);transform:translate(2px,-2px)}
+
+  /* closing */
+  .closing{padding:clamp(64px,10vw,140px) 0 clamp(40px,6vw,64px);border-top:1px solid var(--line)}
+  .closing .big{font:var(--w-display) clamp(40px,7vw,104px)/.98 var(--font-display);letter-spacing:-.035em;color:var(--muted);max-width:14ch}
+  .closing .big a{color:var(--fg);text-decoration:none;background:linear-gradient(currentColor,currentColor) 0 100%/0 3px no-repeat;transition:background-size .35s}
+  .closing .big a:hover{background-size:100% 3px}
+  .foot{border-top:1px solid var(--line)}
+
+  /* ---------- Motion layer (same language as the 2021–26 annual report) ----------
+     Only active when JS adds .anim (skipped for reduced motion), so the page is always readable. */
+  @media (prefers-reduced-motion:no-preference){
+    .anim .meta-top,.anim nav{animation:navIn .6s cubic-bezier(.22,1.2,.36,1) .1s both}
+    @keyframes navIn{0%{transform:translateY(-24px);opacity:0}}
+  }
+  .anim .m-line{display:inline-block;vertical-align:top;padding-bottom:.16em;margin-bottom:-.16em;clip-path:inset(-.6em -.6em 0 -.6em)}
+  .anim .done .m-line{clip-path:none}
+  .anim .m-word{display:inline-block;transform:translateY(112%);transition:transform 1s var(--ease);transition-delay:calc(var(--i,0) * 38ms + var(--d,0ms))}
+  .anim .in .m-word{transform:none}
+  .anim .fade{opacity:0;transform:translateY(14px);transition:opacity .8s var(--ease),transform .8s var(--ease);transition-delay:var(--d,0ms)}
+  .anim .fade.in{opacity:1;transform:none}
+  .anim .card-in{opacity:0;transform:translateY(40px) rotateX(10deg) scale(.97);transform-origin:50% 0;transition:opacity 1.1s var(--ease),transform 1.1s var(--ease);transition-delay:var(--d,0ms)}
+  .anim .card-in.in{opacity:1;transform:none}
+  .anim .cards{perspective:1200px}
+  .anim .rule{border-top-color:transparent;background:linear-gradient(var(--line),var(--line)) left top/0% 1px no-repeat;transition:background-size 1.2s var(--ease)}
+  .anim .rule.in{background-size:100% 1px}
+  .anim .stagger > li{opacity:0;transform:translateY(16px);transition:opacity .8s var(--ease),transform .8s var(--ease);transition-delay:calc(var(--i,0) * 60ms + 150ms)}
+  .anim .stagger.in > li{opacity:1;transform:none}
+
+  @media (max-width:760px){
+    .meta{grid-template-columns:1fr auto;gap:16px 24px}
+    .side{display:contents}
+    .side .tagline{grid-column:1/-1;grid-row:2}
+    .side .logo,.side .totop{grid-column:2;grid-row:1}
+    .hero,.row{grid-template-columns:1fr}
+    h1{grid-column:1}
+    .cards{grid-template-columns:1fr}
+    .card.book{aspect-ratio:auto;min-height:0}
+    .week{--h:28px}
+    .links{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<header class="wrap meta meta-top" id="top">
+  <div class="who">
+    <img src="/hi/assets/avatar.jpg" alt="" width="36" height="36">
+    <div><b>András Pop</b><br>
+    <span class="muted">Local time — <span class="clock" id="clock">--:--</span> Budapest, HU</span></div>
+  </div>
+  <div class="side">
+    <p class="tagline">Designer, studio founder and design teacher. Building things in public, including the parts that don't work.</p>
+    <a class="logo" href="/" aria-label="András Pop — home"><svg viewBox="3 3 249.368 249.367" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M127.684,27.819 C72.619,27.819 27.819,72.618 27.819,127.684 C27.819,182.75 72.619,227.549 127.684,227.549 C182.749,227.549 227.549,182.75 227.549,127.684 C227.549,72.618 182.749,27.819 127.684,27.819 L127.684,27.819 Z M127.684,252.367 C58.934,252.367 3,196.435 3,127.684 C3,58.933 58.934,3 127.684,3 C196.435,3 252.368,58.933 252.368,127.684 C252.368,196.435 196.435,252.367 127.684,252.367 L127.684,252.367 Z M142.989,126.313 L127.341,83.554 L108.054,135.743 C111.33,134.681 114.68,133.86 118.076,133.285 L125.829,131.962 C133.924,130.449 139.408,128.558 143,126.289 L142.989,126.313 Z M163.978,183.23 L151.309,148.956 C146.581,151.414 139.963,153.494 130.508,155.196 L119.73,157.087 C103.847,159.924 97.795,164.273 92.69,177.698 L90.621,183.23 L63.959,183.23 L112.746,50.864 L142.622,50.864 L191.409,183.23 L163.978,183.23 Z"/></svg></a>
+  </div>
+</header>
+
+<nav aria-label="Site">
+  <div class="wrap">
+    <ul>
+      <li><a href="/">Map</a></li>
+      <li><a href="/hi" aria-current="page">Say hi</a></li>
+      <li><a href="https://tendo.sh">Tendo</a></li>
+      <li><a href="https://unwritten.cards">Unwritten</a></li>
+      <li><a href="https://studiostereogram.com">Stereogram</a></li>
+      <li><a href="https://andorasu.com">Art</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <section class="hero" aria-labelledby="h">
+    <h1 id="h" data-mask data-now>András is a <span class="on">designer</span>, studio founder and teacher, based in <span class="bridge" role="img" aria-label="Chain Bridge"><svg viewBox="0 0 150 50" fill="currentColor" aria-hidden="true"><rect x="0" y="31" width="9" height="13"/><rect x="141" y="31" width="9" height="13"/><path fill-rule="evenodd" d="M38 9h16v2h-1v35h-14v-35h-1z M41.5 38v-15a4.5 4.5 0 0 1 9 0v15z"/><path fill-rule="evenodd" d="M96 9h16v2h-1v35h-14v-35h-1z M99.5 38v-15a4.5 4.5 0 0 1 9 0v15z"/><rect x="37" y="7" width="18" height="2.4"/><rect x="95" y="7" width="18" height="2.4"/><rect x="37" y="44" width="18" height="3"/><rect x="95" y="44" width="18" height="3"/><rect x="0" y="36.5" width="150" height="2.6"/><g fill="none" stroke="currentColor" stroke-linecap="round"><path stroke-width="1.8" d="M8 32Q26 28 39 11M53 11Q75 48 97 11M111 11Q124 28 142 32"/><path stroke-width="1.1" d="M8 34.5Q26 31 39 14M53 14Q75 50 97 14M111 14Q124 31 142 34.5"/><path stroke-width=".8" d="M59 19.5V37M64 24.5V37M69 27.6V37M75 28.6V37M81 27.6V37M86 24.5V37M91 19.5V37M17 27V37M24 23V37M31 18V37M119 18V37M126 23V37M133 27V37"/></g></svg></span> <span class="on">Budapest,</span> Hungary.</h1>
+  </section>
+
+  <section class="cards" aria-label="Video and booking">
+    <figure class="card reel card-in" id="reel" aria-label="Video: why I'm doing this" style="--d:0ms">
+      <!-- Swap src for the real reel (MP4, H.264, 1080×1350, faststart). Poster = first frame. -->
+      <video id="vid" src="/hi/assets/reel-placeholder.mp4" poster="/hi/assets/reel-poster.jpg" muted loop playsinline preload="metadata"></video>
+      <span class="tag">Why I'm doing this</span>
+      <span class="big" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></span>
+      <div class="bar">
+        <span class="time" id="time">0:00 / 0:00</span>
+        <div class="scrub" id="scrub" role="slider" tabindex="0" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div class="track"><div class="fill" id="fill"></div><div class="knob" id="knob"></div></div>
+        </div>
+        <button class="mute" id="mute" type="button" aria-label="Unmute">
+          <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="m22 9-6 6M16 9l6 6"/></svg>
+          <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>
+        </button>
+      </div>
+    </figure>
+    <div class="card book card-in" style="--d:120ms">
+      <div class="eyebrow"><span>Open Wednesdays</span><span id="next">Every Wednesday</span></div>
+      <h2 data-mask>45 minutes.<br><span class="dim">No agenda.</span></h2>
+      <div class="week" id="week" role="group" aria-label="This week: three open 45-minute slots on Wednesday, 13:00, 13:45 and 14:30 Budapest time">
+        <div class="wk-head" id="wkHead"></div>
+        <div class="wk-body">
+          <div class="wk-gutter" aria-hidden="true"><span style="--t:0">11</span><span style="--t:2">13</span><span style="--t:4">15</span><span style="--t:6">17</span></div>
+          <div class="wk-cols" id="wkCols"></div>
+        </div>
+        <div class="wk-legend" aria-hidden="true"><span><i class="lg lg-busy"></i>Busy, mostly client work</span><span><i class="lg lg-open"></i>Open for you · CET</span></div>
+      </div>
+      <div class="cta">
+        <a class="btn" id="bookBtn" href="https://calendly.com/stereogram/andraspop-45min"><span id="bookLabel">Pick a Wednesday slot</span>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+        <small>Free. Nothing to prepare. Recorded only if you tick the box.</small>
+      </div>
+    </div>
+  </section>
+
+  <section class="row rule" aria-labelledby="s1">
+    <h3 id="s1" data-mask>Hi</h3>
+    <div class="body">
+      <p class="lead" data-mask>After 7,254 meetings, I'm trying one with no agenda. <span class="dim">Every Wednesday I keep three 45-minute slots open. No pitch, nothing to prepare.</span></p>
+    </div>
+  </section>
+
+  <section class="row rule" aria-labelledby="s2">
+    <h3 id="s2" data-mask>Who I am</h3>
+    <div class="body fade" style="--d:120ms">
+      <p>I'm András. Originally from Transylvania, now in Budapest. I started as a freelancer, studied media design, and for the past six years I've run <a href="https://studiostereogram.com">Stereogram</a>, a nine-person design studio. UX/UI, Framer sites, branding, the usual.</p>
+      <p>Now I'm changing how the studio works. We keep some client work, and more of my time goes into our own products, starting with <a href="https://tendo.sh">Tendo</a> and <a href="https://unwritten.cards">Unwritten</a>. I've also taught design to career changers at UI Academy for six years.</p>
+      <p>I have little to no idea how the products will go. I'm posting about it anyway.</p>
+      <figure class="portrait">
+        <img src="/hi/assets/andras.jpg" alt="Portrait of András Pop, arms crossed, in a navy cardigan" width="1200" height="1500" loading="lazy">
+      </figure>
+    </div>
+  </section>
+
+  <section class="row rule" aria-labelledby="s3">
+    <h3 id="s3" data-mask>Why this exists</h3>
+    <div class="body fade" style="--d:120ms">
+      <p>It's hard to meet new people once you're deep in the grind, corporate or agency. Most of my conversations for the last six years had a client, a brief or an invoice attached.</p>
+      <p>This is the opposite. You get an honest outside view from someone who's made a lot of these mistakes with real money. I get to meet people I wouldn't otherwise meet. Worst case, one of us learns something.</p>
+    </div>
+  </section>
+
+  <section class="row rule" aria-labelledby="s4">
+    <h3 id="s4" data-mask>Happy to talk about</h3>
+    <div class="body">
+      <ol class="topics stagger">
+        <li><span class="n">01</span>running a design studio, and changing one</li>
+        <li><span class="n">02</span>moving from client work to your own products</li>
+        <li><span class="n">03</span>AI in design work (the useful parts and the rest)</li>
+        <li><span class="n">04</span>switching careers into design (I've taught it for 6 years)</li>
+        <li><span class="n">05</span>vibecoding as a designer</li>
+        <li><span class="n">06</span>anything weird you're making</li>
+      </ol>
+      <p class="note fade" style="--d:500ms">Ideas, struggles, wins, flops. Flops are fine. I have plenty.</p>
+    </div>
+  </section>
+
+  <section class="row rule" aria-labelledby="s5">
+    <h3 id="s5" data-mask>About recording</h3>
+    <div class="body fade" style="--d:120ms">
+      <p>Your call. When you book, there's a checkbox for recording. Leave it empty and nothing gets recorded.</p>
+      <p>If you tick it, short clips might end up in my videos or posts. I only use them because you said yes, and you can change your mind by replying to the booking email.</p>
+    </div>
+  </section>
+
+  <section class="row rule" aria-labelledby="s6">
+    <h3 id="s6" data-mask>Follow along</h3>
+    <div class="body">
+      <ul class="links stagger">
+        <li><a href="/">The map of everything <span>↗</span></a></li>
+        <li><a href="https://www.youtube.com/@andraspop">YouTube <span>↗</span></a></li>
+        <li><a href="https://x.com/andraspop">X <span>↗</span></a></li>
+        <li><a href="https://www.threads.com/@andraspop">Threads <span>↗</span></a></li>
+        <li><a href="https://www.instagram.com/andraspop">Instagram <span>↗</span></a></li>
+        <li><a href="https://links.studiostereogram.com/21-26-annual-report">The annual report <span>↗</span></a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="closing rule" aria-label="Book">
+    <p class="big" data-mask>See you on a <a href="https://calendly.com/stereogram/andraspop-45min">Wednesday.</a></p>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap meta">
+    <div class="who">
+      <img src="/hi/assets/avatar.jpg" alt="" width="36" height="36">
+      <div><b>András Pop</b><br><span class="muted">© <span id="yr">2026</span> · Built in public, in Budapest.</span></div>
+    </div>
+    <div class="side">
+      <p class="tagline">Three 45-minute slots, every Wednesday. <a href="https://calendly.com/stereogram/andraspop-45min">Pick one</a> whenever you're ready.</p>
+      <a class="totop" href="#top">Top ↑</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var tz='Europe/Budapest';
+  /* clock */
+  var clock=document.getElementById('clock');
+  function tick(){try{clock.textContent=new Intl.DateTimeFormat('en-GB',{hour:'2-digit',minute:'2-digit',timeZone:tz}).format(new Date())}catch(e){}}
+  tick(); setInterval(tick,15000);
+  document.getElementById('yr').textContent=new Date().getFullYear();
+
+
+  /* week view: busy blocks (illustrative) + the three real Wednesday slots */
+  var START=11,END=17; /* zoomed on the middle of the day */
+  var BUSY={0:[[0,1.5],[3.5,4.5]],1:[[.5,1.5],[4,5.5]],2:[[0,1]],3:[[0,1],[3,4.5]],4:[[1,2]]};
+  var SLOTS=['13:00','13:45','14:30'], CAL='https://calendly.com/stereogram/andraspop-45min';
+  function bud(){var p={};new Intl.DateTimeFormat('en-GB',{timeZone:tz,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23',weekday:'short'}).formatToParts(new Date()).forEach(function(x){p[x.type]=x.value});return p}
+  var weekReady=false;
+  function buildWeek(){
+    var p=bud(),wd={Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6,Sun:7}[p.weekday],hr=+p.hour+ +p.minute/60;
+    var base=new Date(Date.UTC(+p.year,+p.month-1,+p.day));
+    var toWed=3-wd; if(toWed<0||(toWed===0&&hr>=15.25))toWed+=7;
+    var wed=new Date(base.getTime()+toWed*864e5), mon=new Date(wed.getTime()-2*864e5);
+    var iso=wed.toISOString().slice(0,10), href=CAL+'?month='+iso.slice(0,7)+'&date='+iso;
+    var nice=new Intl.DateTimeFormat('en-GB',{timeZone:'UTC',day:'numeric',month:'short'}).format(wed);
+    document.getElementById('next').textContent=(toWed===0?'Today, ':'Next: Wed ')+nice;
+    var btn=document.getElementById('bookBtn'),lab=document.getElementById('bookLabel'); btn.href=href;
+    var head=document.getElementById('wkHead'),cols=document.getElementById('wkCols'),names=['Mon','Tue','Wed','Thu','Fri'],bi=0,h='',c='';
+    for(var i=0;i<5;i++){
+      var d=new Date(mon.getTime()+i*864e5),isToday=d.getTime()===base.getTime();
+      h+='<div class="wk-day'+(i===2?' wed':'')+(isToday?' today':'')+'"><span>'+names[i]+'</span><b>'+d.getUTCDate()+'</b></div>';
+      var inner='';
+      (BUSY[i]||[]).forEach(function(b){inner+='<i class="blk" style="--i:'+(bi++)+';top:calc(var(--h)*'+b[0]+');height:calc(var(--h)*'+(b[1]-b[0])+')"></i>'});
+      if(i===2)SLOTS.forEach(function(t,k){var st=(13-START)+k*.75;
+        inner+='<a class="open" style="--i:'+k+';top:calc(var(--h)*'+st+' + 1px);height:calc(var(--h)*.75 - 2px)" href="'+href+'" data-t="'+t+'" aria-label="Book Wednesday '+nice+' at '+t+'"><span class="t">'+t+'</span></a>'});
+      if(isToday&&hr>=START&&hr<=END)inner+='<span class="now" style="top:calc(var(--h)*'+(hr-START).toFixed(3)+')"></span>';
+      c+='<div class="wk-col'+(i===2?' wed':'')+'">'+inner+'</div>';
+    }
+    head.innerHTML=h; cols.innerHTML=c;
+    var def=lab.textContent;
+    cols.querySelectorAll('.open').forEach(function(a){
+      function on(){lab.textContent='Book Wed '+nice+' · '+a.dataset.t}
+      function off(){lab.textContent=def}
+      a.addEventListener('mouseenter',on);a.addEventListener('focus',on);a.addEventListener('mouseleave',off);a.addEventListener('blur',off);
+    });
+    weekReady=true;
+  }
+  buildWeek();
+  var weekStarted=false;
+  function startWeek(){ if(weekStarted)return; weekStarted=true; var w=document.getElementById('week');
+    setTimeout(function(){w.classList.add('settled');
+      /* one light nudge: walk the open slots once, so it's clear they're interactive */
+      var o=w.querySelectorAll('.open'),k=0;
+      (function step(){ if(k>0)o[k-1].classList.remove('hot'); if(k<o.length){o[k].classList.add('hot');k++;setTimeout(step,260)} })();
+    },1500);
+  }
+
+  /* reel player: autoplay muted · tap to play/pause · scrub · mute toggle */
+  var reel=document.getElementById('reel'),v=document.getElementById('vid'),sc=document.getElementById('scrub'),
+      fill=document.getElementById('fill'),knob=document.getElementById('knob'),tm=document.getElementById('time'),mb=document.getElementById('mute');
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches, userPaused=reduce, dragging=false;
+  function fmt(t){t=Math.max(0,Math.floor(t||0));return Math.floor(t/60)+':'+String(t%60).padStart(2,'0')}
+  function draw(){var p=v.duration?v.currentTime/v.duration:0;fill.style.width=(p*100)+'%';knob.style.left=(p*100)+'%';
+    tm.textContent=fmt(v.currentTime)+' / '+fmt(v.duration);sc.setAttribute('aria-valuenow',Math.round(p*100));sc.setAttribute('aria-valuetext',fmt(v.currentTime))}
+  function state(){reel.classList.toggle('paused',v.paused)}
+  function play(){var pr=v.play();if(pr&&pr.catch)pr.catch(state)}
+  v.addEventListener('timeupdate',draw);v.addEventListener('loadedmetadata',draw);
+  v.addEventListener('play',state);v.addEventListener('pause',state);
+  reel.tabIndex=0;
+  reel.addEventListener('click',function(e){if(e.target.closest('.bar'))return;if(v.paused){userPaused=false;play()}else{userPaused=true;v.pause()}});
+  reel.addEventListener('keydown',function(e){if(e.target===reel&&(e.key===' '||e.key==='Enter')){e.preventDefault();reel.click()}});
+  mb.addEventListener('click',function(e){e.stopPropagation();v.muted=!v.muted;reel.classList.toggle('unmuted',!v.muted);mb.setAttribute('aria-label',v.muted?'Unmute':'Mute');if(v.paused){userPaused=false;play()}});
+  function seekAt(x){var r=sc.getBoundingClientRect(),p=Math.min(1,Math.max(0,(x-r.left)/r.width));if(v.duration){v.currentTime=p*v.duration;draw()}}
+  sc.addEventListener('pointerdown',function(e){e.stopPropagation();dragging=true;sc.classList.add('drag');sc.setPointerCapture(e.pointerId);seekAt(e.clientX)});
+  sc.addEventListener('pointermove',function(e){if(dragging)seekAt(e.clientX)});
+  function end(){dragging=false;sc.classList.remove('drag')}
+  sc.addEventListener('pointerup',end);sc.addEventListener('pointercancel',end);
+  sc.addEventListener('click',function(e){e.stopPropagation()});
+  sc.addEventListener('keydown',function(e){if(!v.duration)return;var d=e.key==='ArrowRight'?5:e.key==='ArrowLeft'?-5:0;if(d){e.preventDefault();v.currentTime=Math.min(v.duration,Math.max(0,v.currentTime+d));draw()}});
+  state();
+  if('IntersectionObserver' in window){new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){if(!userPaused)play()}else if(!v.paused){v.pause()}})},{threshold:.4}).observe(reel)}
+  else if(!reduce){play()}
+
+  /* motion layer — skipped for reduced motion or old browsers */
+  if(reduce||!('IntersectionObserver' in window))return;
+  var root=document.documentElement; root.classList.add('anim');
+
+  /* split text into masked words, keeping inline markup; the bridge rises as one word */
+  var wi=0;
+  function wrapWord(node){var l=document.createElement('span');l.className='m-line';var w=document.createElement('span');w.className='m-word';w.style.setProperty('--i',wi++);
+    node.parentNode.insertBefore(l,node);w.appendChild(node);l.appendChild(w)}
+  function split(el){
+    Array.prototype.slice.call(el.childNodes).forEach(function(n){
+      if(n.nodeType===3){
+        var frag=document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(function(p){
+          if(!p)return;
+          if(/^\s+$/.test(p)){frag.appendChild(document.createTextNode(p));return}
+          var l=document.createElement('span');l.className='m-line';
+          var w=document.createElement('span');w.className='m-word';w.style.setProperty('--i',wi++);w.textContent=p;
+          l.appendChild(w);frag.appendChild(l);
+        });
+        n.parentNode.replaceChild(frag,n);
+      }else if(n.nodeType===1){
+        if(n.classList.contains('bridge'))wrapWord(n);else split(n);
+      }
+    });
+  }
+  document.querySelectorAll('[data-mask]').forEach(function(el){wi=0;split(el)});
+  document.querySelectorAll('.stagger').forEach(function(ul){Array.prototype.forEach.call(ul.children,function(li,i){li.style.setProperty('--i',i)})});
+
+  function reveal(el){el.classList.add('in');
+    if(el.hasAttribute('data-mask')){var n=el.querySelectorAll('.m-word').length,d=parseInt(getComputedStyle(el).getPropertyValue('--d'))||0;
+      setTimeout(function(){el.classList.add('done')},d+n*38+1100)}
+    if(el.id==='week')startWeek();}
+  var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){reveal(x.target);io.unobserve(x.target)}})},{rootMargin:'0px 0px -10% 0px'});
+  document.querySelectorAll('[data-mask]:not([data-now]),.fade,.card-in,.rule,.stagger,#week').forEach(function(el){io.observe(el)});
+  /* hero headline starts right after the header drops in */
+  var h=document.querySelector('[data-now]'); h.style.setProperty('--d','250ms');
+  requestAnimationFrame(function(){requestAnimationFrame(function(){reveal(h)})});
+})();
+</script>
+</body>
+</html>

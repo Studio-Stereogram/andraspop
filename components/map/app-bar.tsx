@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { AndrasLogo } from "@/components/brand/andras-logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
@@ -42,8 +41,9 @@ export function AppBar({ view, onView }: { view: View; onView: (v: View) => void
         ))}
       </ToggleGroup>
       <div className="flex items-center gap-1.5 justify-self-end">
+        {/* /hi is a static page outside the app (public/hi), so a plain link: full page load, no client routing. */}
         <Button asChild variant="outline" size="sm">
-          <Link href="/hi">Say hi</Link>
+          <a href="/hi">Say hi</a>
         </Button>
         <ThemeToggle />
       </div>
