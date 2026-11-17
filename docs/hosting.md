@@ -47,7 +47,8 @@ Start with the password gate (`docs/snippets/proxy.ts`). The schema already cont
 4. **Domains.** In the Vercel project: Settings → Domains → add `andraspop.com` and `edit.andraspop.com`. At your DNS provider, add the records Vercel shows (usually a `CNAME` to `cname.vercel-dns.com` for each subdomain, or `A` records for an apex domain).
 5. **Env:** set `PUBLIC_HOST=andraspop.com` and `EDIT_HOST=edit.andraspop.com` so the proxy knows which is which.
 6. **Publish flow.** When you mark a video Published in the editor, the server action saves it and calls `revalidateTag('map')`, so the public page updates within seconds while staying cached.
-7. **Platform sync (M3).** A Vercel Cron job (`vercel.json` → `crons`) calls `/api/sync/instagram` and `/api/sync/youtube` every 6–12 hours. The routes check `CRON_SECRET`.
+7. **Supabase keepalive.** Supabase pauses free projects after 7 days without activity, and while the connected database is paused Vercel refuses to build any deployment ("Resource provisioning failed"). `vercel.json` runs a daily Vercel Cron job that calls `/api/keepalive`, which reads one row through Supabase's REST API with the publishable key. It needs `CRON_SECRET` set in Vercel (Production, Sensitive); without it the route refuses every call. Crons run on production deployments only. Failed runs show in the project's Cron Jobs logs.
+8. **Platform sync (M3).** A Vercel Cron job (`vercel.json` → `crons`) calls `/api/sync/instagram` and `/api/sync/youtube` every 6–12 hours. The routes check `CRON_SECRET`.
 
 ## Domains
 
