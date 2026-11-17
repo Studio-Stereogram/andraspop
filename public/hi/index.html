@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Say hi — András Pop</title>
+<title>Thinking out loud — Say hi to András Pop</title>
 <meta name="description" content="Every Wednesday I keep three 45-minute slots open. No pitch, nothing to prepare. Come talk about studios, products, AI in design, or whatever you're making.">
 <link rel="canonical" href="https://andraspop.com/hi">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://andraspop.com/hi">
-<meta property="og:title" content="Say hi — András Pop">
+<meta property="og:title" content="Thinking out loud — András Pop">
 <meta property="og:description" content="Three 45-minute slots, every Wednesday. No agenda.">
 <meta property="og:image" content="https://andraspop.com/hi/assets/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Say hi — András Pop">
+<meta name="twitter:title" content="Thinking out loud — András Pop">
 <meta name="twitter:description" content="Three 45-minute slots, every Wednesday. No agenda.">
 <meta name="twitter:image" content="https://andraspop.com/hi/assets/og.jpg">
 <script>try{var t=localStorage.getItem("hi.theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
@@ -176,6 +176,19 @@
   .topics li:first-child{border-top:1px solid var(--line)}
   .topics .n{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums;padding-top:3px}
   .note{color:var(--soft);font-size:15px;margin-top:18px}
+  /* consent: a replica of the booking form's recording question; "Yes" ticks itself when the section comes into view */
+  .consent{margin-top:24px;border:1px solid var(--line);border-radius:14px;padding:18px clamp(16px,2vw,22px);font-size:15px;line-height:1.4}
+  .consent .q{font-weight:var(--w-strong);margin-bottom:10px}
+  .consent .q i{font-style:normal;color:var(--muted)}
+  .opt{display:flex;align-items:center;gap:12px;padding:9px 10px;margin:0 -10px;border-radius:10px;color:var(--soft);transition:background .45s var(--ease),color .45s}
+  .tick{flex:none;width:20px;height:20px;border-radius:6px;border:1.5px solid var(--muted);display:grid;place-items:center;transition:background .3s,border-color .3s,transform .35s cubic-bezier(.22,1.4,.36,1)}
+  .tick svg{width:13px;height:13px;color:var(--bg)}
+  .tick path{stroke-dasharray:20;stroke-dashoffset:20;transition:stroke-dashoffset .35s .12s var(--ease)}
+  .consent.on .yes{background:color-mix(in srgb,var(--fg) 6%,transparent);color:var(--fg)}
+  .consent.on .yes .tick{background:var(--fg);border-color:var(--fg);animation:tickPop .45s cubic-bezier(.22,1.4,.36,1)}
+  .consent.on .yes .tick path{stroke-dashoffset:0}
+  @keyframes tickPop{0%{transform:scale(1)}40%{transform:scale(.82)}100%{transform:scale(1)}}
+  @media (prefers-reduced-motion:reduce){.opt,.tick,.tick path{transition:none}.consent.on .yes .tick{animation:none}}
   /* impact numbers */
   .stats{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:clamp(28px,4vw,44px)}
   .stats li{border:1px solid var(--line);border-radius:14px;padding:clamp(18px,2.4vw,26px) 14px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
@@ -259,7 +272,6 @@
       <li><a href="https://tendo.sh">Tendo</a></li>
       <li><a href="https://unwritten.cards">Unwritten</a></li>
       <li><a href="https://studiostereogram.com">Stereogram</a></li>
-      <li><a href="https://andorasu.com">Art</a></li>
     </ul>
   </div>
 </nav>
@@ -295,7 +307,7 @@
       </div>
     </figure>
     <div class="card book card-in" style="--d:120ms">
-      <div class="eyebrow"><span>Open Wednesdays</span><span id="next">Every Wednesday</span></div>
+      <div class="eyebrow"><span>Thinking out loud · Wednesdays</span><span id="next">Every Wednesday</span></div>
       <h2 data-mask>45 minutes.<br><span class="dim">No agenda.</span></h2>
       <div class="week" id="week" role="group" aria-label="This week: three open 45-minute slots on Wednesday, 13:00, 13:45 and 14:30 Budapest time">
         <div class="wk-head" id="wkHead"></div>
@@ -363,6 +375,11 @@
     <div class="body fade" style="--d:120ms">
       <p>Your call. When you book, there's a checkbox for recording. Leave it empty and nothing gets recorded.</p>
       <p>If you tick it, short clips might end up in my videos or posts. I only use them because you said yes, and you can change your mind by replying to the booking email.</p>
+      <div class="consent" id="consent" role="img" aria-label="The booking form asks: Are you okay with this discussion being recorded, so that it can be posted publicly to the benefit of the community? Options: Yes, I'm happy to share whatever we discuss; or I'd rather not share, maybe next time.">
+        <p class="q" aria-hidden="true">Are you okay with this discussion being recorded, so that it can be posted publicly to the benefit of the community? <i>*</i></p>
+        <div class="opt yes" aria-hidden="true"><span class="tick"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg></span>Yes, I'm happy to share whatever we discuss</div>
+        <div class="opt no" aria-hidden="true"><span class="tick"></span>I'd rather not share, maybe next time</div>
+      </div>
     </div>
   </section>
 
@@ -370,7 +387,7 @@
     <h3 id="s6" data-mask>Follow along</h3>
     <div class="body">
       <ul class="links stagger">
-        <li><a href="/">andraspop.com <span>↗</span></a></li>
+        <li><a href="https://andraspop.com">The map of everything <span>↗</span></a></li>
         <li><a href="https://www.youtube.com/@StudioStereogram">YouTube <span>↗</span></a></li>
         <li><a href="https://x.com/andraspop">X <span>↗</span></a></li>
         <li><a href="https://www.threads.com/@andraspop">Threads <span>↗</span></a></li>
@@ -490,8 +507,13 @@
   if('IntersectionObserver' in window){new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){if(!userPaused)play()}else if(!v.paused){v.pause()}})},{threshold:.4}).observe(reel)}
   else if(!reduce){play()}
 
+  /* consent illustration: tick "Yes" when it scrolls into view (or right away without motion); hover replays it */
+  var consent=document.getElementById('consent');
+  function tickConsent(){consent.classList.remove('on');void consent.offsetWidth;setTimeout(function(){consent.classList.add('on')},reduce?0:650)}
+  consent.addEventListener('mouseenter',function(){if(!reduce)tickConsent()});
+
   /* motion layer — skipped for reduced motion or old browsers */
-  if(reduce||!('IntersectionObserver' in window))return;
+  if(reduce||!('IntersectionObserver' in window)){consent.classList.add('on');return;}
   var root=document.documentElement; root.classList.add('anim');
 
   /* split text into masked words, keeping inline markup; the skyline rebus (.bridge) rises as one word */
@@ -521,9 +543,10 @@
   function reveal(el){el.classList.add('in');
     if(el.hasAttribute('data-mask')){var n=el.querySelectorAll('.m-word').length,d=parseInt(getComputedStyle(el).getPropertyValue('--d'))||0;
       setTimeout(function(){el.classList.add('done')},d+n*38+1100)}
-    if(el.id==='week')startWeek();}
+    if(el.id==='week')startWeek();
+    if(el.id==='consent')tickConsent();}
   var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){reveal(x.target);io.unobserve(x.target)}})},{rootMargin:'0px 0px -10% 0px'});
-  document.querySelectorAll('[data-mask]:not([data-now]),.fade,.card-in,.rule,.stagger,#week').forEach(function(el){io.observe(el)});
+  document.querySelectorAll('[data-mask]:not([data-now]),.fade,.card-in,.rule,.stagger,#week,#consent').forEach(function(el){io.observe(el)});
   /* hero headline starts right after the header drops in */
   var h=document.querySelector('[data-now]'); h.style.setProperty('--d','250ms');
   requestAnimationFrame(function(){requestAnimationFrame(function(){reveal(h)})});
