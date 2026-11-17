@@ -278,8 +278,12 @@
 
   <section class="cards" aria-label="Video and booking">
     <figure class="card reel card-in" id="reel" aria-label="Video: why I'm doing this" style="--d:0ms">
-      <!-- Swap src for the real reel (MP4, H.264, 1080×1350, faststart). Poster = first frame. -->
-      <video id="vid" src="/hi/assets/reel-placeholder.mp4" poster="/hi/assets/reel-poster.jpg" muted loop playsinline preload="metadata"></video>
+      <!-- The reel, hosted on Mux (playback ID rR8P8mSaKDzz02TsftugTUdI00cQPJX00oy). The source is 9:16; the card crops it to 4:5 (object-fit: cover).
+           Browsers that play HLS natively use the stream; others use the MP4 static rendition ("highest", enabled on the asset). -->
+      <video id="vid" muted loop playsinline preload="metadata" poster="https://image.mux.com/rR8P8mSaKDzz02TsftugTUdI00cQPJX00oy/thumbnail.jpg?time=1&amp;width=720&amp;height=900&amp;fit_mode=crop">
+        <source src="https://stream.mux.com/rR8P8mSaKDzz02TsftugTUdI00cQPJX00oy.m3u8" type="application/vnd.apple.mpegurl">
+        <source src="https://stream.mux.com/rR8P8mSaKDzz02TsftugTUdI00cQPJX00oy/highest.mp4" type="video/mp4">
+      </video>
       <span class="tag">Why I'm doing this</span>
       <span class="big" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></span>
       <div class="bar">
@@ -323,7 +327,7 @@
         <li><b>~1B HUF</b><span class="lbl">Stereogram revenue, 6 years</span><a href="https://studiostereogram.com/financial-report">Proof ↗</a></li>
         <li><b>8+ years</b><span class="lbl">in design</span></li>
         <li><b>6+ years</b><span class="lbl">teaching design</span></li>
-        <li><b>181</b><span class="lbl">client projects supervised &amp; assisted</span><a href="https://studiostereogram.com/financial-report#:~:text=Client%20projects%20since%20January%202021">Proof ↗</a></li>
+        <li><b>181</b><span class="lbl">client projects supervised &amp; assisted</span></li>
       </ul>
       <figure class="portrait">
         <img src="/hi/assets/andras.jpg" alt="Portrait of András Pop in a navy T-shirt, looking off to the side" width="1200" height="1500" loading="lazy">
