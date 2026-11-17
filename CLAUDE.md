@@ -23,6 +23,7 @@
 - `components/map/map-app.tsx`: the client shell. React Flow state, view switching with tweened layouts, fit/zoom, wheel and keyboard handling, selection.
 - `components/map/{nodes,edges,layout-background}.tsx`: canvas pieces; styles in `components/map/canvas.css` (editorial register).
 - `components/map/{app-bar,filters-popover,inspector,player,zoom-controls}.tsx` and `components/ui/*`: chrome (product register).
+- `public/hi/`: the standalone "Say hi" page (`/hi` via a rewrite in `next.config.ts`): plain HTML, CSS and JS with its own font and assets, outside the Next app and the design tokens.
 - `app/api/keepalive/route.ts` + `vercel.json`: daily cron that keeps the free Supabase project from pausing (a paused database blocks every Vercel deploy). Checks `CRON_SECRET` via `lib/cron.ts`.
 - `lib/map/*`: pure, tested logic ported from the prototype (`visibility`, `layouts`, `geometry`, `thumbnail`, `normalize`). `lib/tokens.test.ts` keeps `app/globals.css` in sync with the skill's `tokens.css`.
 

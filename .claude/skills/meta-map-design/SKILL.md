@@ -30,6 +30,9 @@ When in doubt: content can be expressive, controls must be trivial to read.
   - **Accent `--hot` (#E5553A):** reserved for interaction and "now": active tab marker, connect thread, drop target, focus ring, Today line, filter count badge. Never decorative, never a topic.
 - Text on tints uses `color-mix(in srgb, var(--sc) 55%, var(--ink))`, not raw colour.
 
+## Exception: /hi
+The "Say hi" page is a standalone static page (`public/hi/index.html`, served at `/hi` by a rewrite in `next.config.ts`), designed separately from this system (2026-11-17, "hi-v5"). It has its own font (Allo Sharp, SIL OFL), black-and-white palette, light/dark from the OS setting, and its own motion script. Don't apply these tokens or components to it, and don't carry its look into the map. Edit the HTML file directly; keep asset paths absolute (`/hi/assets/...`, `/hi/fonts/...`).
+
 ## Type
 | Role | Face | Use |
 |---|---|---|
