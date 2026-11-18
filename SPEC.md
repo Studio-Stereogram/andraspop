@@ -57,8 +57,8 @@ Visitors never see nodes with status `draft`, nodes marked private, or attachmen
 ### Connection model
 - An entry can have **no connections at all**. Standalone entries are first-class (they still appear in every view and filter).
 - Every entry has exactly **two connection points**, and each point can hold any number of connections:
-  - **● Continuity** (right edge): sequence. "This is the next episode / the short cut of / part of the same series." Drawn as a solid, heavier line with an arrow. Series can be derived by walking continuity edges.
-  - **◆ Reference** (bottom edge): context. Links, bookmarks, people, notes and related takes. Drawn as a thinner dashed line; dash pattern varies by kind.
+  - **● Continuity** (right edge): sequence. "This is the next episode / the short cut of / part of the same series." Drawn as a solid, heavier line with a dot at both ends (no arrows). Series can be derived by walking continuity edges.
+  - **◆ Reference** (bottom edge): context. Links, bookmarks, people, notes and related takes. Drawn as a thinner dashed line with a dot at both ends; dash pattern varies by kind.
 - Lines float: each end attaches to the side of the card that faces the other card. The points are where you start a drag and where the type is chosen.
 
 ### People vs bookmarks

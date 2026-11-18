@@ -16,6 +16,8 @@ describe("floating edges", () => {
     expect(facing(a, { x: 0, y: 300, w: 100, h: 50 })).toEqual(["b", "t"]);
     expect(facing(a, { x: -300, y: 20, w: 100, h: 50 })).toEqual(["l", "r"]);
     expect(link(a, { x: 300, y: 0, w: 100, h: 50 }).d.startsWith("M100,25 ")).toBe(true);
+    const g = link(a, { x: 300, y: 0, w: 100, h: 50 });
+    expect([g.a, g.b]).toEqual([{ x: 100, y: 25 }, { x: 300, y: 25 }]);
   });
 });
 
