@@ -34,7 +34,7 @@ function DialogHeader({ title, description }: { title: string; description?: str
   return (
     <div className="flex items-start gap-3 border-b border-line px-5 py-4">
       <div className="grid gap-1">
-        <DialogPrimitive.Title className="m-0 text-[22px] leading-none font-[650] uppercase [font-stretch:112%]">
+        <DialogPrimitive.Title className="m-0 text-[22px] leading-none font-[650] tracking-[-.01em] uppercase">
           {title}
         </DialogPrimitive.Title>
         {description && (

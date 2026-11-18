@@ -16,7 +16,7 @@ import {
   STATUS_LABEL,
 } from "@/lib/map/constants";
 import { newEdgeId, newNode, referenceKind, todayIso } from "@/lib/map/edit";
-import { displayTitle, handleOf, hostOf, isXUrl } from "@/lib/map/format";
+import { displayTitle, handleOf, hostOf, isXUrl, kindLabel } from "@/lib/map/format";
 import type { EdgeKind, EdgeType, MapData, MapNode, NodeType, Platform, Status, Topic } from "@/lib/map/types";
 import { PortGlyph } from "../pieces";
 import type { EditorApi } from "./use-editor";
@@ -107,7 +107,7 @@ function Attach({ node, ed, toast }: { node: MapNode; ed: EditorApi; toast: (m: 
   };
   return (
     <div className="grid gap-2 rounded-lg border border-line bg-surface-2 p-3">
-      <span className="lbl">Attach to this {KIND_LABEL[node.type].toLowerCase()}</span>
+      <span className="lbl">Attach to this {kindLabel(node).toLowerCase()}</span>
       <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-2">
         <Select aria-label="Attachment type" className="w-auto" value={type} onChange={(e) => setType(e.target.value as NodeType)}>
           <option value="link">Link / artifact</option>
@@ -181,7 +181,7 @@ export function InspectorEdit({
       className="absolute top-3 right-3 bottom-3 z-[3] flex w-[352px] flex-col overflow-auto rounded-[var(--r-panel)] border border-line bg-surface shadow-[var(--shadow)] max-[900px]:inset-x-0 max-[900px]:top-auto max-[900px]:bottom-0 max-[900px]:max-h-[62%] max-[900px]:w-auto max-[900px]:rounded-t-xl max-[900px]:rounded-b-none"
     >
       <div className="sticky top-0 z-[1] flex items-center gap-2 border-b border-line bg-surface py-2.5 pr-2.5 pl-4">
-        <span className="lbl">{KIND_LABEL[node.type]}</span>
+        <span className="lbl">{kindLabel(node)}</span>
         <Button variant="ghost" size="icon-sm" className="ml-auto" onClick={onClose} aria-label="Close inspector">
           <X />
         </Button>
