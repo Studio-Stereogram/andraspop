@@ -110,6 +110,57 @@
       "fy": 0
     },
     {
+      "id": "slides-denver",
+      "type": "link",
+      "title": "Beyond the Canvas — slides",
+      "summary": "The Figma prototype I presented from at AI Crafts Denver.",
+      "platform": null,
+      "status": null,
+      "date": "2025-09-17",
+      "url": "https://www.figma.com/proto/GvFd5QywLI8MnRXemnD8sU/AI-Crafts-%E2%80%94-Denver---Beyond-the-Canvas?node-id=23-170&p=f&t=iSL5GJG4or2wdO6H-0&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=23%3A170&show-proto-sidebar=1&page-id=0%3A1",
+      "thumbnail": "",
+      "handle": "",
+      "duration": "",
+      "topics": ["ai", "work"],
+      "private": false,
+      "fx": 242,
+      "fy": -216
+    },
+    {
+      "id": "slides-lisbon",
+      "type": "link",
+      "title": "AI design talk — slides",
+      "summary": "The Figma prototype I presented from at AI Crafts Lisbon.",
+      "platform": null,
+      "status": null,
+      "date": "2025-10-16",
+      "url": "https://www.figma.com/proto/ojzxafNaG9TalU3Yno8MiQ/AI-Crafts---AI-design-Talk?node-id=23-170&p=f&t=3kbYQXQ0U7958NiL-0&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=23%3A170&show-proto-sidebar=1&page-id=0%3A1",
+      "thumbnail": "",
+      "handle": "",
+      "duration": "",
+      "topics": ["ai", "work"],
+      "private": false,
+      "fx": 590,
+      "fy": -216
+    },
+    {
+      "id": "gabor-suhajda",
+      "type": "person",
+      "title": "Gábor Suhajda",
+      "summary": "Co-speaker at AI Crafts Lisbon. On Instagram as @gabor.suhajda.",
+      "platform": null,
+      "status": null,
+      "date": "",
+      "url": "https://gaborsuhajda.com/",
+      "thumbnail": "",
+      "handle": "",
+      "duration": "",
+      "topics": ["ai"],
+      "private": false,
+      "fx": 900,
+      "fy": 96
+    },
+    {
       "id": "idea-silent-corners",
       "type": "video",
       "title": "Silent corners of the web",
@@ -198,6 +249,11 @@
   "edges": [
     { "id": "e-aicrafts", "from": "yt-76CJ_CMCfs0", "to": "yt-K2yXm-u9e0s", "type": "continuity", "kind": "series" },
     { "id": "e1", "from": "idea-what-is-ai", "to": "idea-ai-adoption-survey", "type": "reference", "kind": "related" },
-    { "id": "e2", "from": "idea-ai-adoption-survey", "to": "idea-ai-workflows", "type": "reference", "kind": "related" }
+    { "id": "e2", "from": "idea-ai-adoption-survey", "to": "idea-ai-workflows", "type": "reference", "kind": "related" },
+    { "id": "e-denver-summary", "from": "yt-76CJ_CMCfs0", "to": "ig-DVyKiuqiBbw", "type": "continuity", "kind": "follow-up" },
+    { "id": "e-lisbon-summary", "from": "yt-K2yXm-u9e0s", "to": "ig-DVyKiuqiBbw", "type": "continuity", "kind": "follow-up" },
+    { "id": "e-denver-slides", "from": "yt-76CJ_CMCfs0", "to": "slides-denver", "type": "reference", "kind": "attachment" },
+    { "id": "e-lisbon-slides", "from": "yt-K2yXm-u9e0s", "to": "slides-lisbon", "type": "reference", "kind": "attachment" },
+    { "id": "e-lisbon-gabor", "from": "yt-K2yXm-u9e0s", "to": "gabor-suhajda", "type": "reference", "kind": "features" }
   ]
 }
