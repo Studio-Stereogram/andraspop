@@ -16,16 +16,18 @@ import {
 import { KIND_LABEL, VIEWS } from "@/lib/map/constants";
 import { displayTitle } from "@/lib/map/format";
 import { computeLayout, layoutBounds, type Sized } from "@/lib/map/layouts";
-import type { MapData, Rect, View } from "@/lib/map/types";
+import type { MapData, Rect, View, XY } from "@/lib/map/types";
+import { todayViewport } from "@/lib/map/viewport";
 import { applyFilters, type Filters, NO_FILTERS, neighbourMap } from "@/lib/map/visibility";
 import { cn } from "@/lib/utils";
 import { AppBar } from "./app-bar";
-import { EdgeMarkers, edgeTypes, type FlowEdge } from "./edges";
+import { edgeTypes, type FlowEdge } from "./edges";
 import { FiltersPopover } from "./filters-popover";
 import { Inspector } from "./inspector";
 import { LayoutBackground } from "./layout-background";
 import { MapVisualContext, type MapVisual } from "./map-context";
 import { type FlowNode, nodeTypes } from "./nodes";
+import { Overview } from "./overview";
 import { ZoomControls } from "./zoom-controls";
 
 // Evaluated once per page load, like the prototype: the Timeline's "Today" line.
@@ -218,6 +220,34 @@ function MapShell({ map }: { map: MapData }) {
     [rf, visibleArea],
   );
 
+  /** Timeline: a readable zoom with the Today line in view, rather than the whole history squeezed to fit. */
+  const goToday = useCallback(
+    (animate: boolean) => {
+      const bg = layout?.background;
+      if (bg?.type !== "timeline" || !stageRef.current) return;
+      rf.setViewport(todayViewport(bg, visibleArea(), FIT_PAD, BOTTOM_ROOM), {
+        duration: animate ? VIEW_MS : 0,
+        ease: easeOutCubic,
+      });
+    },
+    [layout, rf, visibleArea],
+  );
+
+  const viewCenter = useCallback((): XY => {
+    const a = visibleArea(),
+      v = rf.getViewport();
+    return { x: ((a.left + a.right) / 2 - v.x) / v.zoom, y: ((a.top + a.bottom) / 2 - v.y) / v.zoom };
+  }, [rf, visibleArea]);
+
+  const centerAt = useCallback(
+    (p: XY) => {
+      const a = visibleArea(),
+        k = rf.getZoom();
+      rf.setViewport({ zoom: k, x: (a.left + a.right) / 2 - p.x * k, y: (a.top + a.bottom) / 2 - p.y * k });
+    },
+    [rf, visibleArea],
+  );
+
   const zoomAt = useCallback(
     (zoom: number, cx: number, cy: number) => {
       const v = rf.getViewport();
@@ -235,7 +265,8 @@ function MapShell({ map }: { map: MapData }) {
     const first = fitRequest.current === "instant";
     const instant = first || reduced;
     if (fitRequest.current) {
-      fitTo(layout.bounds, !instant);
+      if (layout.background?.type === "timeline") goToday(!instant);
+      else fitTo(layout.bounds, !instant);
       fitRequest.current = null;
     }
     const from = new Map(rf.getNodes().map((n) => [n.id, n.position]));
@@ -262,7 +293,7 @@ function MapShell({ map }: { map: MapData }) {
     };
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
-  }, [layout, reduced, rf, setNodes, fitTo]);
+  }, [layout, reduced, rf, setNodes, fitTo, goToday]);
 
   const changeView = useCallback(
     (v: View) => {
@@ -374,10 +405,24 @@ function MapShell({ map }: { map: MapData }) {
             <Background id="minor" variant={BackgroundVariant.Lines} gap={24} lineWidth={1} color="var(--grid)" />
             <Background id="major" variant={BackgroundVariant.Lines} gap={120} lineWidth={1} color="var(--grid-2)" />
             <LayoutBackground background={layout?.background ?? null} />
-            <EdgeMarkers />
           </ReactFlow>
 
-          <ZoomControls onZoom={zoomBy} onFit={() => fitTo(layout?.bounds ?? null, !reduced)} />
+          {placed && layout?.background?.type === "timeline" && layout.bounds && (
+            <Overview
+              bounds={layout.bounds}
+              background={layout.background}
+              sized={layout.sized}
+              positions={layout.positions}
+              viewCenter={viewCenter}
+              centerAt={centerAt}
+            />
+          )}
+
+          <ZoomControls
+            onZoom={zoomBy}
+            onFit={() => fitTo(layout?.bounds ?? null, !reduced)}
+            onToday={layout?.background?.type === "timeline" ? () => goToday(!reduced) : undefined}
+          />
 
           {selected && (
             <Inspector

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thinking out loud — Say hi to András Pop</title>
+<meta name="description" content="Three 45-minute conversations every Wednesday. Bring a half-formed idea and we'll talk it into shape. No pitch, nothing to prepare.">
+<link rel="canonical" href="https://andraspop.com/hi">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://andraspop.com/hi">
+<meta property="og:title" content="Thinking out loud — András Pop">
+<meta property="og:description" content="Three 45-minute conversations every Wednesday. Bring a half-formed idea and we'll talk it into shape. No pitch, nothing to prepare.">
+<meta property="og:image" content="https://andraspop.com/hi/assets/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Thinking out loud — András Pop">
+<meta name="twitter:description" content="Three 45-minute conversations every Wednesday. Bring a half-formed idea and we'll talk it into shape. No pitch, nothing to prepare.">
+<meta name="twitter:image" content="https://andraspop.com/hi/assets/og.jpg">
+<script>document.documentElement.classList.add("js");try{var t=localStorage.getItem("hi.theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preload" href="/hi/fonts/AlloSharp.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+  /* Allo by Josh Puckett (SIL OFL, see fonts/Allo-OFL.txt).
+     "Allo Sharp" = the variable font pinned to ROND 0 (no rounding), keeping wght 100–900 and opsz 9–32.
+     opsz follows font-size automatically (font-optical-sizing:auto): display cut from 32px up. */
+  @font-face{font-family:"Allo Sharp";src:url("/hi/fonts/AlloSharp.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+
+  :root{
+    --bg:#fff; --fg:#0b0b0b; --muted:#a3a3a3; --soft:#6b6b6b; --line:#e8e8e8;
+    --card:#f4f4f3; --accent:#d8392b;
+    --pad:clamp(20px,4vw,48px); --max:1280px;
+    --font-display:"Allo Sharp","Helvetica Neue",Helvetica,Arial,sans-serif;
+    --font-text:"Allo Sharp","Helvetica Neue",Helvetica,Arial,sans-serif;
+    --w-display:600; --w-label:500; --w-text:400; --w-strong:500;
+    --ease:cubic-bezier(.16,1,.3,1);
+  }
+  /* Theme: follows the system by default; the header toggle can pin light or dark (data-theme on <html>, remembered). */
+  :root{color-scheme:light}
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){ --bg:#0c0c0c; --fg:#f2f2f2; --muted:#5e5e5e; --soft:#9a9a9a; --line:#1f1f1f; --card:#161616; color-scheme:dark }
+  }
+  :root[data-theme="dark"]{ --bg:#0c0c0c; --fg:#f2f2f2; --muted:#5e5e5e; --soft:#9a9a9a; --line:#1f1f1f; --card:#161616; color-scheme:dark }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--bg);color:var(--fg);font:var(--w-text) 17px/1.55 var(--font-text);font-optical-sizing:auto;-webkit-font-smoothing:antialiased;font-feature-settings:"kern"}
+  a{color:inherit}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
+
+  /* header + footer share this */
+  .meta{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center;padding-top:var(--pad);padding-bottom:var(--pad);font-size:14px;line-height:1.4}
+  .foot .meta{padding-bottom:calc(var(--pad) + env(safe-area-inset-bottom,0px))}
+  .who{display:flex;align-items:center;gap:12px}
+  .who img{width:36px;height:36px;border-radius:50%;object-fit:cover;flex:none}
+  .who b{font-weight:var(--w-strong)}
+  .muted{color:var(--muted)}
+  .side{display:flex;align-items:center;justify-content:space-between;gap:24px}
+  .tagline{color:var(--muted);max-width:440px}
+  .tagline a{text-underline-offset:3px}
+  .tools{display:flex;align-items:center;gap:14px;flex:none}
+  .theme{width:32px;height:32px;border:1px solid var(--line);border-radius:50%;background:transparent;color:var(--fg);display:grid;place-items:center;cursor:pointer;transition:border-color .2s}
+  .theme:hover{border-color:var(--soft)}
+  .theme svg{width:16px;height:16px;display:none}
+  .theme[data-mode="system"] .i-system,.theme[data-mode="light"] .i-light,.theme[data-mode="dark"] .i-dark{display:block}
+  .logo{display:block;flex:none;width:22px;height:22px;color:var(--fg)}
+  .logo svg{width:100%;height:100%;display:block}
+  .totop{font-size:14px;text-decoration:none;color:var(--muted);transition:color .2s}
+  .totop:hover{color:var(--fg)}
+  .clock{font-variant-numeric:tabular-nums}
+
+  nav{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line)}
+  nav ul{display:flex;gap:18px;list-style:none;padding:14px 0;font-size:13px;overflow-x:auto;scrollbar-width:none}
+  nav a{text-decoration:none;color:var(--muted);white-space:nowrap;transition:color .2s}
+  nav a:hover,nav a[aria-current]{color:var(--fg)}
+  nav a[aria-current]{font-weight:var(--w-strong)}
+
+  /* hero */
+  .hero{display:grid;grid-template-columns:1fr 1fr;gap:24px;padding:clamp(48px,9vw,120px) 0 clamp(40px,6vw,80px)}
+  h1{grid-column:2;font:var(--w-display) clamp(40px,5.6vw,76px)/1 var(--font-display);letter-spacing:-.03em;color:var(--muted)}
+  h1 .on{color:var(--fg)}
+  .bridge{display:inline-block;width:2.85em;height:.72em;vertical-align:-.02em;color:var(--fg)} /* traced skyline, viewBox 659×166.8 */
+  .bridge svg{width:100%;height:100%;display:block}
+
+  /* cards: reel + booking */
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .card{border-radius:14px;overflow:hidden;background:var(--card);position:relative;aspect-ratio:4/5}
+  .book{display:flex;flex-direction:column;justify-content:space-between;padding:clamp(24px,3.4vw,44px);background:#111;color:#f2f2f2}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .book{background:#1a1a1a}}
+  :root[data-theme="dark"] .book{background:#1a1a1a}
+  .book .eyebrow{font-size:13px;color:#8a8a8a;display:flex;justify-content:space-between;gap:12px}
+  .book h2{font:var(--w-display) clamp(36px,4.6vw,64px)/1 var(--font-display);letter-spacing:-.03em}
+  .book h2 .dim{color:#6f6f6f}
+  .slots{display:flex;gap:8px;margin:22px 0 26px;flex-wrap:wrap}
+  .slot{border:1px solid #333;border-radius:999px;padding:7px 14px;font-size:13px;color:#cfcfcf}
+  .btn{display:inline-flex;align-items:center;gap:10px;background:#f2f2f2;color:#0b0b0b;text-decoration:none;font-weight:var(--w-strong);font-size:16px;padding:15px 22px;border-radius:999px;transition:transform .2s,background .2s}
+  .btn:hover{transform:translateY(-1px);background:#fff}
+  .btn svg{width:16px;height:16px;transition:transform .2s}
+  .btn:hover svg{transform:translateX(3px)}
+  .book small{display:block;margin-top:14px;font-size:13px;color:#8a8a8a}
+
+
+  /* week view inside the booking card */
+  .book{gap:22px}
+  .book h2{font-size:clamp(32px,3.6vw,52px)}
+  .week{--h:clamp(28px,3vw,40px);font-size:11px;line-height:1;color:#8a8a8a;margin-top:auto}
+  .wk-head,.wk-cols{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+  .wk-head{margin-left:24px;margin-bottom:8px}
+  .wk-day{text-align:center;display:flex;flex-direction:column;gap:4px;align-items:center}
+  .wk-day b{font-size:15px;font-weight:500;color:#bdbdbd;display:grid;place-items:center;width:28px;height:28px;border-radius:50%}
+  .wk-day.wed{color:#f2f2f2}
+  .wk-day.wed b{background:#f2f2f2;color:#0b0b0b}
+  .wk-day.today:not(.wed) b{box-shadow:inset 0 0 0 1px #555}
+  .wk-body{display:flex;gap:0}
+  .wk-gutter{position:relative;width:24px;flex:none;height:calc(var(--h)*6)}
+  .wk-gutter span{position:absolute;left:0;top:calc(var(--t)*var(--h));transform:translateY(-50%);font-variant-numeric:tabular-nums;color:#5f5f5f}
+  .wk-cols{flex:1;height:calc(var(--h)*6)}
+  .wk-col{position:relative;border-radius:6px;background:repeating-linear-gradient(to bottom,rgba(255,255,255,.045) 0 1px,transparent 1px calc(var(--h)*2))}
+  .wk-col.wed{background-color:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+  .blk{position:absolute;left:3px;right:3px;border-radius:4px;background:rgba(255,255,255,.065);transform-origin:50% 0}
+  .wk-col.wed .blk{background:rgba(255,255,255,.05)}
+  .open{position:absolute;left:3px;right:3px;border-radius:4px;background:#f2f2f2;color:#0b0b0b;font:500 11.5px/1 var(--font-text);display:flex;align-items:center;padding:0 6px;text-decoration:none;font-variant-numeric:tabular-nums;
+    transition:transform .35s cubic-bezier(.22,1.2,.36,1),box-shadow .25s,background .2s;z-index:1}
+  .open:hover,.open:focus-visible,.open.hot{transform:scale(1.06);box-shadow:0 3px 10px rgba(0,0,0,.35),0 0 0 2px rgba(255,255,255,.22);background:#fff;outline:none;z-index:2}
+  .open .t{white-space:nowrap}
+  .now{position:absolute;left:-2px;right:-2px;height:2px;background:var(--accent);border-radius:2px;z-index:3;pointer-events:none}
+  .now::before{content:"";position:absolute;left:-3px;top:-3px;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+  .wk-legend{display:flex;gap:14px;flex-wrap:wrap;margin:12px 0 0 24px;color:#6f6f6f}
+  .lg{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+  .lg-busy{background:rgba(255,255,255,.12)}.lg-open{background:#f2f2f2}
+  .cta small{display:block;margin-top:12px;font-size:13px;color:#8a8a8a}
+  .anim .week .blk{transform:scaleY(0);opacity:0;transition:transform .7s var(--ease),opacity .4s;transition-delay:calc(var(--i,0) * 28ms + 150ms)}
+  .anim .week .open{opacity:0;transform:translateY(6px) scale(.7);transition:opacity .4s,transform .6s cubic-bezier(.22,1.2,.36,1),box-shadow .25s,background .2s;transition-delay:calc(var(--i,0) * 110ms + 750ms)}
+  .anim .week.in .blk{transform:none;opacity:1}
+  .anim .week.in .open{opacity:1;transform:none}
+  .anim .week.settled .open{transition-delay:0s}
+  .anim .week .wk-col.wed{transition:background-color .6s .55s,box-shadow .6s .55s}
+  .anim .week:not(.in) .wk-col.wed{background-color:transparent;box-shadow:inset 0 0 0 1px transparent}
+
+  /* reel player */
+  .reel{background:#000;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none}
+  .reel video{width:100%;height:100%;object-fit:cover;object-position:50% 65%;display:block} /* the reel's burned-in captions sit low: show a bit more of the bottom so they clear the controls */
+  .reel::after{content:"";position:absolute;inset:auto 0 0 0;height:38%;background:linear-gradient(transparent,rgba(0,0,0,.55));pointer-events:none}
+  .reel .tag{position:absolute;top:16px;left:16px;z-index:2;font-size:12px;padding:6px 11px;border-radius:999px;background:rgba(0,0,0,.35);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+  .reel .big{position:absolute;inset:0;margin:auto;width:64px;height:64px;border-radius:50%;background:rgba(0,0,0,.4);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:grid;place-items:center;z-index:2;opacity:0;transform:scale(.9);transition:opacity .25s,transform .25s;pointer-events:none}
+  .reel.paused .big{opacity:1;transform:none}
+  .reel .big svg{width:22px;height:22px;margin-left:3px}
+  .reel .bar{position:absolute;left:16px;right:16px;bottom:14px;z-index:3;display:flex;align-items:center;gap:12px}
+  .reel .time{font-size:12px;font-variant-numeric:tabular-nums;opacity:.85;min-width:68px}
+  .scrub{flex:1;height:22px;display:flex;align-items:center;cursor:pointer;touch-action:none}
+  .scrub .track{position:relative;width:100%;height:3px;border-radius:3px;background:rgba(255,255,255,.3);transition:height .15s}
+  .scrub:hover .track,.scrub.drag .track,.scrub:focus-visible .track{height:5px}
+  .scrub .fill{position:absolute;inset:0 auto 0 0;width:0;border-radius:inherit;background:#fff}
+  .scrub .knob{position:absolute;top:50%;left:0;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:#fff;transform:scale(0);transition:transform .15s}
+  .scrub:hover .knob,.scrub.drag .knob,.scrub:focus-visible .knob{transform:scale(1)}
+  .scrub:focus-visible{outline:none}
+  .scrub:focus-visible .track{outline:2px solid #fff;outline-offset:4px}
+  .mute{flex:none;width:34px;height:34px;border:0;border-radius:50%;background:rgba(0,0,0,.35);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;display:grid;place-items:center;cursor:pointer;transition:background .2s}
+  .mute:hover{background:rgba(0,0,0,.6)}
+  .mute svg{width:16px;height:16px}
+  .mute .on{display:none}
+  .reel.unmuted .mute .on{display:block}
+  .reel.unmuted .mute .off{display:none}
+
+  /* info rows */
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:24px;padding:clamp(40px,6vw,72px) 0;border-top:1px solid var(--line)}
+  .cards + .row{border-top:0}
+  .row h3{font:var(--w-label) clamp(22px,2.2vw,28px)/1.1 var(--font-display);letter-spacing:-.02em}
+  .portrait{margin-top:clamp(28px,4vw,44px);width:100%;aspect-ratio:4/5;border-radius:12px;overflow:hidden;background:var(--card)}
+  .portrait img{width:100%;height:100%;object-fit:cover;display:block}
+  /* blurred previews (tiny inline PNGs made from each image) show until the real image arrives */
+  .portrait,.reel,.who img{background-size:cover;background-position:center;background-repeat:no-repeat}
+  .reel{background-position:50% 65%}
+  .js .portrait img{opacity:0;transition:opacity .7s var(--ease)}
+  .js .portrait img.loaded{opacity:1}
+  .body{max-width:560px}
+  .body p+p{margin-top:1em}
+  .body a{text-decoration:underline;text-decoration-color:var(--muted);text-underline-offset:3px;transition:text-decoration-color .2s}
+  .body a:hover{text-decoration-color:var(--fg)}
+  .lead{font:var(--w-label) clamp(22px,2.3vw,30px)/1.25 var(--font-display);letter-spacing:-.02em}
+  .lead .dim{color:var(--muted)}
+  .topics{list-style:none}
+  .topics li{display:grid;grid-template-columns:36px 1fr;padding:14px 0;border-bottom:1px solid var(--line)}
+  .topics li:first-child{border-top:1px solid var(--line)}
+  .topics .n{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums;padding-top:3px}
+  .note{color:var(--soft);font-size:15px;margin-top:18px}
+  /* impact numbers */
+  .stats{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:clamp(28px,4vw,44px)}
+  .stats li{border:1px solid var(--line);border-radius:14px;padding:clamp(18px,2.4vw,26px) 14px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+  .stats b{font:var(--w-display) clamp(28px,3vw,40px)/1 var(--font-display);letter-spacing:-.03em;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .stats .lbl{color:var(--soft);font-size:15px;line-height:1.35}
+  .stats a{font-size:14px;text-underline-offset:3px;margin-top:2px;text-decoration-color:var(--muted);transition:text-decoration-color .2s}
+  .stats a:hover{text-decoration-color:var(--fg)}
+  .links{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
+  .links li{border-bottom:1px solid var(--line)}
+  .links a{display:flex;justify-content:space-between;padding:14px 0;text-decoration:none}
+  .links a span{color:var(--muted);transition:color .2s,transform .2s}
+  .links a:hover span{color:var(--fg);transform:translate(2px,-2px)}
+
+  /* closing */
+  .closing{padding:clamp(64px,10vw,140px) 0 clamp(40px,6vw,64px);border-top:1px solid var(--line)}
+  .closing .big{font:var(--w-display) clamp(40px,7vw,104px)/.98 var(--font-display);letter-spacing:-.035em;color:var(--muted);max-width:14ch}
+  .closing .big a{color:var(--fg);text-decoration:none;background:linear-gradient(currentColor,currentColor) 0 100%/0 3px no-repeat;transition:background-size .35s}
+  .closing .big a:hover{background-size:100% 3px}
+  .foot{border-top:1px solid var(--line)}
+
+  /* ---------- Motion layer (same language as the 2021–26 annual report) ----------
+     Only active when JS adds .anim (skipped for reduced motion), so the page is always readable. */
+  @media (prefers-reduced-motion:no-preference){
+    .anim .meta-top,.anim nav{animation:navIn .6s cubic-bezier(.22,1.2,.36,1) .1s both}
+    @keyframes navIn{0%{transform:translateY(-24px);opacity:0}}
+  }
+  .anim .m-line{display:inline-block;vertical-align:top;padding-bottom:.16em;margin-bottom:-.16em;clip-path:inset(-.6em -.6em 0 -.6em)}
+  .anim .done .m-line{clip-path:none}
+  .anim .m-word{display:inline-block;transform:translateY(112%);transition:transform 1s var(--ease);transition-delay:calc(var(--i,0) * 38ms + var(--d,0ms))}
+  .anim .in .m-word{transform:none}
+  .anim .fade{opacity:0;transform:translateY(14px);transition:opacity .8s var(--ease),transform .8s var(--ease);transition-delay:var(--d,0ms)}
+  .anim .fade.in{opacity:1;transform:none}
+  .anim .card-in{opacity:0;transform:translateY(40px) rotateX(10deg) scale(.97);transform-origin:50% 0;transition:opacity 1.1s var(--ease),transform 1.1s var(--ease);transition-delay:var(--d,0ms)}
+  .anim .card-in.in{opacity:1;transform:none}
+  .anim .cards{perspective:1200px}
+  .anim .rule{border-top-color:transparent;background:linear-gradient(var(--line),var(--line)) left top/0% 1px no-repeat;transition:background-size 1.2s var(--ease)}
+  .anim .rule.in{background-size:100% 1px}
+  .anim .stagger > li{opacity:0;transform:translateY(16px);transition:opacity .8s var(--ease),transform .8s var(--ease);transition-delay:calc(var(--i,0) * 60ms + 150ms)}
+  .anim .stagger.in > li{opacity:1;transform:none}
+
+  @media (max-width:760px){
+    .meta{grid-template-columns:1fr auto;gap:16px 24px}
+    .side{display:contents}
+    .side .tagline{grid-column:1/-1;grid-row:2}
+    .side .tools,.side .totop{grid-column:2;grid-row:1}
+    .hero,.row{grid-template-columns:1fr}
+    h1{grid-column:1}
+    .cards{grid-template-columns:1fr}
+    .card.book{aspect-ratio:auto;min-height:0}
+    .week{--h:28px}
+    .links{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<header class="wrap meta meta-top" id="top">
+  <div class="who">
+    <img src="/hi/assets/avatar.jpg" alt="" width="36" height="36" style="background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABIElEQVR42l2SS24DMQxD+Wi3OUW76f3PlyYzErvwTJpEEPyDKJGE+f76MUz7c47Lx7x8zM8xhkmy7fW73a+3+/W+3bZt26s6kzMEWnHu5wXEedAU6AUEJ+QofCoQmmDgXHl0O5ofiWQRkYkNYBsbrJWKZIl/AobgvE3wv5wIPebaDhHJXI/iqdcpnxd9xiKZkVYqT5wfFuGDDDKKMrsDatGoo5YCEVoLOQEBkGZVB5DKVNShZUALSYRFoBfVuVcZIw17RhVKi4YSxUMUWtVYmdtWw62MYe8jexgyHigdhQQLIywpmrXvGUZUpTolNTRGiol7VSOIyNIgma7uSjqUGAtwCGDZtuyb3S3U3Z0cLh0GKTjvRmvmPZ4AOog8/jDSH1sdrSxyEXP1AAAAAElFTkSuQmCC)">
+    <div><b>András Pop</b><br>
+    <span class="muted">Local time — <span class="clock" id="clock">--:--</span> Budapest, HU</span></div>
+  </div>
+  <div class="side">
+    <p class="tagline">Designer, studio founder and design teacher. Building things in public, including the parts that don't work.</p>
+    <div class="tools">
+    <button class="theme" id="theme" type="button" data-mode="system" aria-label="Theme: system. Switch to light" title="Theme: system">
+      <svg class="i-system" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" stroke="none"/></svg>
+      <svg class="i-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="i-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
+    </button>
+    <a class="logo" href="/" aria-label="András Pop — home"><svg viewBox="3 3 249.368 249.367" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M127.684,27.819 C72.619,27.819 27.819,72.618 27.819,127.684 C27.819,182.75 72.619,227.549 127.684,227.549 C182.749,227.549 227.549,182.75 227.549,127.684 C227.549,72.618 182.749,27.819 127.684,27.819 L127.684,27.819 Z M127.684,252.367 C58.934,252.367 3,196.435 3,127.684 C3,58.933 58.934,3 127.684,3 C196.435,3 252.368,58.933 252.368,127.684 C252.368,196.435 196.435,252.367 127.684,252.367 L127.684,252.367 Z M142.989,126.313 L127.341,83.554 L108.054,135.743 C111.33,134.681 114.68,133.86 118.076,133.285 L125.829,131.962 C133.924,130.449 139.408,128.558 143,126.289 L142.989,126.313 Z M163.978,183.23 L151.309,148.956 C146.581,151.414 139.963,153.494 130.508,155.196 L119.73,157.087 C103.847,159.924 97.795,164.273 92.69,177.698 L90.621,183.23 L63.959,183.23 L112.746,50.864 L142.622,50.864 L191.409,183.23 L163.978,183.23 Z"/></svg></a>
+    </div>
+  </div>
+</header>
+
+<nav aria-label="Site">
+  <div class="wrap">
+    <ul>
+      <li><a href="/">Map</a></li>
+      <li><a href="/hi" aria-current="page">Say hi</a></li>
+      <li><a href="https://tendo.sh">Tendo</a></li>
+      <li><a href="https://unwritten.cards">Unwritten</a></li>
+      <li><a href="https://studiostereogram.com">Stereogram</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <section class="hero" aria-labelledby="h">
+    <h1 id="h" data-mask data-now>András is a <span class="on">designer</span>, studio founder and teacher, based in <span class="bridge" role="img" aria-label="Budapest skyline with the Parliament"><svg viewBox="57 0 659 166.8" fill="currentColor" aria-hidden="true"><path d="M0.9 166.6C-0.0 166.4 -0.1 166.1 0.8 165.9C1.3 165.8 3.5 165.6 5.9 165.4C8.2 165.2 10.3 164.9 10.4 164.9C10.9 164.7 15.3 164.3 19.4 164.0C21.4 163.9 24.4 163.6 26.0 163.4C27.6 163.2 30.6 162.9 32.6 162.7C34.7 162.6 38.1 162.2 40.1 162.0C42.2 161.7 46.2 161.3 49.1 161.1C52.0 160.9 54.5 160.7 54.8 160.6C55.3 160.5 61.9 159.8 64.8 159.6C66.1 159.5 68.2 159.3 69.6 159.1C71.8 158.8 74.9 158.5 80.6 158.1C82.2 158.0 82.7 157.5 82.8 155.8C82.9 154.0 83.4 153.5 85.2 153.5C86.3 153.5 86.6 153.4 87.1 152.9L87.8 152.3L87.8 140.6L87.7 128.9L88.7 128.0C89.4 127.4 89.8 126.7 90.1 125.8C90.7 123.9 91.4 123.8 91.4 125.6C91.4 126.6 92.1 127.9 92.7 128.1C93.0 128.2 93.4 128.7 93.6 129.3C93.9 129.9 94.2 130.5 94.3 130.6C94.5 130.7 97.3 130.7 100.6 130.7L106.7 130.8L107.1 130.3C107.3 130.0 107.5 129.7 107.5 129.5C107.5 128.7 108.3 128.0 109.2 128.0C109.8 128.0 110.3 127.8 110.9 127.2L111.8 126.5L114.6 126.5L117.4 126.5L118.4 127.2C118.9 127.7 119.7 128.0 120.4 128.1C121.6 128.3 121.9 128.5 122.1 129.7C122.2 130.1 122.4 130.6 122.6 130.7C122.9 130.9 134.2 130.8 134.8 130.6C135.0 130.5 135.3 130.1 135.5 129.6C135.7 129.0 136.1 128.5 136.7 128.1L137.7 127.5L137.9 125.2C138.1 124.0 138.3 122.9 138.3 122.8C138.7 122.5 139.0 123.2 139.1 124.8C139.3 127.3 139.4 127.4 140.5 128.0C141.0 128.3 141.5 128.7 141.6 128.9C141.7 129.1 141.7 134.3 141.7 140.5C141.7 148.0 141.8 151.9 142.0 152.5C142.3 153.3 142.6 153.5 144.6 153.6L145.9 153.6L146.5 154.9C147.1 156.0 147.2 156.1 148.0 156.2C148.8 156.3 149.0 156.2 149.3 155.7C149.6 155.2 149.7 150.8 149.8 133.7L149.9 112.2L150.4 111.9C150.8 111.6 152.3 111.5 158.9 111.5L166.9 111.5L167.3 112.0C167.7 112.4 167.8 113.2 167.8 118.6C167.8 126.2 167.7 126.1 170.0 126.2C171.1 126.2 171.8 126.4 172.0 126.6C172.2 126.9 172.3 129.0 172.3 134.2L172.2 141.4L172.7 142.0C173.5 143.0 176.2 143.1 176.7 142.1C176.8 141.8 176.9 140.2 176.8 138.5C176.8 135.2 177.0 133.6 177.5 133.2C178.1 132.9 187.1 132.9 187.5 133.3C187.6 133.5 187.7 135.6 187.8 138.6C187.9 142.6 187.9 143.6 188.2 143.8C188.7 144.1 194.3 144.1 194.8 143.8C195.1 143.6 195.1 142.1 195.2 133.7L195.4 123.9L196.0 123.7C196.3 123.6 197.7 123.5 199.0 123.5C200.3 123.5 201.5 123.4 201.8 123.3C202.1 123.0 202.1 120.5 202.2 103.9L202.4 84.8L202.9 84.2C203.2 83.9 203.5 83.2 203.6 82.6C203.7 82.1 204.1 81.3 204.4 81.0C204.8 80.5 205.0 79.7 205.3 78.1C205.4 77.0 205.7 76.0 205.8 76.0C205.9 76.0 206.1 76.9 206.2 77.9C206.5 79.5 206.7 80.0 207.4 80.7C208.0 81.4 208.3 81.9 208.3 82.5C208.3 83.1 208.5 83.5 209.1 84.1L210.0 84.9L210.0 87.9L210.0 90.9L210.6 91.5L211.2 92.0L219.3 92.0C223.9 92.0 227.5 91.9 227.8 91.7C228.4 91.4 228.5 90.8 228.6 87.3C228.7 83.7 229.2 81.5 230.2 80.5C230.8 79.8 231.1 78.2 231.2 75.6C231.2 75.4 231.4 75.2 231.5 75.2C231.8 75.2 232.2 77.4 232.2 78.6C232.2 79.2 232.5 79.8 233.1 80.5C234.6 82.2 234.8 83.5 234.8 90.0C234.9 94.4 235.0 95.8 235.2 96.1C235.7 96.7 246.0 96.7 246.5 96.1C246.8 95.8 246.9 94.7 247.0 92.9C247.2 89.2 247.7 87.4 248.8 85.8C249.2 85.3 249.5 84.5 249.6 83.6C249.8 81.4 250.2 81.4 250.5 83.5C250.7 84.9 251.0 85.8 251.8 86.6C252.5 87.4 252.9 89.8 252.9 93.9C253.0 95.9 253.0 97.7 253.0 97.9C253.0 98.0 253.2 98.4 253.5 98.7L254.0 99.2L257.7 99.3C262.0 99.3 262.1 99.3 262.3 101.6C262.4 102.4 262.6 103.2 262.7 103.3C262.9 103.5 264.9 103.6 269.7 103.7C277.2 103.8 278.4 103.7 278.8 103.0C278.9 102.7 279.0 95.0 279.0 80.9C279.0 67.8 279.1 58.9 279.3 58.6C279.4 58.2 279.8 57.6 280.1 57.2C280.6 56.7 280.7 56.1 280.9 54.5C281.0 53.4 281.1 52.2 281.2 51.8C281.4 51.2 281.4 51.2 281.6 51.6C281.7 51.9 281.9 53.2 282.0 54.5C282.2 56.5 282.3 56.9 282.9 57.6L283.6 58.3L283.8 64.1C283.9 69.2 283.9 70.0 284.3 70.4C284.7 70.8 285.2 70.8 287.7 70.8C291.5 70.8 291.6 70.7 291.9 68.7L292.1 67.1L297.7 67.1C304.0 67.0 304.0 67.0 304.0 68.8C304.0 70.7 304.3 70.9 307.2 70.9C310.1 70.9 310.4 70.7 310.6 68.9C310.9 67.1 311.0 67.0 313.6 67.0C315.5 67.0 316.0 67.1 316.3 67.4C316.6 67.8 316.6 71.0 316.8 85.4L316.9 103.0L317.4 103.4C317.7 103.6 318.6 103.7 320.6 103.8L323.3 103.8L323.9 103.1C324.4 102.7 324.5 102.3 324.5 101.3C324.5 99.9 324.7 99.6 326.1 99.3C327.1 99.1 327.9 98.6 330.4 96.8C332.3 95.4 333.2 94.5 333.4 93.8C333.5 93.4 333.7 92.9 333.9 92.6L334.3 92.0L337.7 92.0C340.7 92.0 341.2 91.9 341.6 91.5C342.0 91.1 342.0 90.0 342.0 79.9L342.0 68.8L343.1 67.9L344.3 66.9L344.2 58.0L344.2 49.1L344.7 48.7C345.0 48.4 345.3 48.2 345.4 48.2C346.2 48.3 346.6 47.2 346.8 44.7C347.1 40.5 347.5 38.7 348.0 38.7C348.4 38.7 348.5 39.5 348.8 42.8C349.2 47.8 349.1 47.7 350.2 48.2C350.8 48.5 351.2 48.9 351.3 49.1C351.4 49.3 351.5 53.4 351.5 58.3L351.5 67.1L351.9 67.4C352.2 67.5 352.7 67.9 353.1 68.3L353.8 69.0L353.8 76.2C353.7 82.3 353.8 83.5 354.1 83.7C354.3 83.9 355.4 84.1 356.4 84.1C359.3 84.3 359.4 84.3 359.5 80.3C359.6 76.2 359.6 76.1 362.8 76.1C364.1 76.1 365.3 76.0 365.6 75.9C366.4 75.5 366.5 74.3 366.5 65.6C366.5 61.0 366.5 57.0 366.5 56.8C366.5 56.7 366.8 56.2 367.2 55.7L367.9 55.0L368.1 51.2C368.2 47.5 368.6 45.3 369.6 41.9C370.3 39.9 371.3 37.5 371.7 36.8C372.0 36.4 372.6 35.5 373.1 34.7C374.3 33.0 376.9 30.3 378.8 29.1C379.5 28.5 380.5 27.8 381.1 27.4L382.0 26.7L382.0 22.0L382.0 17.3L382.6 16.8C383.5 15.9 383.7 15.1 383.9 10.0C384.0 5.5 384.5 0.4 384.8 0.1C385.4 -0.5 385.7 1.4 386.0 8.4C386.3 15.4 386.3 15.5 387.3 16.6L388.0 17.6L388.0 22.1L388.0 26.7L388.8 27.4C389.3 27.8 390.2 28.4 390.7 28.8C392.6 29.8 394.7 31.8 396.2 33.8C397.1 34.9 397.7 35.9 397.8 36.0C397.8 36.1 398.0 36.6 398.3 37.1C398.7 37.5 399.1 38.4 399.3 38.9C399.4 39.4 399.7 40.1 399.9 40.4C400.2 40.9 401.3 45.3 401.8 48.0C401.9 48.8 402.0 50.6 402.0 52.2L402.0 55.0L402.8 55.9L403.6 56.8L403.5 65.6C403.5 72.0 403.6 74.6 403.8 75.1C404.2 76.0 405.1 76.3 407.4 76.2C409.1 76.1 409.5 76.2 410.0 76.6L410.5 77.1L410.5 80.1C410.5 84.1 410.5 84.1 413.3 84.1C414.7 84.1 415.6 84.0 415.8 83.8C416.2 83.5 416.2 82.6 416.2 76.2L416.2 69.0L417.4 67.9L418.5 66.8L418.5 58.8C418.6 54.5 418.6 50.5 418.5 50.0C418.5 49.1 418.8 48.6 419.9 48.1C420.8 47.8 421.0 47.1 421.0 44.8C421.0 43.1 421.5 39.3 421.7 38.8C422.2 37.9 422.9 40.6 423.1 44.5C423.3 47.1 423.8 48.2 424.6 48.2C424.8 48.2 425.1 48.5 425.3 48.7C425.7 49.1 425.8 50.1 425.8 58.1L425.8 67.0L426.3 67.4C426.7 67.7 427.1 68.0 427.4 68.1C428.0 68.5 428.0 68.5 428.0 81.0C428.0 89.9 428.0 91.3 428.4 91.6C428.7 91.9 429.4 92.0 432.3 92.0L435.7 92.0L436.1 92.6C436.3 92.9 436.5 93.4 436.6 93.8C436.8 94.6 437.5 95.2 440.5 97.5C442.3 98.8 443.1 99.2 443.7 99.2C444.9 99.3 445.5 100.0 445.5 101.5C445.5 103.5 445.7 103.6 449.2 103.7L452.2 103.8L452.7 103.1L453.3 102.4L453.2 85.1C453.2 69.7 453.3 67.7 453.6 67.4C454.1 66.9 458.5 66.8 458.9 67.3C459.1 67.5 459.3 68.2 459.4 68.9C459.5 69.6 459.7 70.4 459.9 70.5C460.4 71.0 464.8 71.1 465.4 70.7C465.6 70.5 465.9 69.8 466.0 69.0C466.1 68.3 466.4 67.5 466.5 67.4C466.9 66.9 477.3 66.8 477.7 67.3C477.8 67.5 478.0 68.2 478.1 68.9C478.2 69.6 478.5 70.4 478.7 70.5C479.2 71.0 485.3 71.0 485.8 70.6C486.0 70.3 486.2 68.7 486.2 64.3L486.4 58.3L487.1 57.6C487.7 57.0 487.8 56.5 488.0 54.6C488.4 50.9 488.8 50.9 489.1 54.6C489.3 56.4 489.4 56.7 490.1 57.5L490.9 58.3L490.9 80.4C491.0 99.7 491.1 102.7 491.4 103.2L491.8 103.8L499.3 103.7L506.8 103.6L507.3 103.0C507.6 102.6 507.8 102.1 507.8 101.3C507.7 99.4 508.0 99.3 512.3 99.2L516.0 99.2L516.5 98.6L517.0 97.9L517.0 94.4C517.0 90.1 517.4 87.7 518.5 86.2C518.9 85.6 519.3 84.8 519.4 84.3C519.7 82.4 519.8 82.0 520.0 82.0C520.1 82.0 520.3 82.5 520.4 83.1C520.7 85.2 520.8 85.5 521.5 86.4C521.9 86.9 522.2 87.6 522.2 88.0C522.2 88.4 522.4 89.2 522.6 89.7C522.9 90.4 523.0 91.5 522.9 93.0C522.9 94.7 523.0 95.3 523.3 95.8L523.8 96.5L529.1 96.5C533.1 96.5 534.5 96.4 534.7 96.2C534.8 96.0 534.9 93.1 535.0 89.8L535.1 83.6L535.8 82.2C536.1 81.5 536.7 80.5 537.0 80.1C537.5 79.6 537.7 79.0 537.8 77.8C537.9 76.9 538.1 76.0 538.2 75.8C538.4 75.4 538.5 75.5 538.7 76.1C538.9 76.5 539.0 77.3 539.0 78.0C539.0 79.1 539.2 79.6 540.1 80.8C540.9 82.0 541.5 84.9 541.4 87.9C541.3 90.4 541.4 90.8 541.8 91.4L542.3 92.0L550.6 92.0L559.0 92.0L559.5 91.3C560.0 90.7 560.0 90.4 560.0 88.4C559.9 85.1 559.9 85.1 560.9 84.1C561.5 83.5 561.8 83.0 561.8 82.5C561.8 82.1 562.0 81.4 562.5 80.9C563.2 80.1 564.0 77.8 564.0 76.5C564.0 76.1 564.1 75.8 564.2 75.8C564.4 75.8 564.5 76.0 564.5 76.4C564.5 78.1 565.1 80.4 565.8 81.2C566.2 81.7 566.5 82.3 566.5 82.8C566.5 83.3 566.7 83.8 567.1 84.2L567.6 84.8L567.8 103.8C567.8 114.3 568.0 123.0 568.1 123.2C568.2 123.4 569.1 123.5 570.9 123.5C572.3 123.5 573.8 123.6 574.1 123.7L574.8 124.0L574.8 135.8C574.8 149.5 574.6 148.7 577.0 148.8C578.1 148.8 578.5 148.6 578.8 148.3L579.2 147.8L579.2 125.5C579.2 106.5 579.3 103.0 579.6 102.6L580.0 102.1L588.2 102.1L596.4 102.1L597.0 102.6C597.3 102.9 597.5 103.4 597.5 103.8C597.5 105.1 597.9 105.5 599.2 105.5C599.9 105.5 600.6 105.7 600.9 105.9L601.5 106.3L601.5 130.2C601.5 150.4 601.6 154.2 601.9 154.6C602.1 155.0 602.6 155.1 604.1 155.2L606.0 155.3L606.6 154.7L607.2 154.0L607.2 144.8L607.2 135.6L607.8 134.9L608.3 134.3L614.0 134.2C618.5 134.2 619.8 134.3 620.1 134.6L620.6 135.0L620.7 144.2C620.7 150.3 620.9 153.5 621.0 153.7C621.4 154.2 624.6 154.1 625.0 153.6C625.2 153.4 625.4 152.1 625.4 150.5C625.6 147.4 625.6 147.4 627.5 147.1C629.1 146.9 629.2 146.7 629.2 145.0C629.2 143.0 629.6 142.6 631.3 142.7C632.0 142.7 632.9 142.5 633.3 142.3L634.0 142.0L634.0 135.5L634.0 129.0L634.4 128.6C634.7 128.4 635.2 128.0 635.6 127.7C636.1 127.3 636.3 126.8 636.5 125.7C636.6 124.9 636.8 124.1 637.0 123.8C637.2 123.4 637.2 123.5 637.5 124.1C637.6 124.5 637.8 125.2 637.8 125.6C637.8 126.9 638.1 127.6 639.1 128.2C639.6 128.5 640.0 129.0 640.2 129.6C640.4 130.2 640.8 130.6 641.1 130.7C641.4 130.8 644.3 130.8 647.5 130.8L653.4 130.6L653.7 129.5L654.1 128.4L655.3 128.1C656.0 127.9 656.9 127.5 657.4 127.1L658.2 126.5L661.2 126.5L664.2 126.5L664.8 127.2C665.2 127.8 665.5 128.0 666.2 128.0C667.4 128.0 667.9 128.4 668.3 129.4C668.4 130.0 668.7 130.5 668.8 130.6C669.0 130.8 681.1 130.9 681.5 130.6C681.6 130.6 681.9 130.0 682.0 129.5C682.2 128.8 682.6 128.3 683.0 128.1C683.5 127.8 683.9 127.2 684.2 126.5C685.0 124.4 685.3 124.3 685.9 126.4C686.2 127.4 686.5 127.8 687.1 128.2L688.0 128.7L688.0 140.6L688.0 152.5L688.5 153.0C688.9 153.4 689.3 153.5 690.5 153.5C692.3 153.5 692.7 153.9 692.7 155.5C692.7 156.3 692.9 156.9 693.3 157.3C693.8 158.0 693.5 158.0 699.6 158.5C701.4 158.7 703.9 158.9 705.2 159.1C706.6 159.3 709.2 159.6 711.1 159.7C713.0 159.9 716.3 160.2 718.4 160.5C720.4 160.8 723.8 161.1 725.7 161.2C727.7 161.4 730.4 161.7 731.7 161.9C733.1 162.1 735.1 162.3 736.2 162.4C737.4 162.5 740.9 162.8 743.9 163.1C746.9 163.5 751.3 163.9 753.6 164.1C757.6 164.5 767.5 165.6 769.6 165.9C770.8 166.1 770.7 166.4 769.3 166.6C768.0 166.8 1.6 166.8 0.9 166.6Z"/></svg></span> <span class="on">Budapest,</span> Hungary.</h1>
+  </section>
+
+  <section class="row rule" aria-labelledby="s1">
+    <h3 id="s1" data-mask>Hi</h3>
+    <div class="body">
+      <p class="lead" data-mask>After 7,254 meetings, I'm trying one with no agenda. <span class="dim">Every Wednesday I keep three <span style="white-space:nowrap">45-minute</span> slots open to think out loud with whoever shows up. No pitch, nothing to prepare.</span></p>
+    </div>
+  </section>
+
+  <section class="cards" aria-label="Video and booking">
+    <figure class="card reel card-in" id="reel" aria-label="Video: why I'm doing this" style="--d:0ms;background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAgCAIAAACQHr+mAAACuklEQVR42nWV3ZLdNgyDP9Da5hH7Ann/mUzb7LEkAr2QTza9qIfj8R8EUgBp/fn9u1S6ivFRH9/08a0+/qA+HHqtef+8f/51//xx//Njfv697s9eM+4hRYoIRIkSniD/f4wiYCElwoqxQxNIx5107NhxYieOPS4ZCSSatLLjApKk9xPud/gg37ADZJPCShwne6dnenkv97bbbrdjj6FGQgkkikUCFcd7ed29pvf03t77gNM9hjYoVHI43GxSsT2318vr9po+nLu9t+1xsUGJTDsXNKlE2fZanq9er153r9m93du9E4/KBoJIJa0UURpvey7P2/OVPbNXToXdiYc8E0BEpGLZuMm25/a8nyT3cu904yYZXhNwcGSXjc2bbXvNrJk90xs3aWKS0fMOOHJoq41Nb7ydtbNW9jz3uBUfD41538dMjhy1adOd3vZ29mZvesutWHlsOO7PG5TgkMMZueN22tlNPzzCIkWijPs14ViXREE+MCcO3fJWrLie9wTG654gQgB0wk6ein14Siklb1+M172OHQGpdGx9VgmK640pkeIQjNdaQkISpatKpdJZBKSUKKjiIoBCwrhXIxVU1SWu1ChKJUWiIEUlV4iOmwiMu1uopAqjQCiSIpX0tNQVJVw5zfEb7Kq6AEmmijy1IihkoaAgUADGaktqGAillE4qlKKD+7W/vJsZxnKkU26kXMqVVFI5mxY/U+ko9BxjdySOTJIu1dWRLOpsnBUTJ05MfMzVZwKdtiELH+24cE4/+cCa+MxBGPaj7jPwUCFBki7pGZ02Pmwn9wMD0aROo4FISvUFi3GCH/MyYnFYoDmEEHJRPlZ7prQfYxEYeW+QHUPDg+SxnPQkdj485y9YwI7A0DJ5MNKj/n9h78ujTBIHGdWZSnpyhrdDAMaXhE+nnh8N+V3dN+DXs38BRUZX8xaom44AAAAASUVORK5CYII=)">
+      <!-- Poster: the frame at 35.3s ("I feel like verbalizing"), uncropped so the CSS crop matches the video.
+           The reel, hosted on Mux (playback ID ve0202Hy8z4KBzUQyC9g91AdwBXK3E4KENfvaKvU8Ik3A). The source is 9:16; the card crops it to 4:5 (object-fit: cover).
+           Safari and iOS play it natively; other browsers use hls.js (full build, public/hi/vendor, loaded on demand);
+           the MP4 static rendition ("highest", if enabled on the asset) is the last resort. -->
+      <video id="vid" muted loop playsinline preload="metadata" data-hls="https://stream.mux.com/ve0202Hy8z4KBzUQyC9g91AdwBXK3E4KENfvaKvU8Ik3A.m3u8" data-mp4="https://stream.mux.com/ve0202Hy8z4KBzUQyC9g91AdwBXK3E4KENfvaKvU8Ik3A/highest.mp4" poster="https://image.mux.com/ve0202Hy8z4KBzUQyC9g91AdwBXK3E4KENfvaKvU8Ik3A/thumbnail.jpg?time=35.3&amp;width=720">
+      </video>
+      <span class="tag">Why I'm doing this</span>
+      <span class="big" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></span>
+      <div class="bar">
+        <span class="time" id="time">0:00 / 0:00</span>
+        <div class="scrub" id="scrub" role="slider" tabindex="0" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div class="track"><div class="fill" id="fill"></div><div class="knob" id="knob"></div></div>
+        </div>
+        <button class="mute" id="mute" type="button" aria-label="Unmute">
+          <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="m22 9-6 6M16 9l6 6"/></svg>
+          <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>
+        </button>
+      </div>
+    </figure>
+    <div class="card book card-in" style="--d:120ms">
+      <div class="eyebrow"><span>Thinking out loud · Wednesdays</span><span id="next">Every Wednesday</span></div>
+      <h2 data-mask>45 minutes.<br><span class="dim">No agenda.</span></h2>
+      <div class="week" id="week" role="group" aria-label="This week: three open 45-minute slots on Wednesday, 13:00, 13:45 and 14:30 Budapest time">
+        <div class="wk-head" id="wkHead"></div>
+        <div class="wk-body">
+          <div class="wk-gutter" aria-hidden="true"><span style="--t:0">11</span><span style="--t:2">13</span><span style="--t:4">15</span><span style="--t:6">17</span></div>
+          <div class="wk-cols" id="wkCols"></div>
+        </div>
+        <div class="wk-legend" aria-hidden="true"><span><i class="lg lg-busy"></i>Busy, mostly client work</span><span><i class="lg lg-open"></i>Open for you · CET</span></div>
+      </div>
+      <div class="cta">
+        <a class="btn" id="bookBtn" href="https://calendly.com/stereogram/andraspop-45min"><span id="bookLabel">Pick a Wednesday slot</span>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+        <small>Free. Nothing to prepare. Recorded only if you say yes.</small>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="row rule" aria-labelledby="s2">
+    <h3 id="s2" data-mask>Who I am</h3>
+    <div class="body fade" style="--d:120ms">
+      <p>I'm András. Originally from Transylvania, now in Budapest. I started as a freelancer, studied media design, and for the past six years I've run <a href="https://studiostereogram.com">Stereogram</a>, a nine-person design studio. UX/UI, Framer sites, branding, the usual.</p>
+      <p>Now I'm changing how the studio works. We keep some of our client work, and more of my time goes into our own products, starting with <a href="https://tendo.sh">Tendo</a> and <a href="https://unwritten.cards">Unwritten</a>. I've also taught design to career changers at <a href="https://uiacademy.hu/">UI Academy</a> for six years and I've been a mentor at <a href="https://www.kreaiskola.hu/kepzesek/ui-ux-designer">Krea</a> for three.</p>
+      <p>I have little to no idea how the products will go. I'm posting about it anyway.</p>
+      <ul class="stats stagger" aria-label="In numbers">
+        <li><b>~1B HUF</b><span class="lbl">Stereogram revenue, 6 years</span><a href="https://studiostereogram.com/financial-report">Proof ↗</a></li>
+        <li><b>8+ years</b><span class="lbl">in design</span></li>
+        <li><b>6+ years</b><span class="lbl">teaching design</span></li>
+        <li><b>181</b><span class="lbl">client projects supervised &amp; assisted</span></li>
+      </ul>
+      <figure class="portrait" style="background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAoCAIAAAAQS2/OAAAF30lEQVR42nVX25IbuQ4DSNlJJZv//82TbJLplkjgPKjtuSSrYnV5XB5CBG9oHi+nre6uteY8jpeXl98/f//6+evnj9+//v396+fx8vs8z1WrWjJAkpE5brf7p0+fP3/58vXLP1//+fb127evX//58uXL58+f7/dPY4zMJGPgwyHA/QABvv1s0zAAGP6PA18/eJzh5198+geJIEnGZdf3D9cw9XosW5Zg4QnxBHh3e5LcTwaZrwCMHY1sG7BJdb81S5ZeAwEM8AMAgO0/yAhmxIgYwSKTaFgWJBuyASpTtVSru6SSdhz2nxT5NQgEmcGMeADECDYRMC1027LadpE1su531VKV1DuIt0QNvMF7khMRI+OWURkjH0HY5UYvtQwgO4AaUfNea3aV+g0GLo7Ga+1wX/+6eGeOzFtmZ3ZGBQsONbpUSzIiy6qMut9rzl5TVerWIxmblw3gtwnIiMy4ZWikRipDEUUsiCrX1JwlgQEpI+p+73lUza51ZftiCYDH9u7XBCCCyVDEiLhFdEYHBzGuCJZrqkogpMqsedSaWustRc9yevaBHx3AnWRHKKmMjqjgIAION3YQa8louNfodaqmej28621ex/sa2pl4lCk5yBEYZBIJ0aIKXe4lgxVX/XRZffXa+zP+NilAIIDdwwEEnHDYYdGim2oaUEMNN/SXHt6t/8cseoNB+IPF02gDQQcdQPA5XS6en2eA5E4BSdDA1YoWZGjXg2hdGI9OhBnBzLgsGEEyGHwP8Dj29mzbvoZYP0z25T2JTKaDjhg5Ro6RmZGREZFxHV7hcPjpGE/PkqSW1L1n2Zv+ZERmpDMYeRtjjDEyx4iRGck3NF1J1va8r7s9d3d1dVV1dfU+6guAjMgcMGOM2xi3K4Tr1gFeo/2apl1t22p1qXo7rqpaVWutVWtVdbe0FxpABgPheNKfjGAEyGt02rJp2x5zTtvaAGtqrrpsrrnmWmvVXLWqq9WyACNMgolIRJoB0IYMyd3q7ugGSWO8HMcFUKU1tY46zjrOOufaNte56lw9S7NdQhkygZBDpow2Sq7uVTWqYpW5UmZo/Pz1+6KoSjV7nn2+1HH0ca5jrmOuc81Zc/VZmuXVqIZAkhBSWOVZmqvPWTlXnBPMNrKbkePHj3+v6tlzeJ09jz5e6jzqONYx65hzrnXWnD2XqlyCCdodQClKY/Y4V54zbifi1uatFGMwcny/AFrd7qU1e519Hn2+1HnUeda5U1Fr9VramTDAxAh7GbNjrjgXj4k8xSxh3CrGIGP87/uPDWC1u7RW19Q8ex49r2uvVbVqrd71VDIISgNStkfHbfF2YhyO0eYq5e2eORgc33/8sA1JErrUpZpas9fsdWrO7bhWV3eVu93eAB6QhzA7zuJ9YZyOIXO1xq0iB8nx789fu4UfJVbupdp0TO1r1266h0DZAOGmscTRsSrOxTEZN4PVHvUAeHk5AMOy5H4QVXWJkVXq7lKXq91tCW2ADtthlqM0Vq9VOVfmJGmjpcgmOWotPwCuIFTquhSVpFbLD0NrR0ADvL5Ut6rV3VWd2YwyEBbJYcm4xhEuHfhOaRrXU9iTgO+2h6//3hTsh6SQTIAcuXcH7IAveXitD+uxOoLUc8J/WK+vkuedUn7YuI3YataiSBMiRDUCTlrXEgv5WmswgEt8IMmMS8jmJQkviyDJcb89VoIktYVuiAqYkBx09FYUNu2GLABbfETGR78fAT7db36lMNTsYIeDINyPTUkLdsMETMGM5AiOiJEcW2G+Wo69Rclxv6VtO3YEIiIQ3OohqFeWLNNu7+255fdTJjM3WLzCXAC329gBWJLYAHvfV7CQDYcViHBqB6MHQDyoeE/OtYciguQYGd7sEqLpuDScwhF+7HAHg/SuFRBA8K093lOCe3XuzyRHxgUgArAz7MgIB/X8ddD8E4DvLPgRZgNE0IaFR+3TcRX9e4HDxwsW6Pcvim/fGN8ZSY6rcwj+3R1f2+fZSrwa+g+Pf0H9PxE3oHuvKfp6AAAAAElFTkSuQmCC)">
+        <img src="/hi/assets/andras.jpg" alt="Portrait of András Pop in a navy T-shirt, looking off to the side" width="1200" height="1500" loading="lazy">
+      </figure>
+    </div>
+  </section>
+
+  <section class="row rule" aria-labelledby="s3">
+    <h3 id="s3" data-mask>Why out loud</h3>
+    <div class="body fade" style="--d:120ms">
+      <p>Thoughts get clearer when you say them out loud. Explaining an idea to someone forces it into an order, and that usually helps to see what's missing. These calls are for doing that together, with your ideas or mine.</p>
+      <p>It's hard to meet new people once you're deep in the grind, corporate or agency. Most of my conversations for the last six years had a client, a brief or an invoice attached.</p>
+      <p>This is the opposite. You get an honest outside view from someone who's made a lot of these mistakes with real money. I get to meet people I wouldn't otherwise meet. Worst case, one of us learns something.</p>
+    </div>
+  </section>
+
+  <section class="row rule" aria-labelledby="s4">
+    <h3 id="s4" data-mask>Happy to talk about</h3>
+    <div class="body">
+      <ol class="topics stagger">
+        <li><span class="n">01</span>running a design studio, and changing one</li>
+        <li><span class="n">02</span>moving from client work to your own products</li>
+        <li><span class="n">03</span>AI in design work (the useful parts and the rest)</li>
+        <li><span class="n">04</span>switching careers into design (I've taught it for 6 years)</li>
+        <li><span class="n">05</span>vibecoding as a designer</li>
+        <li><span class="n">06</span>photography</li>
+        <li><span class="n">07</span>meditation</li>
+        <li><span class="n">08</span>building a house</li>
+        <li><span class="n">09</span>anything weird you're making</li>
+      </ol>
+      <p class="note fade" style="--d:500ms">Ideas, struggles, wins, flops. Flops are fine. I have plenty.</p>
+    </div>
+  </section>
+
+  <section class="row rule" aria-labelledby="s5">
+    <h3 id="s5" data-mask>About recording</h3>
+    <div class="body fade" style="--d:120ms">
+      <p>Your call. When you book, the form asks whether we can record. Choose &ldquo;I'd rather not share&rdquo; and nothing gets recorded.</p>
+      <p>If you say yes, short clips might end up in my videos or posts. I only use them because you said yes, and you can change your mind by replying to the booking email.</p>
+    </div>
+  </section>
+
+  <section class="row rule" aria-labelledby="s6">
+    <h3 id="s6" data-mask>Follow along</h3>
+    <div class="body">
+      <ul class="links stagger">
+        <li><a href="https://andraspop.com">The map of everything <span>↗</span></a></li>
+        <li><a href="https://www.youtube.com/@StudioStereogram">YouTube <span>↗</span></a></li>
+        <li><a href="https://x.com/andraspop">X <span>↗</span></a></li>
+        <li><a href="https://www.threads.com/@andraspop">Threads <span>↗</span></a></li>
+        <li><a href="https://www.instagram.com/andraspop">Instagram <span>↗</span></a></li>
+        <li><a href="https://studiostereogram.com/financial-report">Stereogram financial report <span>↗</span></a></li>
+        <li><a href="https://off-brief.com">Off-Brief (podcast archive) <span>↗</span></a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="closing rule" aria-label="Book">
+    <p class="big" data-mask>See you on a <a href="https://calendly.com/stereogram/andraspop-45min">Wednesday.</a></p>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap meta">
+    <div class="who">
+      <img src="/hi/assets/avatar.jpg" alt="" width="36" height="36" style="background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABIElEQVR42l2SS24DMQxD+Wi3OUW76f3PlyYzErvwTJpEEPyDKJGE+f76MUz7c47Lx7x8zM8xhkmy7fW73a+3+/W+3bZt26s6kzMEWnHu5wXEedAU6AUEJ+QofCoQmmDgXHl0O5ofiWQRkYkNYBsbrJWKZIl/AobgvE3wv5wIPebaDhHJXI/iqdcpnxd9xiKZkVYqT5wfFuGDDDKKMrsDatGoo5YCEVoLOQEBkGZVB5DKVNShZUALSYRFoBfVuVcZIw17RhVKi4YSxUMUWtVYmdtWw62MYe8jexgyHigdhQQLIywpmrXvGUZUpTolNTRGiol7VSOIyNIgma7uSjqUGAtwCGDZtuyb3S3U3Z0cLh0GKTjvRmvmPZ4AOog8/jDSH1sdrSxyEXP1AAAAAElFTkSuQmCC)">
+      <div><b>András Pop</b><br><span class="muted">© <span id="yr">2026</span> · Built in public, in Budapest.</span></div>
+    </div>
+    <div class="side">
+      <p class="tagline">Three 45-minute slots, every Wednesday. <a href="https://calendly.com/stereogram/andraspop-45min">Pick one</a> whenever you're ready.</p>
+      <a class="totop" href="#top">Top ↑</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var tz='Europe/Budapest';
+  /* clock */
+  var clock=document.getElementById('clock');
+  function tick(){try{clock.textContent=new Intl.DateTimeFormat('en-GB',{hour:'2-digit',minute:'2-digit',timeZone:tz}).format(new Date())}catch(e){}}
+  tick(); setInterval(tick,15000);
+  document.getElementById('yr').textContent=new Date().getFullYear();
+
+
+  /* theme toggle: system → light → dark → system; "system" clears the override */
+  var themeBtn=document.getElementById('theme'), MODES=['system','light','dark'];
+  function setTheme(m,save){var de=document.documentElement;
+    if(m==='system')delete de.dataset.theme;else de.dataset.theme=m;
+    themeBtn.dataset.mode=m;var next=MODES[(MODES.indexOf(m)+1)%3];
+    themeBtn.setAttribute('aria-label','Theme: '+m+'. Switch to '+next);themeBtn.title='Theme: '+m;
+    if(save){try{if(m==='system')localStorage.removeItem('hi.theme');else localStorage.setItem('hi.theme',m)}catch(e){}}}
+  setTheme(document.documentElement.dataset.theme||'system',false);
+  themeBtn.addEventListener('click',function(){setTheme(MODES[(MODES.indexOf(themeBtn.dataset.mode)+1)%3],true)});
+
+  /* week view: busy blocks (illustrative) + the three real Wednesday slots */
+  var START=11,END=17; /* zoomed on the middle of the day */
+  var BUSY={0:[[0,1.5],[3.5,4.5]],1:[[.5,1.5],[4,5.5]],2:[[0,1]],3:[[0,1],[3,4.5]],4:[[1,2]]};
+  var SLOTS=['13:00','13:45','14:30'], CAL='https://calendly.com/stereogram/andraspop-45min';
+  function bud(){var p={};new Intl.DateTimeFormat('en-GB',{timeZone:tz,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23',weekday:'short'}).formatToParts(new Date()).forEach(function(x){p[x.type]=x.value});return p}
+  var weekReady=false;
+  function buildWeek(){
+    var p=bud(),wd={Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6,Sun:7}[p.weekday],hr=+p.hour+ +p.minute/60;
+    var base=new Date(Date.UTC(+p.year,+p.month-1,+p.day));
+    var toWed=3-wd; if(toWed<0||(toWed===0&&hr>=15.25))toWed+=7;
+    var wed=new Date(base.getTime()+toWed*864e5), mon=new Date(wed.getTime()-2*864e5);
+    var iso=wed.toISOString().slice(0,10), href=CAL+'?month='+iso.slice(0,7)+'&date='+iso;
+    var nice=new Intl.DateTimeFormat('en-GB',{timeZone:'UTC',day:'numeric',month:'short'}).format(wed);
+    document.getElementById('next').textContent=(toWed===0?'Today, ':'Next: Wed ')+nice;
+    var btn=document.getElementById('bookBtn'),lab=document.getElementById('bookLabel'); btn.href=href;
+    var head=document.getElementById('wkHead'),cols=document.getElementById('wkCols'),names=['Mon','Tue','Wed','Thu','Fri'],bi=0,h='',c='';
+    for(var i=0;i<5;i++){
+      var d=new Date(mon.getTime()+i*864e5),isToday=d.getTime()===base.getTime();
+      h+='<div class="wk-day'+(i===2?' wed':'')+(isToday?' today':'')+'"><span>'+names[i]+'</span><b>'+d.getUTCDate()+'</b></div>';
+      var inner='';
+      (BUSY[i]||[]).forEach(function(b){inner+='<i class="blk" style="--i:'+(bi++)+';top:calc(var(--h)*'+b[0]+' + 3px);height:calc(var(--h)*'+(b[1]-b[0])+' - 6px)"></i>'});
+      if(i===2)SLOTS.forEach(function(t,k){var st=(13-START)+k*.75;
+        inner+='<a class="open" style="--i:'+k+';top:calc(var(--h)*'+st+' + 1px);height:calc(var(--h)*.75 - 2px)" href="'+href+'" data-t="'+t+'" aria-label="Book Wednesday '+nice+' at '+t+'"><span class="t">'+t+'</span></a>'});
+      if(isToday&&hr>=START&&hr<=END)inner+='<span class="now" style="top:calc(var(--h)*'+(hr-START).toFixed(3)+')"></span>';
+      c+='<div class="wk-col'+(i===2?' wed':'')+'">'+inner+'</div>';
+    }
+    head.innerHTML=h; cols.innerHTML=c;
+    var def=lab.textContent;
+    cols.querySelectorAll('.open').forEach(function(a){
+      function on(){lab.textContent='Book Wed '+nice+' · '+a.dataset.t}
+      function off(){lab.textContent=def}
+      a.addEventListener('mouseenter',on);a.addEventListener('focus',on);a.addEventListener('mouseleave',off);a.addEventListener('blur',off);
+    });
+    weekReady=true;
+  }
+  buildWeek();
+  var weekStarted=false;
+  function startWeek(){ if(weekStarted)return; weekStarted=true; var w=document.getElementById('week');
+    setTimeout(function(){w.classList.add('settled');
+      /* one light nudge: walk the open slots once, so it's clear they're interactive */
+      var o=w.querySelectorAll('.open'),k=0;
+      (function step(){ if(k>0)o[k-1].classList.remove('hot'); if(k<o.length){o[k].classList.add('hot');k++;setTimeout(step,260)} })();
+    },1500);
+  }
+
+  /* reel player: autoplay muted · tap to play/pause · scrub · mute toggle */
+  /* blurred preview → photo: fade the portrait in once it has loaded */
+  document.querySelectorAll('.portrait img').forEach(function(img){
+    function done(){img.classList.add('loaded')}
+    if(img.complete&&img.naturalWidth)done();else img.addEventListener('load',done); /* on error it stays on the blur */
+  });
+
+  /* video source. Safari and every iOS browser: Apple's native HLS player. Elsewhere: hls.js (full build: Mux sends
+     audio as a separate track, which the light build ignores). Without either: the MP4 static rendition. */
+  (function(){
+    var vid=document.getElementById('vid'),HLS=vid.dataset.hls,MP4=vid.dataset.mp4,ua=navigator.userAgent,
+        native=vid.canPlayType('application/vnd.apple.mpegurl')!=='',
+        apple=/iP(hone|ad|od)/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)||
+              /^((?!chrome|chromium|crios|fxios|edg|opr|android).)*safari/i.test(ua);
+    function fallback(){vid.src=native?HLS:MP4}
+    if((apple&&native)||!(window.MediaSource||window.ManagedMediaSource)){fallback();return}
+    var sc=document.createElement('script');sc.src='/hi/vendor/hls.min.js';sc.async=true;
+    sc.onload=function(){
+      if(!window.Hls||!Hls.isSupported()){fallback();return}
+      var h=new Hls({capLevelToPlayerSize:true,maxBufferLength:20});
+      h.on(Hls.Events.ERROR,function(_,d){if(d.fatal){h.destroy();fallback()}});
+      h.loadSource(HLS);h.attachMedia(vid);
+    };
+    sc.onerror=fallback;
+    document.head.appendChild(sc);
+  })();
+
+  var reel=document.getElementById('reel'),v=document.getElementById('vid'),sc=document.getElementById('scrub'),
+      fill=document.getElementById('fill'),knob=document.getElementById('knob'),tm=document.getElementById('time'),mb=document.getElementById('mute');
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches, userPaused=reduce, dragging=false;
+  function fmt(t){t=Math.max(0,Math.floor(t||0));return Math.floor(t/60)+':'+String(t%60).padStart(2,'0')}
+  function draw(){var p=v.duration?v.currentTime/v.duration:0;fill.style.width=(p*100)+'%';knob.style.left=(p*100)+'%';
+    tm.textContent=fmt(v.currentTime)+' / '+fmt(v.duration);sc.setAttribute('aria-valuenow',Math.round(p*100));sc.setAttribute('aria-valuetext',fmt(v.currentTime))}
+  function state(){reel.classList.toggle('paused',v.paused)}
+  function play(){var pr=v.play();if(pr&&pr.catch)pr.catch(state)}
+  v.addEventListener('timeupdate',draw);v.addEventListener('loadedmetadata',draw);
+  v.addEventListener('play',state);v.addEventListener('pause',state);
+  reel.tabIndex=0;
+  reel.addEventListener('click',function(e){if(e.target.closest('.bar'))return;if(v.paused){userPaused=false;play()}else{userPaused=true;v.pause()}});
+  reel.addEventListener('keydown',function(e){if(e.target===reel&&(e.key===' '||e.key==='Enter')){e.preventDefault();reel.click()}});
+  mb.addEventListener('click',function(e){e.stopPropagation();v.muted=!v.muted;reel.classList.toggle('unmuted',!v.muted);mb.setAttribute('aria-label',v.muted?'Unmute':'Mute');if(v.paused){userPaused=false;play()}});
+  function seekAt(x){var r=sc.getBoundingClientRect(),p=Math.min(1,Math.max(0,(x-r.left)/r.width));if(v.duration){v.currentTime=p*v.duration;draw()}}
+  sc.addEventListener('pointerdown',function(e){e.stopPropagation();dragging=true;sc.classList.add('drag');sc.setPointerCapture(e.pointerId);seekAt(e.clientX)});
+  sc.addEventListener('pointermove',function(e){if(dragging)seekAt(e.clientX)});
+  function end(){dragging=false;sc.classList.remove('drag')}
+  sc.addEventListener('pointerup',end);sc.addEventListener('pointercancel',end);
+  sc.addEventListener('click',function(e){e.stopPropagation()});
+  sc.addEventListener('keydown',function(e){if(!v.duration)return;var d=e.key==='ArrowRight'?5:e.key==='ArrowLeft'?-5:0;if(d){e.preventDefault();v.currentTime=Math.min(v.duration,Math.max(0,v.currentTime+d));draw()}});
+  state();
+  if('IntersectionObserver' in window){new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){if(!userPaused)play()}else if(!v.paused){v.pause()}})},{threshold:.4}).observe(reel)}
+  else if(!reduce){play()}
+
+  /* motion layer — skipped for reduced motion or old browsers */
+  if(reduce||!('IntersectionObserver' in window))return;
+  var root=document.documentElement; root.classList.add('anim');
+
+  /* split text into masked words, keeping inline markup; the skyline rebus (.bridge) rises as one word */
+  var wi=0;
+  function wrapWord(node){var l=document.createElement('span');l.className='m-line';var w=document.createElement('span');w.className='m-word';w.style.setProperty('--i',wi++);
+    node.parentNode.insertBefore(l,node);w.appendChild(node);l.appendChild(w)}
+  function split(el){
+    Array.prototype.slice.call(el.childNodes).forEach(function(n){
+      if(n.nodeType===3){
+        var frag=document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(function(p){
+          if(!p)return;
+          if(/^\s+$/.test(p)){frag.appendChild(document.createTextNode(p));return}
+          var l=document.createElement('span');l.className='m-line';
+          var w=document.createElement('span');w.className='m-word';w.style.setProperty('--i',wi++);w.textContent=p;
+          l.appendChild(w);frag.appendChild(l);
+        });
+        n.parentNode.replaceChild(frag,n);
+      }else if(n.nodeType===1){
+        if(n.classList.contains('bridge'))wrapWord(n);else split(n);
+      }
+    });
+  }
+  document.querySelectorAll('[data-mask]').forEach(function(el){wi=0;split(el)});
+  document.querySelectorAll('.stagger').forEach(function(ul){Array.prototype.forEach.call(ul.children,function(li,i){li.style.setProperty('--i',i)})});
+
+  function reveal(el){el.classList.add('in');
+    if(el.hasAttribute('data-mask')){var n=el.querySelectorAll('.m-word').length,d=parseInt(getComputedStyle(el).getPropertyValue('--d'))||0;
+      setTimeout(function(){el.classList.add('done')},d+n*38+1100)}
+    if(el.id==='week')startWeek();}
+  var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){reveal(x.target);io.unobserve(x.target)}})},{rootMargin:'0px 0px -10% 0px'});
+  document.querySelectorAll('[data-mask]:not([data-now]),.fade,.card-in,.rule,.stagger,#week').forEach(function(el){io.observe(el)});
+  /* hero headline starts right after the header drops in */
+  var h=document.querySelector('[data-now]'); h.style.setProperty('--d','250ms');
+  requestAnimationFrame(function(){requestAnimationFrame(function(){reveal(h)})});
+})();
+</script>
+</body>
+</html>

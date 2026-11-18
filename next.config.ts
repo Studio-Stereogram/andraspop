@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
     // Real video thumbnails (YouTube, Instagram's CDN). Same list the Thumb component checks before using one.
     remotePatterns: THUMBNAIL_HOSTS.map((hostname) => ({ protocol: "https" as const, hostname: hostname.replace(/^\*\./, "**.") })),
   },
+  // /hi is a standalone static page (public/hi/index.html, with its own font, styles and script), outside the app.
+  async rewrites() {
+    return [{ source: "/hi", destination: "/hi/index.html" }];
+  },
   turbopack: {
     rules: {
       "*.css": {

@@ -40,9 +40,11 @@ Wide (YouTube)                          Tall (reel)        Idea
 | Position | right edge, vertical centre | bottom edge, horizontal centre |
 | Shape | 11px circle | 10px square rotated 45° |
 | Meaning | sequence: next in series, same series | context: references, attachment, inspired by, features, made by, related |
-| Line | solid, 2.2px, `--ink-2`, arrow | dashed 5/4 (attachment 3/4, references dotted, inspired-by 9/5), 1.4px, `--edge`; arrow except attachment/related |
+| Line | solid, 2.2px, `--ink-2` | dashed 5/4 (attachment 3/4, references dotted, inspired-by 9/5), 1.4px, `--edge` |
+| Ends | filled dot at both ends, r 3.6px, line colour | filled dot at both ends, r 2.8px, line colour |
 
 - Both handles take any number of connections; nodes may have none.
+- **No arrows.** Relations are not always one-way (same series, related), so every line ends in a dot at both ends where it meets the card. The kind label carries the reading.
 - Lines **float**: each end attaches to the midpoint of the side facing the other node; Bézier tangents are normal to that side (`k = max(40, distance × 0.38)`).
 - Selected node: its lines go `--ink` 2px with a mono uppercase kind label at the midpoint (stroked with `--bg` for legibility). Unrelated nodes fade to 42%.
 
@@ -57,7 +59,7 @@ Wide (YouTube)                          Tall (reel)        Idea
 
 ## Layout backgrounds
 - **Clusters:** topic anchors on a ring (co-tagged topics adjacent). Nodes pulled equally to all their topics, so multi-topic items sit in between. Each topic draws soft halos (rounded rects, 11% topic colour) around its members, which overlap where topics are shared. Labels: display face 46px uppercase in topic colour with a mono two-digit count.
-- **Timeline:** lanes YouTube / Instagram / X / Links, bookmarks and notes / People; lane titles display face 26px uppercase `--ink-2`. Mono date ticks on Mondays and month starts; Today line 1.5px `--hot` with a filled label; undated items in a Backlog column.
+- **Timeline:** lanes YouTube / Instagram / X / Links, bookmarks and notes / People; lane titles display face 26px uppercase `--ink-2`. Mono date ticks on Mondays and month starts; Today line 1.5px `--hot` with a filled label; undated items in a Backlog column. Opens on Today at a readable zoom (80–100%, never a fit-everything strip); a picture-in-picture overview above the zoom panel (desktop only) shows lanes, month ticks, Today and every card as a blip, outlines what is on screen, and pans on press or drag. The zoom panel gains a Today button.
 - **Tidy (Freeform view):** snap to 24px, share column x and row y for near-aligned items, exactly 48px gutters between close neighbours, clear overlaps by moving whole columns or column tails. Undo for 8s.
 
 ## Motion

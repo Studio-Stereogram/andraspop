@@ -263,10 +263,12 @@
   stroke-linejoin: round;
   text-anchor: middle;
 }
-.mm-markers { position: absolute; width: 0; height: 0; overflow: hidden; }
-#mm-arrow path { fill: var(--edge); }
-#mm-arrow-c path { fill: var(--ink-2); }
-#mm-arrow-hl path { fill: var(--ink); }
+/* end dots: drawn in the viewport portal, above the cards, centred on the border */
+.mm-canvas .react-flow__viewport-portal { pointer-events: none; z-index: 2000; } /* above selected nodes (React Flow raises them to 1000) */
+.mm-ecap { position: absolute; left: 0; top: 0; border-radius: 50%; background: var(--edge); transition: opacity .2s; }
+.mm-ecap.cont { background: var(--ink-2); }
+.mm-ecap.hl { background: var(--ink); }
+.mm-ecap.dim { opacity: .12; }
 
 /* ---------- layout backgrounds (behind edges and nodes) ---------- */
 .mm-bg { position: absolute; left: 0; top: 0; z-index: -1; pointer-events: none; }
@@ -319,6 +321,22 @@
   color: var(--ink-2);
   white-space: nowrap;
 }
+
+/* ---------- timeline overview (picture-in-picture, bottom left) ---------- */
+.mm-ov-bg { fill: var(--bg); }
+.mm-ov-lane { stroke: var(--line); stroke-width: 1; }
+.mm-ov-tick { stroke: var(--grid-2); stroke-width: 1; }
+.mm-ov-backlog { stroke: var(--line-2); stroke-width: 1; stroke-dasharray: 2 2; }
+.mm-ov-node { fill: var(--ink-3); }
+.mm-ov-node.dim { opacity: .3; }
+.mm-ov-node.sel { fill: var(--ink); }
+.mm-ov-today { stroke: var(--hot); stroke-width: 1.5; }
+.mm-ov-view {
+  fill: color-mix(in srgb, var(--ink) 7%, transparent);
+  stroke: var(--ink-2);
+  stroke-width: 1;
+}
+.mm-overview svg:hover .mm-ov-view { stroke: var(--ink); }
 
 @media (prefers-reduced-motion: reduce) {
   .mm-node, .mm-edge, .mm-node::after, .mm-play, .mm-playbtn span { transition: none; }
