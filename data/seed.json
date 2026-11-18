@@ -146,6 +146,24 @@
       "fy": 0
     },
     {
+      "id": "stereogram-financial-report",
+      "type": "link",
+      "title": "Studio Stereogram — financial report",
+      "summary": "Studio Stereogram's financial report.",
+      "platform": null,
+      "status": null,
+      "date": "",
+      "url": "https://studiostereogram.com/financial-report",
+      "thumbnail": "",
+      "handle": "",
+      "duration": "",
+      "links": [{ "url": "https://studiostereogram.com/", "label": "Studio Stereogram" }],
+      "topics": ["work"],
+      "private": false,
+      "fx": 1114,
+      "fy": -160
+    },
+    {
       "id": "say-hi",
       "type": "link",
       "title": "Say hi",
@@ -275,6 +293,7 @@
     { "id": "e-denver-slides", "from": "yt-76CJ_CMCfs0", "to": "slides-denver", "type": "reference", "kind": "attachment" },
     { "id": "e-lisbon-slides", "from": "yt-K2yXm-u9e0s", "to": "slides-lisbon", "type": "reference", "kind": "attachment" },
     { "id": "e-lisbon-gabor", "from": "yt-K2yXm-u9e0s", "to": "gabor-suhajda", "type": "reference", "kind": "features" },
-    { "id": "e-denver-gabor", "from": "yt-76CJ_CMCfs0", "to": "gabor-suhajda", "type": "reference", "kind": "features" }
+    { "id": "e-denver-gabor", "from": "yt-76CJ_CMCfs0", "to": "gabor-suhajda", "type": "reference", "kind": "features" },
+    { "id": "e-era-report", "from": "ig-DeKVLAEoUI3", "to": "stereogram-financial-report", "type": "reference", "kind": "attachment" }
   ]
 }
