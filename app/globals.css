@@ -44,8 +44,8 @@
   --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px color-mix(in srgb, var(--hot) 70%, transparent); /* box-shadow for :focus-visible; --ring below is shadcn's ring colour */
   --r-node: 4px; --r-sm: 6px; --r: 8px; --r-panel: 10px; --r-dialog: 12px;
   /* type */
-  --f-ui: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
-  --f-title: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
+  --f-ui: var(--font-allo), "Helvetica Neue", Arial, sans-serif;
+  --f-title: var(--font-allo), "Helvetica Neue", Arial, sans-serif;
   --f-mono: var(--font-plex-mono), ui-monospace, "SF Mono", Menlo, monospace;
   /* motion */
   --dur-fast: 120ms; --dur-pop: 140ms; --dur-layout: 520ms;
@@ -136,6 +136,7 @@
     background: var(--bg);
     color: var(--ink);
     font: 14px/1.45 var(--f-ui);
+    font-optical-sizing: auto; /* Allo: text cut at UI sizes, display cut from ~32px */
     -webkit-font-smoothing: antialiased;
   }
   :focus-visible { outline: none; box-shadow: var(--focus-ring); }

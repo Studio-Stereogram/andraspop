@@ -14,7 +14,7 @@ function Brand() {
     <div className="flex min-w-0 items-center gap-2.5">
       <AndrasLogo className="size-[22px] flex-none" />
       <span aria-hidden className="h-4 w-px flex-none bg-line-2" />
-      <b className="text-[15px] font-[650] tracking-[.01em] whitespace-nowrap [font-stretch:112%]">mind-map</b>
+      <b className="text-[16px] font-[650] tracking-[-.02em] whitespace-nowrap">mind-map</b>
       <span className="lbl whitespace-nowrap max-[1100px]:hidden">Building in public</span>
     </div>
   );

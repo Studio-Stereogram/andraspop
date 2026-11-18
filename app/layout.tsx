@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { archivo, plexMono } from "./fonts";
+import { allo, plexMono } from "./fonts";
 import { themeScript } from "@/lib/theme";
 import "./globals.css";
 
@@ -18,7 +18,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${archivo.variable} ${plexMono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${allo.variable} ${plexMono.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>

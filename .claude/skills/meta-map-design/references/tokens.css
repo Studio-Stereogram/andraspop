@@ -4,7 +4,9 @@
    The Next.js app loads fonts with next/font (app/fonts.ts) instead of the @import below, and points --f-* at its
    variables; lib/tokens.test.ts checks every other value here matches app/globals.css. */
 
-@import url("https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
+/* Allo Sharp: Allo (Josh Puckett, SIL OFL) pinned to sharp corners; variable wght 100–900, opsz 9–32. */
+@font-face { font-family: "Allo Sharp"; src: url("/hi/fonts/AlloSharp.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap");
 
 :root {
   /* surfaces */
@@ -42,8 +44,8 @@
   --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px color-mix(in srgb, var(--hot) 70%, transparent); /* box-shadow for :focus-visible; --ring below is shadcn's ring colour */
   --r-node: 4px; --r-sm: 6px; --r: 8px; --r-panel: 10px; --r-dialog: 12px;
   /* type */
-  --f-ui: "Archivo", "Helvetica Neue", Arial, sans-serif;
-  --f-title: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --f-ui: "Allo Sharp", "Helvetica Neue", Arial, sans-serif;
+  --f-title: "Allo Sharp", "Helvetica Neue", Arial, sans-serif;
   --f-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
   /* motion */
   --dur-fast: 120ms; --dur-pop: 140ms; --dur-layout: 520ms;
