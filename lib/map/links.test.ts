@@ -143,3 +143,12 @@ describe("misc", () => {
     expect(decodeEntities("&#39;a&#x27; &lt;b&gt;")).toBe("'a' <b>");
   });
 });
+
+describe("displayTitle", () => {
+  it("names untitled Instagram posts and reels apart", async () => {
+    const { displayTitle } = await import("./format");
+    const ig = { title: "", type: "video" as const, platform: "instagram" as const };
+    expect(displayTitle({ ...ig, url: "https://www.instagram.com/p/DVyKiuqiBbw/" })).toBe("Instagram post");
+    expect(displayTitle({ ...ig, url: "https://www.instagram.com/reel/DeKVLAEoUI3/" })).toBe("Instagram reel");
+  });
+});

@@ -69,11 +69,13 @@ export function safeHref(url: string): string | null {
   }
 }
 
-/** What to call an entry: its title, or a readable stand-in ("YouTube video", "Instagram reel", "Untitled link"). */
-export function displayTitle(n: Pick<MapNode, "title" | "type" | "platform">): string {
+/** What to call an entry: its title, or a readable stand-in ("YouTube video", "Instagram reel" or "post", "Untitled link"). */
+export function displayTitle(n: Pick<MapNode, "title" | "type" | "platform"> & { url?: string }): string {
   if (n.title) return n.title;
   if (n.type === "person") return "Unnamed person";
-  if (n.type === "video" && n.platform) return n.platform === "instagram" ? "Instagram reel" : `${PLATFORMS[n.platform].label} video`;
+  if (n.type === "video" && n.platform === "instagram")
+    return /instagram\.com\/p\//.test(n.url ?? "") ? "Instagram post" : "Instagram reel";
+  if (n.type === "video" && n.platform) return `${PLATFORMS[n.platform].label} video`;
   return `Untitled ${KIND_LABEL[n.type].toLowerCase()}`;
 }
 
