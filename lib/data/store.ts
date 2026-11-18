@@ -70,6 +70,12 @@ function supabaseStore(kind: SupabaseKey): MapStore {
     read: () => readSupabase(kind),
 
     async saveNode(node) {
+      // Only one entry can be New (unique index): taking the tag clears it everywhere else first.
+      if (node.new)
+        await rest(kind, `nodes?is_new=is.true&slug=neq.${encodeURIComponent(node.id)}`, {
+          method: "PATCH",
+          body: { is_new: false },
+        });
       const [row] = await rest<{ id: string }[]>(kind, "nodes?on_conflict=slug&select=id", {
         method: "POST",
         body: [nodeToRow(node)],
@@ -159,10 +165,13 @@ export function fileStore(): MapStore {
     kind: "file",
     read: readFileMap,
     saveNode: (node) =>
-      update((m) => ({
-        ...m,
-        nodes: m.nodes.some((n) => n.id === node.id) ? m.nodes.map((n) => (n.id === node.id ? node : n)) : [...m.nodes, node],
-      })),
+      update((m) => {
+        const others = node.new ? m.nodes.map((n) => (n.new && n.id !== node.id ? { ...n, new: undefined } : n)) : m.nodes;
+        return {
+          ...m,
+          nodes: others.some((n) => n.id === node.id) ? others.map((n) => (n.id === node.id ? node : n)) : [...others, node],
+        };
+      }),
     savePositions: (ps) =>
       update((m) => {
         const at = new Map(ps.map((p) => [p.id, p]));

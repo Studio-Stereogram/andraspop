@@ -63,6 +63,16 @@ describe("Supabase store", () => {
     expect((calls[2].body as unknown[]).length).toBe(node.topics.length);
   });
 
+  it("clears the New tag elsewhere before giving it to an entry", async () => {
+    const store = editorStore()!;
+    replies = [() => undefined, () => [{ id: "11111111-1111-4111-8111-111111111111" }]];
+    const node = { ...normalizeMap(seed).nodes[0], new: true, topics: [] };
+    await store.saveNode(node);
+    expect(calls[0]).toMatchObject({ method: "PATCH", body: { is_new: false } });
+    expect(decodeURIComponent(calls[0].path)).toBe(`nodes?is_new=is.true&slug=neq.${node.id}`);
+    expect((calls[1].body as { is_new: boolean }[])[0].is_new).toBe(true);
+  });
+
   it("resolves both ends of a connection by slug before saving it", async () => {
     const store = editorStore()!;
     replies = [
