@@ -3,7 +3,7 @@ import "server-only";
 import { cacheLife, cacheTag } from "next/cache";
 import seed from "@/data/seed.json";
 import { normalizeMap } from "@/lib/map/normalize";
-import type { MapData, MapNode } from "@/lib/map/types";
+import { withDerived, type Derived, type MapData, type MapNode } from "@/lib/map/types";
 import { toPublicMap } from "@/lib/map/visibility";
 import { persistCover } from "./covers";
 import { getLinkPreview } from "./link-preview";
@@ -43,9 +43,6 @@ async function readPublicSource(): Promise<{ map: MapData; fallback: boolean }> 
   return { map: normalizeMap(seed), fallback: false };
 }
 
-/** What a video's link adds when the data leaves a field empty: shown on cards, never written back. */
-export type Derived = Partial<Pick<MapNode, "title" | "thumbnail" | "date" | "duration" | "views">>;
-
 export async function derivedFields(n: MapNode): Promise<Derived> {
   if (n.type !== "video" || !n.url) return {};
   const p = await getLinkPreview(n.url);
@@ -66,5 +63,5 @@ export async function derivedFields(n: MapNode): Promise<Derived> {
  * Instagram covers are copied to Vercel Blob, because Instagram's own image links expire.
  */
 async function withLinkPreview(n: MapNode): Promise<MapNode> {
-  return { ...n, views: null, ...(await derivedFields(n)) };
+  return withDerived(n, await derivedFields(n));
 }

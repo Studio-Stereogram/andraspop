@@ -16,13 +16,15 @@ export type FlowNode = Node<FlowNodeData, "entry">;
 
 /**
  * Exactly two connection points per node: ● continuity on the right edge, ◆ reference on the bottom edge.
- * Edges reference them by id (ConnectionMode.Loose lets an edge end on either). Hidden in public mode.
+ * Edges reference them by id (ConnectionMode.Loose lets an edge end on either). Hidden in public mode; live in the
+ * editor's Edit mode, where dragging from one starts a connection.
  */
 function Ports() {
+  const { editing } = useMapVisual();
   return (
     <>
-      <Handle id="continuity" type="source" position={Position.Right} isConnectable={false} className="mm-port p-cont" />
-      <Handle id="reference" type="source" position={Position.Bottom} isConnectable={false} className="mm-port p-ref" />
+      <Handle id="continuity" type="source" position={Position.Right} isConnectable={editing} className="mm-port p-cont" />
+      <Handle id="reference" type="source" position={Position.Bottom} isConnectable={editing} className="mm-port p-ref" />
     </>
   );
 }

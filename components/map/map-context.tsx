@@ -13,6 +13,10 @@ export interface MapVisual {
   dim: ReadonlySet<string>;
   /** Topics the filter narrows to; cluster regions of other topics fade. */
   topicFilter: ReadonlySet<string>;
+  /** Editor, Edit mode: connection points are live. */
+  editing: boolean;
+  /** While connecting: entries already linked to the source by the same type (they fade to 30%). */
+  noDrop: ReadonlySet<string>;
 }
 
 export const MapVisualContext = createContext<MapVisual | null>(null);
@@ -25,13 +29,14 @@ export function useMapVisual(): MapVisual {
 
 /** Class names for a node's state: sel, nb (neighbour of the selection), fade, dim. */
 export function useNodeState(id: string, selected: boolean): string {
-  const { selectedId, neighbours, dim } = useMapVisual();
+  const { selectedId, neighbours, dim, noDrop } = useMapVisual();
   const nb = neighbours.has(id);
   return [
     selected && "sel",
     nb && "nb",
     selectedId && !selected && !nb && "fade",
     dim.has(id) && "dim",
+    noDrop.has(id) && "no-drop",
   ]
     .filter(Boolean)
     .join(" ");

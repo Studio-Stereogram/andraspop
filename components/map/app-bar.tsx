@@ -7,6 +7,20 @@ import { Kbd } from "@/components/ui/kbd";
 import { ActiveMarker, ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { VIEWS } from "@/lib/map/constants";
 import type { View } from "@/lib/map/types";
+import { cn } from "@/lib/utils";
+import type { SaveState } from "./editor/use-editor";
+
+export type Mode = "edit" | "public";
+
+/** Editor domain only: save status, Data, and the Edit / Public tabs. */
+export interface AppBarEditor {
+  mode: Mode;
+  onMode: (m: Mode) => void;
+  onData: () => void;
+  saveState: SaveState;
+}
+
+const SAVE_LABEL: Record<SaveState, string> = { saved: "Saved", saving: "Saving…", error: "Not saved" };
 
 /** András Pop's logo as the main brand, then the "mind-map" wordmark (lowercase, as the name is written). */
 function Brand() {
@@ -20,8 +34,11 @@ function Brand() {
   );
 }
 
-/** Brand left, view tabs centred, Say hi and the theme toggle right. The public domain has no Data or Edit/Public controls. */
-export function AppBar({ view, onView }: { view: View; onView: (v: View) => void }) {
+/**
+ * Brand left, view tabs centred, Say hi and the theme toggle right. The editor domain adds save status, Data and the
+ * Edit / Public tabs on the right; the public domain never shows them.
+ */
+export function AppBar({ view, onView, editor }: { view: View; onView: (v: View) => void; editor?: AppBarEditor }) {
   return (
     <header className="z-10 grid flex-none grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-x-3.5 gap-y-2.5 border-b border-line bg-bg px-3.5 py-2.5 max-[980px]:gap-2 max-[980px]:px-2.5 max-[980px]:py-2 max-[640px]:grid-cols-[minmax(0,1fr)_auto]">
       <Brand />
@@ -41,10 +58,38 @@ export function AppBar({ view, onView }: { view: View; onView: (v: View) => void
         ))}
       </ToggleGroup>
       <div className="flex items-center gap-1.5 justify-self-end">
-        {/* /hi is a static page outside the app (public/hi), so a plain link: full page load, no client routing. */}
-        <Button asChild variant="outline" size="sm">
-          <a href="/hi">Say hi</a>
-        </Button>
+        {editor ? (
+          <>
+            <span
+              aria-live="polite"
+              className={cn(
+                "mr-1 font-mono text-[10.5px] font-medium tracking-[.08em] whitespace-nowrap uppercase max-[980px]:hidden",
+                editor.saveState === "error" ? "text-hot" : "text-ink-3",
+              )}
+            >
+              {SAVE_LABEL[editor.saveState]}
+            </span>
+            {editor.mode === "edit" && (
+              <Button variant="outline" size="sm" onClick={editor.onData}>
+                Data
+              </Button>
+            )}
+            <ToggleGroup
+              type="single"
+              value={editor.mode}
+              onValueChange={(m) => m && editor.onMode(m as Mode)}
+              aria-label="Mode"
+            >
+              <ToggleGroupItem value="edit">Edit</ToggleGroupItem>
+              <ToggleGroupItem value="public">Public</ToggleGroupItem>
+            </ToggleGroup>
+          </>
+        ) : (
+          // /hi is a static page outside the app (public/hi), so a plain link: full page load, no client routing.
+          <Button asChild variant="outline" size="sm">
+            <a href="/hi">Say hi</a>
+          </Button>
+        )}
         <ThemeToggle />
       </div>
     </header>

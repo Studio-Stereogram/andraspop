@@ -52,6 +52,22 @@ export interface MapEdge {
   kind: EdgeKind;
 }
 
+/** What a video's link fills in where the data leaves a field empty: shown on cards, never written back. */
+export type Derived = Partial<Pick<MapNode, "title" | "thumbnail" | "date" | "duration" | "views">>;
+
+/** A node as shown: its own values, with empty fields filled from its link. */
+export function withDerived(n: MapNode, d: Derived | undefined): MapNode {
+  if (!d) return n;
+  return {
+    ...n,
+    title: n.title || d.title || "",
+    thumbnail: n.thumbnail || d.thumbnail || "",
+    date: n.date || d.date || "",
+    duration: n.duration || d.duration || "",
+    views: d.views ?? null,
+  };
+}
+
 export interface MapData {
   topics: Topic[];
   nodes: MapNode[];

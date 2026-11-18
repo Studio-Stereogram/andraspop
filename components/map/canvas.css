@@ -85,6 +85,49 @@
 /* Public mode never shows editing affordances. The handles stay in the DOM (React Flow attaches edges to them). */
 .mm-public .mm-port { visibility: hidden; }
 
+/* Editor, Edit mode (canvas.md → States): hovering a card grows both points; hovering a point fills it with --hot. */
+.mm-canvas:not(.mm-public) .mm-port.react-flow__handle { cursor: crosshair; }
+.mm-canvas:not(.mm-public) .react-flow__node:hover .mm-port { scale: 1.25; border-color: var(--ink); }
+.mm-canvas:not(.mm-public) .react-flow__node .mm-port:hover,
+.mm-canvas .mm-port.connectingfrom {
+  scale: 1.5;
+  background: var(--hot);
+  border-color: var(--hot);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--hot) 22%, transparent);
+}
+.mm-canvas:not(.mm-public) .react-flow__node.draggable { cursor: grab; }
+.mm-canvas:not(.mm-public) .react-flow__node.dragging { cursor: grabbing; }
+
+/* While connecting: candidates show faint brackets, entries already linked by the same type fade to 30%. */
+.mm-canvas.connecting .mm-node::after { --bc: var(--line-2); opacity: 1; }
+.mm-canvas.connecting .mm-node.no-drop { opacity: .3; }
+.mm-canvas.connecting .mm-node.no-drop::after { opacity: 0; }
+.mm-canvas .react-flow__connectionline { z-index: 2001; overflow: visible; }
+.mm-thread { fill: none; stroke: var(--hot); stroke-dasharray: 6 5; }
+.mm-thread.snapped { stroke-dasharray: none; }
+.mm-thread-dot { fill: var(--bg); stroke: var(--hot); }
+.mm-thread-dot.on { fill: var(--hot); }
+.mm-lockon {
+  fill: none;
+  stroke: var(--hot);
+  stroke-width: 1.5px;
+  vector-effect: non-scaling-stroke;
+  animation: mm-breathe .8s ease-in-out infinite alternate;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes mm-breathe { from { scale: 1; } to { scale: .985; } }
+.mm-thread-label {
+  font-family: var(--f-mono);
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  fill: var(--ink);
+  paint-order: stroke;
+  stroke: var(--bg);
+  stroke-linejoin: round;
+}
+
 /* ---------- thumbnails: each keeps its platform's frame ---------- */
 .mm-thumb {
   position: relative;

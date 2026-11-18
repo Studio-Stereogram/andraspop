@@ -54,3 +54,18 @@ export function link(a: Rect, b: Rect): Curve {
   const [sa, sb] = facing(a, b);
   return curve(sidePoint(a, sa), NORMAL[sa], sidePoint(b, sb), NORMAL[sb]);
 }
+
+/** A line from a's facing side to a free point (the pointer while connecting); from the right side if it's inside a. */
+export function toPoint(a: Rect, p: XY): Curve {
+  const inside = p.x >= a.x && p.x <= a.x + a.w && p.y >= a.y && p.y <= a.y + a.h;
+  const s = inside ? "r" : facing(a, { x: p.x, y: p.y, w: 0, h: 0 })[0];
+  const n = NORMAL[s];
+  return curve(sidePoint(a, s), n, p, [-n[0] * 0.3, -n[1] * 0.3]);
+}
+
+/** Distance from a point to a box (0 inside it). */
+export function distanceToRect(p: XY, r: Rect): number {
+  const dx = Math.max(r.x - p.x, 0, p.x - (r.x + r.w)),
+    dy = Math.max(r.y - p.y, 0, p.y - (r.y + r.h));
+  return Math.hypot(dx, dy);
+}
