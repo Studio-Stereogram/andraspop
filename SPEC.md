@@ -38,6 +38,7 @@ Visitors never see nodes with status `draft`, nodes marked private, or attachmen
 | status | `idea` · `draft` · `scheduled` · `published` | videos only |
 | date | date | publish/scheduled date for videos, added date for others |
 | url | url | canonical link out |
+| new | bool | the one entry marked **New** (a filled accent tag on its card); at most one at a time, so it keeps its weight |
 | links | `{url, label}[]` | more links besides `url` (a person's Instagram, a mirror, a download); label is optional and defaults to the site's name |
 | duration | text | e.g. `12:40`; later filled from platform APIs |
 | thumbnail | url | the demo generates a sequencer-style pattern seeded by the node (see §11); real thumbnails come from the platform APIs |

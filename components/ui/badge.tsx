@@ -12,6 +12,8 @@ const badgeVariants = cva("inline-flex shrink-0 items-center whitespace-nowrap",
         "h-5 gap-[5px] rounded-full border border-[color-mix(in_srgb,var(--sc)_38%,transparent)] bg-[color-mix(in_srgb,var(--sc)_15%,transparent)] px-2 text-[11px] leading-none font-medium text-[color-mix(in_srgb,var(--sc)_55%,var(--ink))] before:size-1.5 before:rounded-full before:bg-[var(--sc)] before:content-['']",
       outline:
         "h-[18px] rounded-sm border border-line-2 px-1.5 font-mono text-[10px] leading-none font-medium tracking-[.06em] text-ink-2",
+      // The one New entry: filled --hot like the Today label ("now"), mono uppercase.
+      new: "h-[18px] rounded-[3px] bg-hot px-1.5 font-mono text-[9.5px] leading-none font-semibold tracking-[.1em] text-white uppercase",
     },
     tone: {
       idea: "[--sc:var(--st-idea)]",

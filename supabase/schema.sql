@@ -2,6 +2,8 @@
 -- Run in the Supabase SQL editor. Public visitors use the anon key and only ever see public rows.
 -- Already ran an earlier version? Add the links column with:
 --   alter table public.nodes add column if not exists links jsonb not null default '[]'::jsonb;
+--   alter table public.nodes add column if not exists is_new boolean not null default false;
+--   create unique index if not exists nodes_one_new on public.nodes ((true)) where is_new;
 
 create extension if not exists "pgcrypto";
 
@@ -33,6 +35,7 @@ create table public.nodes (
   duration    text,
   thumbnail   text,
   links       jsonb not null default '[]'::jsonb, -- more links besides url: [{"url": "…", "label": "…"}]
+  is_new      boolean not null default false,       -- the one entry tagged New (see the unique index below)
   private     boolean not null default false,
   pos_x       real not null default 0,       -- Free layout position (fx / fy in the JSON format)
   pos_y       real not null default 0,
@@ -44,6 +47,7 @@ create table public.nodes (
   )
 );
 create index on public.nodes (type, status);
+create unique index nodes_one_new on public.nodes ((true)) where is_new;  -- at most one New entry
 create unique index nodes_platform_external on public.nodes (platform, external_id) where external_id is not null;
 
 create table public.node_topics (

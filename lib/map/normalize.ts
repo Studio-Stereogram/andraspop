@@ -1,4 +1,5 @@
 import { CONTINUITY_KINDS, REFERENCE_KINDS, TOPIC_PALETTE } from "./constants";
+import { isAllowedThumbnail } from "./links";
 import type { EdgeKind, EdgeType, ExtraLink, MapData, MapEdge, MapNode, NodeType, Platform, Status, Topic } from "./types";
 
 const NODE_TYPES: NodeType[] = ["video", "link", "bookmark", "person", "note"];
@@ -64,6 +65,7 @@ export function normalizeMap(input: unknown): MapData {
   }));
   const topicIds = new Set(topics.map((t) => t.id));
 
+  let newTaken = false; // at most one entry carries the New tag, so it keeps its weight: the first one wins
   const nodes: MapNode[] = (data.nodes as Raw[])
     .filter((n) => str(n.id) && oneOf(n.type, NODE_TYPES))
     .map((n) => {
@@ -78,7 +80,7 @@ export function normalizeMap(input: unknown): MapData {
         status: isVideo ? (oneOf(n.status, STATUSES) ?? "draft") : null,
         date: str(n.date),
         url: str(n.url),
-        thumbnail: httpsUrl(str(n.thumbnail)),
+        thumbnail: isAllowedThumbnail(str(n.thumbnail)) ? str(n.thumbnail) : httpsUrl(str(n.thumbnail)),
         handle: str(n.handle),
         duration: str(n.duration),
         links: normalizeLinks(n.links, str(n.url)),
@@ -86,6 +88,7 @@ export function normalizeMap(input: unknown): MapData {
         private: n.private === true,
         fx: num(n.fx),
         fy: num(n.fy),
+        ...(n.new === true && !newTaken && (newTaken = true) ? { new: true } : {}),
       };
     });
   const nodeIds = new Set(nodes.map((n) => n.id));

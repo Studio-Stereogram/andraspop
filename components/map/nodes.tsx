@@ -9,7 +9,7 @@ import { embedUrl, videoFrame } from "@/lib/map/links";
 import type { MapNode, Topic } from "@/lib/map/types";
 import { cn } from "@/lib/utils";
 import { useMapVisual, useNodeState } from "./map-context";
-import { Avatar, Thumb, TopicTags } from "./pieces";
+import { Avatar, Cover, Thumb, TopicTags } from "./pieces";
 
 export type FlowNodeData = { node: MapNode };
 export type FlowNode = Node<FlowNodeData, "entry">;
@@ -37,7 +37,14 @@ function PersonCard({ n, state }: { n: MapNode; state: string }) {
       <Ports />
       <Avatar node={n} />
       <div className="mm-pbody">
-        <span className="mm-pkind">Person{n.private ? " · private" : ""}</span>
+        <span className="mm-pkind">
+          Person{n.private ? " · private" : ""}
+          {n.new && (
+            <Badge variant="new" className="ml-1.5 align-[1px]">
+              New
+            </Badge>
+          )}
+        </span>
         <div className={cn("mm-ntitle", !n.title && "empty")}>{displayTitle(n)}</div>
         <div className="mm-nmeta">{personMeta(n)}</div>
       </div>
@@ -60,10 +67,12 @@ function EntryCard({ n, state, topicById }: { n: MapNode; state: string; topicBy
       <div className="mm-nhead">
         <span>{KIND_LABEL[n.type]}</span>
         {isVideo && n.platform && <Badge variant="outline">{PLATFORMS[n.platform].short}</Badge>}
+        {n.new && <Badge variant="new">New</Badge>}
         {isVideo && n.status && <Badge tone={n.status}>{STATUS_LABEL[n.status]}</Badge>}
         {!isVideo && n.private && <Badge tone="private">Private</Badge>}
       </div>
       {isVideo && !compact && <Thumb node={n} topicById={topicById} play={embedUrl(n.url) !== null} />}
+      {!isVideo && <Cover node={n} />}
       <div className="mm-nbody">
         <div className={cn("mm-ntitle", !n.title && "empty")}>{displayTitle(n)}</div>
         {compact && n.summary && <p className="mm-nsum">{n.summary}</p>}

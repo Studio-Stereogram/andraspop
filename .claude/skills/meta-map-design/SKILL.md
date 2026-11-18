@@ -27,7 +27,7 @@ When in doubt: content can be expressive, controls must be trivial to read.
 - Chrome is greyscale. Colour carries meaning only:
   - **Topic colours:** saturated set: blue `#3E63DD`, teal `#12A594`, orange `#F76B15`, magenta `#D6409F`, violet `#8E4EC6`, brown `#A18072`, green `#46A758`. Spares: `#0090FF`, `#E5484D`, `#FFB224`. Topic colour appears as small squares, chip dots, cluster halos and labels, and in thumbnails. Never as a card fill.
   - **Status:** idea grey, draft amber, scheduled blue, published green. Always as a Badge (tinted pill with a dot), never as plain coloured text.
-  - **Accent `--hot` (#E5553A):** reserved for interaction and "now": active tab marker, connect thread, drop target, focus ring, Today line, filter count badge. Never decorative, never a topic.
+  - **Accent `--hot` (#E5553A):** reserved for interaction and "now": active tab marker, connect thread, drop target, focus ring, Today line, filter count badge, and the **New** tag (one entry at a time, filled like the Today label). Never decorative, never a topic.
 - Text on tints uses `color-mix(in srgb, var(--sc) 55%, var(--ink))`, not raw colour.
 
 ## Exception: /hi
