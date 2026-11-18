@@ -59,6 +59,29 @@ export function avatarColor(n: Pick<MapNode, "title" | "id">): string {
   return TOPIC_PALETTE[h32(n.title || n.id) % TOPIC_PALETTE.length];
 }
 
+const SITE_NAMES: [RegExp, string][] = [
+  [/(^|\.)instagram\.com$/, "Instagram"],
+  [/(^|\.)(x|twitter)\.com$/, "X"],
+  [/(^|\.)(youtube\.com|youtu\.be)$/, "YouTube"],
+  [/(^|\.)linkedin\.com$/, "LinkedIn"],
+  [/(^|\.)github\.com$/, "GitHub"],
+  [/(^|\.)figma\.com$/, "Figma"],
+  [/(^|\.)behance\.net$/, "Behance"],
+  [/(^|\.)dribbble\.com$/, "Dribbble"],
+  [/(^|\.)threads\.(net|com)$/, "Threads"],
+  [/(^|\.)bsky\.app$/, "Bluesky"],
+  [/(^|\.)tiktok\.com$/, "TikTok"],
+  [/(^|\.)vimeo\.com$/, "Vimeo"],
+  [/(^|\.)substack\.com$/, "Substack"],
+];
+
+/** A link's button text: its label, else the site's name ("Instagram"), else the host name. */
+export function linkLabel(l: { url: string; label: string }): string {
+  if (l.label) return l.label;
+  const host = hostOf(l.url);
+  return SITE_NAMES.find(([re]) => re.test(host))?.[1] ?? host;
+}
+
 /** Only http(s) links are rendered as hrefs; anything else is treated as missing. */
 export function safeHref(url: string): string | null {
   try {

@@ -1,5 +1,5 @@
 import { KIND_LABEL, PLATFORMS } from "@/lib/map/constants";
-import { displayTitle, formatDate, safeHref } from "@/lib/map/format";
+import { displayTitle, formatDate, linkLabel, safeHref } from "@/lib/map/format";
 import type { MapData } from "@/lib/map/types";
 
 /**
@@ -25,6 +25,16 @@ export function EntryList({ map }: { map: MapData }) {
               {href ? <a href={href}>{displayTitle(n)}</a> : displayTitle(n)}
               {` (${kind}${n.date ? `, ${formatDate(n.date)}` : ""})`}
               {n.summary && <p>{n.summary}</p>}
+              {n.links.length > 0 && (
+                <p>
+                  {n.links.map((l, i) => (
+                    <span key={l.url}>
+                      {i > 0 && " · "}
+                      <a href={safeHref(l.url) ?? undefined}>{linkLabel(l)}</a>
+                    </span>
+                  ))}
+                </p>
+              )}
             </li>
           );
         })}
