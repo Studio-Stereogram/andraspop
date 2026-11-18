@@ -61,6 +61,27 @@ export function Thumb({
   );
 }
 
+/**
+ * A link or bookmark's cover (e.g. a deck's first slide), 16:9 like a wide video frame. Nothing when the entry has
+ * no usable image or it fails to load: links don't get a generated pattern.
+ */
+export function Cover({ node, large = false }: { node: MapNode; large?: boolean }) {
+  const [failed, setFailed] = useState(false);
+  if (!node.thumbnail || !isAllowedThumbnail(node.thumbnail) || failed) return null;
+  return (
+    <div className={cn("mm-thumb f-wide", large && "lg")}>
+      <Image
+        src={node.thumbnail}
+        alt=""
+        fill
+        sizes={large ? "320px" : `${nodeWidth(node)}px`}
+        className="object-cover"
+        onError={() => setFailed(true)}
+      />
+    </div>
+  );
+}
+
 export function Avatar({ node, large = false }: { node: MapNode; large?: boolean }) {
   return (
     <span className={cn("mm-avatar", large && "lg")} style={{ "--av": avatarColor(node) } as CSSProperties} aria-hidden>

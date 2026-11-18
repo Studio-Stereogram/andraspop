@@ -24,7 +24,7 @@ Install shadcn/ui and keep its components, then theme them through `tokens.css`.
   - `destructive`: `--hot` text and border; the confirm step is solid.
   - `icon`: square 32/28.
   - Toggle buttons (e.g. Filters while open) use `aria-pressed` and the `--surface-2` wash.
-- **Badge**: status = tinted pill (15% tint, 38% border, dot, 11px/500). Platform = outline, mono 10px, 4px radius. "Sample data" = draft-tinted badge.
+- **Badge**: status = tinted pill (15% tint, 38% border, dot, 11px/500). Platform = outline, mono 10px, 4px radius. New = filled `--hot`, white mono 9.5px uppercase, 3px radius; only one entry on the map carries it, in the card header after the platform and in the inspector header. "Sample data" = draft-tinted badge.
 - **Toggle group** (filter chips): 28px, 6px radius, outline. Pressed = inverted (ink fill, bg text) plus a check mark. Topic chips lead with an 8px topic square. Counts in mono `--ink-3`.
 - **Switch**: 34×20, `--surface-3` off, ink on.
 - **Checkbox**: 16px, 4px radius, ink fill with bg check.

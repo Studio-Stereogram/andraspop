@@ -10,7 +10,7 @@ import { displayTitle, formatDate, handleOf, hostOf, isXUrl, linkLabel, personMe
 import type { EdgeType, MapData, MapNode, Topic } from "@/lib/map/types";
 import { videoFrame } from "@/lib/map/links";
 import { formatViews } from "@/lib/map/youtube";
-import { Avatar, PortGlyph } from "./pieces";
+import { Avatar, Cover, PortGlyph } from "./pieces";
 import { Player } from "./player";
 
 function Connections({ node, map, onGo }: { node: MapNode; map: MapData; onGo: (id: string) => void }) {
@@ -106,6 +106,7 @@ export function Inspector({
     >
       <div className="sticky top-0 z-[1] flex items-center gap-2 border-b border-line bg-surface py-2.5 pr-2.5 pl-4">
         <span className="lbl">{label}</span>
+        {node.new && <Badge variant="new">New</Badge>}
         <Button variant="ghost" size="icon-sm" className="ml-auto" onClick={onClose} aria-label="Close inspector">
           <X />
         </Button>
@@ -114,6 +115,7 @@ export function Inspector({
       <div className="grid gap-4 p-4">
         {isVideo && videoFrame(node) !== "none" && <Player key={node.id} node={node} topicById={topicById} />}
         {isPerson && <Avatar node={node} large />}
+        {!isVideo && !isPerson && <Cover key={node.id} node={node} large />}
         <h2 className="m-0 text-[26px] leading-[1.08] font-[650] tracking-[-.01em] text-balance [font-stretch:104%]">
           {displayTitle(node)}
         </h2>

@@ -42,6 +42,8 @@ export interface MapNode {
   /** People only: X handle. */
   handle: string;
   duration: string;
+  /** The one entry marked New (normalizeMap keeps only the first). Optional in the JSON format. */
+  new?: boolean;
   /** More links besides `url` (optional in the JSON format; [] when absent). */
   links: ExtraLink[];
   /** From the platform at build time (YouTube only for now). Not part of the JSON import/export format. */

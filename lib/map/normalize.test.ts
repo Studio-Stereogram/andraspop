@@ -75,3 +75,20 @@ describe("extra links", () => {
     expect(linkLabel({ url: "https://github.com/a", label: "Source" })).toBe("Source");
   });
 });
+
+describe("the New tag", () => {
+  it("is kept on the first entry only", () => {
+    const map = normalizeMap({
+      topics: [],
+      nodes: [
+        { id: "a", type: "note" },
+        { id: "b", type: "link", new: true },
+        { id: "c", type: "link", new: true },
+        { id: "d", type: "link", new: "yes" },
+      ],
+      edges: [],
+    });
+    expect(map.nodes.filter((n) => n.new).map((n) => n.id)).toEqual(["b"]);
+    expect("new" in map.nodes[0]).toBe(false);
+  });
+});

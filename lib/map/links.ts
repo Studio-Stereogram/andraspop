@@ -22,7 +22,11 @@ export const THUMBNAIL_HOSTS = [
   "*.public.blob.vercel-storage.com", // covers copied to Vercel Blob (lib/data/covers.ts)
 ] as const;
 
+/** Covers kept in the repo (public/thumbs), e.g. a deck's first slide. Same origin, so next/image needs no config. */
+const LOCAL_THUMB = /^\/thumbs\/[A-Za-z0-9._-]+\.(?:jpe?g|png|webp)$/;
+
 export function isAllowedThumbnail(url: string): boolean {
+  if (LOCAL_THUMB.test(url)) return true;
   try {
     const u = new URL(url);
     if (u.protocol !== "https:") return false;
