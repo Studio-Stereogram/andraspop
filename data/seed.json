@@ -160,7 +160,7 @@
       "links": [{ "url": "https://studiostereogram.com/", "label": "Studio Stereogram" }],
       "topics": ["work"],
       "private": false,
-      "fx": 1114,
+      "fx": 1132,
       "fy": -160
     },
     {
@@ -172,13 +172,13 @@
       "status": null,
       "date": "2026-11-05",
       "url": "https://andraspop.com/hi",
-      "thumbnail": "",
+      "thumbnail": "/thumbs/say-hi.jpg",
       "handle": "",
       "duration": "",
       "new": true,
       "topics": ["community"],
       "private": false,
-      "fx": 1364,
+      "fx": 1400,
       "fy": 0
     },
     {
@@ -195,7 +195,7 @@
       "duration": "",
       "topics": ["community"],
       "private": false,
-      "fx": 1364,
+      "fx": 1400,
       "fy": 178
     },
     {
