@@ -32,7 +32,7 @@ github.com/Studio-Stereogram/andraspop  ──push main──▶  Vercel project
 | Writes | Server actions use the Supabase service key after re-checking the password | Writes use the user's session; RLS checks `is_editor()` |
 | Logout | Close the browser | Real sessions |
 
-Start with the password gate (`docs/snippets/proxy.ts`). The schema already contains the `editors` table and `is_editor()` policy, so switching to magic links later doesn't need a migration.
+Start with the password gate (`proxy.ts` at the project root; `docs/snippets/proxy.ts` was its first sketch). The schema already contains the `editors` table and `is_editor()` policy, so switching to magic links later doesn't need a migration.
 
 **Security notes**
 - Every server action and API route that writes must **re-check** the gate. The proxy is a convenience layer, not the only lock. Next.js has had proxy/middleware bypass bugs before.
@@ -49,6 +49,19 @@ Start with the password gate (`docs/snippets/proxy.ts`). The schema already cont
 6. **Publish flow.** When you mark a video Published in the editor, the server action saves it and calls `revalidateTag('map')`, so the public page updates within seconds while staying cached.
 7. **Supabase keepalive.** Supabase pauses free projects after 7 days without activity, and while the connected database is paused Vercel refuses to build any deployment ("Resource provisioning failed"). `vercel.json` runs a daily Vercel Cron job that calls `/api/keepalive`, which reads one row through Supabase's REST API with the publishable key. It needs `CRON_SECRET` set in Vercel (Production, Sensitive); without it the route refuses every call. Crons run on production deployments only. Failed runs show in the project's Cron Jobs logs.
 8. **Platform sync (M3).** A Vercel Cron job (`vercel.json` → `crons`) calls `/api/sync/instagram` and `/api/sync/youtube` every 6–12 hours. The routes check `CRON_SECRET`.
+
+## Turning on the editor (M2)
+
+The code is in place; these steps switch it on. Until they're done the public site keeps showing `data/seed.json`.
+
+1. **Schema.** In Supabase → SQL editor, run `supabase/schema.sql` once. (The Vercel integration already set `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` and `SUPABASE_SECRET_KEY`.)
+2. **Password.** In Vercel → Settings → Environment Variables, add `EDIT_PASSWORD` (Production, Sensitive, 24+ random characters from a password manager).
+3. **Host name.** Add `EDIT_HOST=edit.andraspop.com` (Production). Without it any `edit.` host name counts as the editor.
+4. **Domain.** Vercel → Settings → Domains → add `edit.andraspop.com`, and the DNS record Vercel shows, if your DNS isn't on Vercel.
+5. **Redeploy** so the new variables apply.
+6. **First run.** Open `edit.andraspop.com`, enter the password (any user name), and press **Import the seed**. From then on the public page reads the database.
+
+Saving in the editor writes through server actions that re-check the password and call `updateTag('map')`, so visitors get the change on their next page load. **Data → Import** replaces everything; it runs as several REST calls rather than one transaction, so **Download** the current JSON first.
 
 ## Domains
 
