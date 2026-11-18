@@ -34,3 +34,6 @@ Thumbs.db
 # testing / misc
 /coverage
 *.pem
+
+# local editor data (development without Supabase)
+/.data/
