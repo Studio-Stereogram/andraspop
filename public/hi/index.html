@@ -279,8 +279,8 @@
   <section class="cards" aria-label="Video and booking">
     <figure class="card reel card-in" id="reel" aria-label="Video: why I'm doing this" style="--d:0ms">
       <!-- The reel, hosted on Mux (playback ID PCrbiGlta8LLQdC1ea68uC3a5fMqwjk6XeShM5O3voQ). The source is 9:16; the card crops it to 4:5 (object-fit: cover).
-           Played with hls.js (public/hi/vendor, loaded on demand) wherever Media Source is available; native HLS otherwise
-           (older iOS); the MP4 static rendition ("highest", if enabled on the asset) as the last resort. -->
+           Safari and iOS play it natively; other browsers use hls.js (full build, public/hi/vendor, loaded on demand);
+           the MP4 static rendition ("highest", if enabled on the asset) is the last resort. -->
       <video id="vid" muted loop playsinline preload="metadata" data-hls="https://stream.mux.com/PCrbiGlta8LLQdC1ea68uC3a5fMqwjk6XeShM5O3voQ.m3u8" data-mp4="https://stream.mux.com/PCrbiGlta8LLQdC1ea68uC3a5fMqwjk6XeShM5O3voQ/highest.mp4" poster="https://image.mux.com/PCrbiGlta8LLQdC1ea68uC3a5fMqwjk6XeShM5O3voQ/thumbnail.jpg?time=1&amp;width=720&amp;height=900&amp;fit_mode=crop">
       </video>
       <span class="tag">Why I'm doing this</span>
@@ -467,13 +467,16 @@
   }
 
   /* reel player: autoplay muted · tap to play/pause · scrub · mute toggle */
-  /* video source: hls.js where Media Source exists (Chrome, Edge, Firefox, Safari, iOS 17.1+), else native HLS, else MP4 */
+  /* video source. Safari and every iOS browser: Apple's native HLS player. Elsewhere: hls.js (full build: Mux sends
+     audio as a separate track, which the light build ignores). Without either: the MP4 static rendition. */
   (function(){
-    var vid=document.getElementById('vid'),HLS=vid.dataset.hls,MP4=vid.dataset.mp4,
-        native=vid.canPlayType('application/vnd.apple.mpegurl')!=='';
+    var vid=document.getElementById('vid'),HLS=vid.dataset.hls,MP4=vid.dataset.mp4,ua=navigator.userAgent,
+        native=vid.canPlayType('application/vnd.apple.mpegurl')!=='',
+        apple=/iP(hone|ad|od)/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)||
+              /^((?!chrome|chromium|crios|fxios|edg|opr|android).)*safari/i.test(ua);
     function fallback(){vid.src=native?HLS:MP4}
-    if(!(window.MediaSource||window.ManagedMediaSource)){fallback();return}
-    var sc=document.createElement('script');sc.src='/hi/vendor/hls.light.min.js';sc.async=true;
+    if((apple&&native)||!(window.MediaSource||window.ManagedMediaSource)){fallback();return}
+    var sc=document.createElement('script');sc.src='/hi/vendor/hls.min.js';sc.async=true;
     sc.onload=function(){
       if(!window.Hls||!Hls.isSupported()){fallback();return}
       var h=new Hls({capLevelToPlayerSize:true,maxBufferLength:20});
