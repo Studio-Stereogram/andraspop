@@ -15,7 +15,7 @@
 <meta name="twitter:title" content="Thinking out loud — András Pop">
 <meta name="twitter:description" content="Three 45-minute conversations every Wednesday. Bring a half-formed idea and we'll talk it into shape. No pitch, nothing to prepare.">
 <meta name="twitter:image" content="https://andraspop.com/hi/assets/og.jpg">
-<script>try{var t=localStorage.getItem("hi.theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
+<script>document.documentElement.classList.add("js");try{var t=localStorage.getItem("hi.theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="preload" href="/hi/fonts/AlloSharp.woff2" as="font" type="font/woff2" crossorigin>
 <style>
   /* Allo by Josh Puckett (SIL OFL, see fonts/Allo-OFL.txt).
@@ -136,7 +136,7 @@
 
   /* reel player */
   .reel{background:#000;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none}
-  .reel video{width:100%;height:100%;object-fit:cover;display:block}
+  .reel video{width:100%;height:100%;object-fit:cover;object-position:50% 65%;display:block} /* the reel's burned-in captions sit low: show a bit more of the bottom so they clear the controls */
   .reel::after{content:"";position:absolute;inset:auto 0 0 0;height:38%;background:linear-gradient(transparent,rgba(0,0,0,.55));pointer-events:none}
   .reel .tag{position:absolute;top:16px;left:16px;z-index:2;font-size:12px;padding:6px 11px;border-radius:999px;background:rgba(0,0,0,.35);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
   .reel .big{position:absolute;inset:0;margin:auto;width:64px;height:64px;border-radius:50%;background:rgba(0,0,0,.4);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:grid;place-items:center;z-index:2;opacity:0;transform:scale(.9);transition:opacity .25s,transform .25s;pointer-events:none}
@@ -165,6 +165,11 @@
   .row h3{font:var(--w-label) clamp(22px,2.2vw,28px)/1.1 var(--font-display);letter-spacing:-.02em}
   .portrait{margin-top:clamp(28px,4vw,44px);width:100%;aspect-ratio:4/5;border-radius:12px;overflow:hidden;background:var(--card)}
   .portrait img{width:100%;height:100%;object-fit:cover;display:block}
+  /* blurred previews (tiny inline PNGs made from each image) show until the real image arrives */
+  .portrait,.reel,.who img{background-size:cover;background-position:center;background-repeat:no-repeat}
+  .reel{background-position:50% 65%}
+  .js .portrait img{opacity:0;transition:opacity .7s var(--ease)}
+  .js .portrait img.loaded{opacity:1}
   .body{max-width:560px}
   .body p+p{margin-top:1em}
   .body a{text-decoration:underline;text-decoration-color:var(--muted);text-underline-offset:3px;transition:text-decoration-color .2s}
@@ -234,7 +239,7 @@
 
 <header class="wrap meta meta-top" id="top">
   <div class="who">
-    <img src="/hi/assets/avatar.jpg" alt="" width="36" height="36">
+    <img src="/hi/assets/avatar.jpg" alt="" width="36" height="36" style="background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABIElEQVR42l2SS24DMQxD+Wi3OUW76f3PlyYzErvwTJpEEPyDKJGE+f76MUz7c47Lx7x8zM8xhkmy7fW73a+3+/W+3bZt26s6kzMEWnHu5wXEedAU6AUEJ+QofCoQmmDgXHl0O5ofiWQRkYkNYBsbrJWKZIl/AobgvE3wv5wIPebaDhHJXI/iqdcpnxd9xiKZkVYqT5wfFuGDDDKKMrsDatGoo5YCEVoLOQEBkGZVB5DKVNShZUALSYRFoBfVuVcZIw17RhVKi4YSxUMUWtVYmdtWw62MYe8jexgyHigdhQQLIywpmrXvGUZUpTolNTRGiol7VSOIyNIgma7uSjqUGAtwCGDZtuyb3S3U3Z0cLh0GKTjvRmvmPZ4AOog8/jDSH1sdrSxyEXP1AAAAAElFTkSuQmCC)">
     <div><b>András Pop</b><br>
     <span class="muted">Local time — <span class="clock" id="clock">--:--</span> Budapest, HU</span></div>
   </div>
@@ -277,11 +282,12 @@
   </section>
 
   <section class="cards" aria-label="Video and booking">
-    <figure class="card reel card-in" id="reel" aria-label="Video: why I'm doing this" style="--d:0ms">
-      <!-- The reel, hosted on Mux (playback ID PCrbiGlta8LLQdC1ea68uC3a5fMqwjk6XeShM5O3voQ). The source is 9:16; the card crops it to 4:5 (object-fit: cover).
+    <figure class="card reel card-in" id="reel" aria-label="Video: why I'm doing this" style="--d:0ms;background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAgCAIAAACQHr+mAAACuklEQVR42nWV3ZLdNgyDP9Da5hH7Ann/mUzb7LEkAr2QTza9qIfj8R8EUgBp/fn9u1S6ivFRH9/08a0+/qA+HHqtef+8f/51//xx//Njfv697s9eM+4hRYoIRIkSniD/f4wiYCElwoqxQxNIx5107NhxYieOPS4ZCSSatLLjApKk9xPud/gg37ADZJPCShwne6dnenkv97bbbrdjj6FGQgkkikUCFcd7ed29pvf03t77gNM9hjYoVHI43GxSsT2318vr9po+nLu9t+1xsUGJTDsXNKlE2fZanq9er153r9m93du9E4/KBoJIJa0UURpvey7P2/OVPbNXToXdiYc8E0BEpGLZuMm25/a8nyT3cu904yYZXhNwcGSXjc2bbXvNrJk90xs3aWKS0fMOOHJoq41Nb7ydtbNW9jz3uBUfD41538dMjhy1adOd3vZ29mZvesutWHlsOO7PG5TgkMMZueN22tlNPzzCIkWijPs14ViXREE+MCcO3fJWrLie9wTG654gQgB0wk6ein14Siklb1+M172OHQGpdGx9VgmK640pkeIQjNdaQkISpatKpdJZBKSUKKjiIoBCwrhXIxVU1SWu1ChKJUWiIEUlV4iOmwiMu1uopAqjQCiSIpX0tNQVJVw5zfEb7Kq6AEmmijy1IihkoaAgUADGaktqGAillE4qlKKD+7W/vJsZxnKkU26kXMqVVFI5mxY/U+ko9BxjdySOTJIu1dWRLOpsnBUTJ05MfMzVZwKdtiELH+24cE4/+cCa+MxBGPaj7jPwUCFBki7pGZ02Pmwn9wMD0aROo4FISvUFi3GCH/MyYnFYoDmEEHJRPlZ7prQfYxEYeW+QHUPDg+SxnPQkdj485y9YwI7A0DJ5MNKj/n9h78ujTBIHGdWZSnpyhrdDAMaXhE+nnh8N+V3dN+DXs38BRUZX8xaom44AAAAASUVORK5CYII=)">
+      <!-- Poster: the frame at 35.3s ("I feel like verbalizing"), uncropped so the CSS crop matches the video.
+           The reel, hosted on Mux (playback ID ve0202Hy8z4KBzUQyC9g91AdwBXK3E4KENfvaKvU8Ik3A). The source is 9:16; the card crops it to 4:5 (object-fit: cover).
            Safari and iOS play it natively; other browsers use hls.js (full build, public/hi/vendor, loaded on demand);
            the MP4 static rendition ("highest", if enabled on the asset) is the last resort. -->
-      <video id="vid" muted loop playsinline preload="metadata" data-hls="https://stream.mux.com/PCrbiGlta8LLQdC1ea68uC3a5fMqwjk6XeShM5O3voQ.m3u8" data-mp4="https://stream.mux.com/PCrbiGlta8LLQdC1ea68uC3a5fMqwjk6XeShM5O3voQ/highest.mp4" poster="https://image.mux.com/PCrbiGlta8LLQdC1ea68uC3a5fMqwjk6XeShM5O3voQ/thumbnail.jpg?time=1&amp;width=720&amp;height=900&amp;fit_mode=crop">
+      <video id="vid" muted loop playsinline preload="metadata" data-hls="https://stream.mux.com/ve0202Hy8z4KBzUQyC9g91AdwBXK3E4KENfvaKvU8Ik3A.m3u8" data-mp4="https://stream.mux.com/ve0202Hy8z4KBzUQyC9g91AdwBXK3E4KENfvaKvU8Ik3A/highest.mp4" poster="https://image.mux.com/ve0202Hy8z4KBzUQyC9g91AdwBXK3E4KENfvaKvU8Ik3A/thumbnail.jpg?time=35.3&amp;width=720">
       </video>
       <span class="tag">Why I'm doing this</span>
       <span class="big" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></span>
@@ -328,7 +334,7 @@
         <li><b>6+ years</b><span class="lbl">teaching design</span></li>
         <li><b>181</b><span class="lbl">client projects supervised &amp; assisted</span></li>
       </ul>
-      <figure class="portrait">
+      <figure class="portrait" style="background-image:url(data:image/png;base64,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)">
         <img src="/hi/assets/andras.jpg" alt="Portrait of András Pop in a navy T-shirt, looking off to the side" width="1200" height="1500" loading="lazy">
       </figure>
     </div>
@@ -392,7 +398,7 @@
 <footer class="foot">
   <div class="wrap meta">
     <div class="who">
-      <img src="/hi/assets/avatar.jpg" alt="" width="36" height="36">
+      <img src="/hi/assets/avatar.jpg" alt="" width="36" height="36" style="background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABIElEQVR42l2SS24DMQxD+Wi3OUW76f3PlyYzErvwTJpEEPyDKJGE+f76MUz7c47Lx7x8zM8xhkmy7fW73a+3+/W+3bZt26s6kzMEWnHu5wXEedAU6AUEJ+QofCoQmmDgXHl0O5ofiWQRkYkNYBsbrJWKZIl/AobgvE3wv5wIPebaDhHJXI/iqdcpnxd9xiKZkVYqT5wfFuGDDDKKMrsDatGoo5YCEVoLOQEBkGZVB5DKVNShZUALSYRFoBfVuVcZIw17RhVKi4YSxUMUWtVYmdtWw62MYe8jexgyHigdhQQLIywpmrXvGUZUpTolNTRGiol7VSOIyNIgma7uSjqUGAtwCGDZtuyb3S3U3Z0cLh0GKTjvRmvmPZ4AOog8/jDSH1sdrSxyEXP1AAAAAElFTkSuQmCC)">
       <div><b>András Pop</b><br><span class="muted">© <span id="yr">2026</span> · Built in public, in Budapest.</span></div>
     </div>
     <div class="side">
@@ -468,6 +474,12 @@
   }
 
   /* reel player: autoplay muted · tap to play/pause · scrub · mute toggle */
+  /* blurred preview → photo: fade the portrait in once it has loaded */
+  document.querySelectorAll('.portrait img').forEach(function(img){
+    function done(){img.classList.add('loaded')}
+    if(img.complete&&img.naturalWidth)done();else img.addEventListener('load',done); /* on error it stays on the blur */
+  });
+
   /* video source. Safari and every iOS browser: Apple's native HLS player. Elsewhere: hls.js (full build: Mux sends
      audio as a separate track, which the light build ignores). Without either: the MP4 static rendition. */
   (function(){
