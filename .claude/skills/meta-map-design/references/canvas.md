@@ -40,9 +40,11 @@ Wide (YouTube)                          Tall (reel)        Idea
 | Position | right edge, vertical centre | bottom edge, horizontal centre |
 | Shape | 11px circle | 10px square rotated 45° |
 | Meaning | sequence: next in series, same series | context: references, attachment, inspired by, features, made by, related |
-| Line | solid, 2.2px, `--ink-2`, arrow | dashed 5/4 (attachment 3/4, references dotted, inspired-by 9/5), 1.4px, `--edge`; arrow except attachment/related |
+| Line | solid, 2.2px, `--ink-2` | dashed 5/4 (attachment 3/4, references dotted, inspired-by 9/5), 1.4px, `--edge` |
+| Ends | filled dot at both ends, r 3.6px, line colour | filled dot at both ends, r 2.8px, line colour |
 
 - Both handles take any number of connections; nodes may have none.
+- **No arrows.** Relations are not always one-way (same series, related), so every line ends in a dot at both ends where it meets the card. The kind label carries the reading.
 - Lines **float**: each end attaches to the midpoint of the side facing the other node; Bézier tangents are normal to that side (`k = max(40, distance × 0.38)`).
 - Selected node: its lines go `--ink` 2px with a mono uppercase kind label at the midpoint (stroked with `--bg` for legibility). Unrelated nodes fade to 42%.
 

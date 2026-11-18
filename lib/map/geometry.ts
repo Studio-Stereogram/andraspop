@@ -29,6 +29,9 @@ export function facing(a: Rect, b: Rect): [Side, Side] {
 
 export interface Curve {
   d: string;
+  /** The two ends, where the end dots sit. */
+  a: XY;
+  b: XY;
   /** Midpoint of the curve, where the kind label sits. */
   mx: number;
   my: number;
@@ -40,6 +43,8 @@ export function curve(p1: XY, n1: [number, number], p2: XY, n2: [number, number]
     c2 = { x: p2.x + n2[0] * k, y: p2.y + n2[1] * k };
   return {
     d: `M${f2(p1.x)},${f2(p1.y)} C${f2(c1.x)},${f2(c1.y)} ${f2(c2.x)},${f2(c2.y)} ${f2(p2.x)},${f2(p2.y)}`,
+    a: { x: f2(p1.x), y: f2(p1.y) },
+    b: { x: f2(p2.x), y: f2(p2.y) },
     mx: (p1.x + 3 * c1.x + 3 * c2.x + p2.x) / 8,
     my: (p1.y + 3 * c1.y + 3 * c2.y + p2.y) / 8,
   };

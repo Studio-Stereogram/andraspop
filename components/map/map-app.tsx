@@ -21,7 +21,7 @@ import { todayViewport } from "@/lib/map/viewport";
 import { applyFilters, type Filters, NO_FILTERS, neighbourMap } from "@/lib/map/visibility";
 import { cn } from "@/lib/utils";
 import { AppBar } from "./app-bar";
-import { EdgeMarkers, edgeTypes, type FlowEdge } from "./edges";
+import { edgeTypes, type FlowEdge } from "./edges";
 import { FiltersPopover } from "./filters-popover";
 import { Inspector } from "./inspector";
 import { LayoutBackground } from "./layout-background";
@@ -405,7 +405,6 @@ function MapShell({ map }: { map: MapData }) {
             <Background id="minor" variant={BackgroundVariant.Lines} gap={24} lineWidth={1} color="var(--grid)" />
             <Background id="major" variant={BackgroundVariant.Lines} gap={120} lineWidth={1} color="var(--grid-2)" />
             <LayoutBackground background={layout?.background ?? null} />
-            <EdgeMarkers />
           </ReactFlow>
 
           {placed && layout?.background?.type === "timeline" && layout.bounds && (
