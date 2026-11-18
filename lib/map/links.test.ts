@@ -99,10 +99,10 @@ describe("videoFrame", () => {
   const v = (platform: string | null, url: string, status = "published") => ({ type: "video", status, platform, url });
   it("matches each platform's own shape", () => {
     expect(videoFrame(v("youtube", "https://www.youtube.com/watch?v=76CJ_CMCfs0"))).toBe("wide");
-    expect(videoFrame(v("youtube", "https://www.youtube.com/shorts/76CJ_CMCfs0"))).toBe("tall");
-    expect(videoFrame(v("instagram", "https://www.instagram.com/reel/DeKVLAEoUI3/"))).toBe("tall");
+    expect(videoFrame(v("youtube", "https://www.youtube.com/shorts/76CJ_CMCfs0"))).toBe("post");
+    expect(videoFrame(v("instagram", "https://www.instagram.com/reel/DeKVLAEoUI3/"))).toBe("post");
     expect(videoFrame(v("instagram", "https://www.instagram.com/p/DeKVLAEoUI3/"))).toBe("post");
-    expect(videoFrame(v("instagram", ""))).toBe("tall");
+    expect(videoFrame(v("instagram", ""))).toBe("post");
     expect(videoFrame(v("x", "https://x.com/a/status/1"))).toBe("wide");
   });
 

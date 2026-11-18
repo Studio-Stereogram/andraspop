@@ -9,7 +9,7 @@ import { thumbSVG } from "@/lib/map/thumbnail";
 import type { MapNode, Topic } from "@/lib/map/types";
 
 /**
- * A published video's thumbnail in its platform's own frame (16:9, 4:5 or 9:16): the real image when it has one,
+ * A published video's thumbnail in its frame (16:9, or 4:5 for anything vertical): the real image when it has one,
  * otherwise (or if it fails to load) the generated sequencer pattern, cropped to the frame either way.
  * `play` adds the ▶ shown on card hover; the inspector's Player adds a real button instead.
  */

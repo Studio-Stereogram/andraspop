@@ -26,6 +26,17 @@
 .mm-node.compact:hover { border-color: var(--ink-3); }
 .mm-node.compact.sel { border-color: var(--ink-2); }
 .mm-node.compact .mm-nbody { padding-top: 2px; }
+/* ideas: secondary in the hierarchy. An outline on the grid (no fill), dashed, quieter title, 72% until hovered or
+   selected. The dim/fade rules below still win, so filters and selection read the same as for other cards. */
+.mm-node.idea {
+  background: transparent;
+  border: 1px dashed var(--line-2);
+  opacity: .72;
+}
+.mm-node.idea .mm-ntitle { font-weight: 500; color: var(--ink-2); }
+.mm-node.idea:hover, .mm-node.idea.sel, .mm-node.idea.nb { opacity: 1; }
+.mm-node.idea:hover { border-color: var(--ink-3); }
+.mm-node.idea:hover .mm-ntitle, .mm-node.idea.sel .mm-ntitle { color: var(--ink); }
 .mm-node.dim { opacity: .16; }
 .mm-node.fade { opacity: .42; }
 .mm-node.dim.nb, .mm-node.fade.nb { opacity: .9; }
@@ -95,11 +106,8 @@
   background: var(--thumb-bg);
 }
 .mm-thumb.f-post { aspect-ratio: 4 / 5; }
-.mm-thumb.f-tall { aspect-ratio: 9 / 16; }
 .mm-thumb svg { display: block; width: 100%; height: 100%; }
 .mm-thumb.lg { margin: 0; border-radius: 6px; }
-/* Tall frames would fill the inspector: cap the height and centre them. */
-.mm-thumb.lg.f-tall { height: min(568px, 56vh); width: auto; margin-inline: auto; }
 .mm-dur {
   position: absolute;
   right: 6px;
@@ -180,13 +188,12 @@
 .mm-playbtn:focus-visible { box-shadow: none; }
 .mm-playbtn:focus-visible span { box-shadow: 0 0 0 1.5px var(--thumb-ink), 0 0 0 4px var(--hot); }
 /* Instagram's embed adds its own header and footer around the media, so it gets a fixed, taller box. */
-.mm-player.ig, .mm-player.ig.f-tall { aspect-ratio: auto; width: 100%; height: min(640px, 76vh); background: var(--surface-2); }
+.mm-player.ig { aspect-ratio: auto; width: 100%; height: min(640px, 76vh); background: var(--surface-2); }
 
 /* ---------- card body ---------- */
 .mm-nbody { padding: 10px 12px 12px; display: grid; gap: 6px; }
 .mm-ntitle {
   font: 600 14.5px/1.22 var(--f-title);
-  font-stretch: 96%;
   letter-spacing: -.005em;
   text-wrap: balance;
   color: var(--ink);
@@ -234,7 +241,7 @@
   display: grid;
   place-items: center;
   font: 700 15px var(--f-title);
-  font-stretch: 110%;
+  letter-spacing: -.01em;
   color: #fff;
   background: var(--av);
 }
@@ -285,9 +292,8 @@
   align-items: baseline;
   gap: 12px;
   font: 650 46px/1 var(--f-title);
-  font-stretch: 112%;
+  letter-spacing: -.02em;
   text-transform: uppercase;
-  letter-spacing: .005em;
   color: var(--tc);
   transition: opacity .2s;
 }
@@ -295,7 +301,7 @@
 .mm-cl-label small { font: 500 13px var(--f-mono); color: var(--ink-3); letter-spacing: .08em; }
 .mm-cl-label.off { opacity: .22; }
 .mm-lane { position: absolute; border-top: 1px solid var(--line-2); }
-.mm-lane h3 { margin: 14px 0 0 20px; font: 650 26px/1 var(--f-title); font-stretch: 112%; text-transform: uppercase; color: var(--ink-2); }
+.mm-lane h3 { margin: 14px 0 0 20px; font: 650 26px/1 var(--f-title); letter-spacing: -.01em; text-transform: uppercase; color: var(--ink-2); }
 .mm-tick { position: absolute; border-left: 1px dashed var(--line); }
 .mm-tick span {
   position: absolute;

@@ -135,16 +135,16 @@ export function youtubeOEmbedTitle(json: unknown): string {
 }
 
 /**
- * The frame a video's thumbnail keeps, so its card has the platform's own shape: wide (16:9) for YouTube and X,
- * post (4:5) for Instagram feed posts, tall (9:16) for reels and Shorts. Ideas and drafts have nothing to frame yet.
+ * The frame a video's thumbnail keeps: wide (16:9) for YouTube and X; 4:5 ("post") for everything vertical, so
+ * Instagram posts, reels and YouTube Shorts are all cropped the same way. Ideas and drafts have nothing to frame yet.
  */
-export type VideoFrame = "wide" | "post" | "tall" | "none";
+export type VideoFrame = "wide" | "post" | "none";
 
 export function videoFrame(n: { type: string; status: string | null; platform: string | null; url: string }): VideoFrame {
   if (n.type !== "video") return "none";
   if (n.status === "idea" || n.status === "draft") return "none";
-  if (n.platform === "instagram") return /instagram\.com\/p\//.test(n.url) ? "post" : "tall";
-  if (n.platform === "youtube" && /youtube\.com\/shorts\//.test(n.url)) return "tall";
+  if (n.platform === "instagram") return "post";
+  if (n.platform === "youtube" && /youtube\.com\/shorts\//.test(n.url)) return "post";
   return "wide";
 }
 

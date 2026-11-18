@@ -13,8 +13,8 @@ import {
   useNodesState,
   useReactFlow,
 } from "@xyflow/react";
-import { KIND_LABEL, VIEWS } from "@/lib/map/constants";
-import { displayTitle } from "@/lib/map/format";
+import { VIEWS } from "@/lib/map/constants";
+import { displayTitle, kindLabel } from "@/lib/map/format";
 import { computeLayout, layoutBounds, type Sized } from "@/lib/map/layouts";
 import type { MapData, Rect, View, XY } from "@/lib/map/types";
 import { todayViewport } from "@/lib/map/viewport";
@@ -100,7 +100,7 @@ function toFlowNodes(map: MapData): FlowNode[] {
     type: "entry",
     position: { x: n.fx, y: n.fy },
     data: { node: n },
-    ariaLabel: `${KIND_LABEL[n.type]}: ${displayTitle(n)}`,
+    ariaLabel: `${kindLabel(n)}: ${displayTitle(n)}`,
   }));
 }
 

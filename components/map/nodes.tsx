@@ -3,8 +3,8 @@
 import { memo } from "react";
 import { Handle, Position, type Node, type NodeProps } from "@xyflow/react";
 import { Badge } from "@/components/ui/badge";
-import { KIND_LABEL, NODE_WIDTH, PLATFORMS, STATUS_LABEL } from "@/lib/map/constants";
-import { displayTitle, formatDate, hostOf, nodeWidth, personMeta } from "@/lib/map/format";
+import { NODE_WIDTH, PLATFORMS, STATUS_LABEL } from "@/lib/map/constants";
+import { displayTitle, formatDate, hostOf, kindLabel, nodeWidth, personMeta } from "@/lib/map/format";
 import { embedUrl, videoFrame } from "@/lib/map/links";
 import type { MapNode, Topic } from "@/lib/map/types";
 import { cn } from "@/lib/utils";
@@ -56,19 +56,20 @@ function EntryCard({ n, state, topicById }: { n: MapNode; state: string; topicBy
   const isVideo = n.type === "video";
   const frame = videoFrame(n);
   const compact = isVideo && frame === "none"; // ideas and drafts: nothing to show yet
+  const idea = isVideo && n.status === "idea"; // a quieter, secondary card: no "Video" label, no status badge
   const meta: string[] = [];
   if (!isVideo && n.url) meta.push(hostOf(n.url));
   if (n.date) meta.push(formatDate(n.date));
   else if (isVideo && !compact) meta.push("No date yet");
 
   return (
-    <div className={cn("mm-node", `t-${n.type}`, compact && "compact", state)} style={{ width: nodeWidth(n) }}>
+    <div className={cn("mm-node", `t-${n.type}`, compact && "compact", idea && "idea", state)} style={{ width: nodeWidth(n) }}>
       <Ports />
       <div className="mm-nhead">
-        <span>{KIND_LABEL[n.type]}</span>
+        <span>{kindLabel(n)}</span>
         {isVideo && n.platform && <Badge variant="outline">{PLATFORMS[n.platform].short}</Badge>}
         {n.new && <Badge variant="new">New</Badge>}
-        {isVideo && n.status && <Badge tone={n.status}>{STATUS_LABEL[n.status]}</Badge>}
+        {isVideo && n.status && !idea && <Badge tone={n.status}>{STATUS_LABEL[n.status]}</Badge>}
         {!isVideo && n.private && <Badge tone="private">Private</Badge>}
       </div>
       {isVideo && !compact && <Thumb node={n} topicById={topicById} play={embedUrl(n.url) !== null} />}

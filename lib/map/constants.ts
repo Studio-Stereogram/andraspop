@@ -58,7 +58,7 @@ export const NODE_WIDTH: Record<NodeType, number> = {
 };
 
 /** Video card widths by thumbnail frame (canvas.md → Node anatomy). "none" is the compact idea/draft card. */
-export const FRAME_WIDTH = { wide: 252, post: 216, tall: 180, none: 224 } as const;
+export const FRAME_WIDTH = { wide: 252, post: 216, none: 224 } as const;
 
 /** Height estimates used until React Flow has measured a node. */
 export const NODE_HEIGHT_ESTIMATE: Record<NodeType, number> = {

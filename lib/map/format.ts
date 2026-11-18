@@ -75,6 +75,11 @@ const SITE_NAMES: [RegExp, string][] = [
   [/(^|\.)substack\.com$/, "Substack"],
 ];
 
+/** What an entry is called in labels: ideas are Ideas (not videos yet); everything else by its type. */
+export function kindLabel(n: Pick<MapNode, "type" | "status">): string {
+  return n.type === "video" && n.status === "idea" ? "Idea" : KIND_LABEL[n.type];
+}
+
 /** A link's button text: its label, else the site's name ("Instagram"), else the host name. */
 export function linkLabel(l: { url: string; label: string }): string {
   if (l.label) return l.label;
