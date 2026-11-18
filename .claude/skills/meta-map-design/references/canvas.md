@@ -9,28 +9,29 @@ Widths: link/bookmark/note 224, person 236. Videos take the width of their **fra
 | Frame | Ratio | Card | Used for |
 |---|---|---|---|
 | Wide | 16:9 | 252 | YouTube videos, X videos |
-| Post | 4:5 | 216 | Instagram feed posts (`/p/` links) |
-| Tall | 9:16 | 180 | Instagram reels (`/reel/`, `/tv/`), YouTube Shorts |
-| Idea | none | 224 | videos with status idea or draft (nothing to show yet) |
+| Vertical | 4:5 | 216 | everything vertical: Instagram posts and reels, YouTube Shorts (one consistent crop) |
+| Idea / draft | none | 224 | videos with status idea or draft (nothing to show yet) |
 
 ```
-Wide (YouTube)                          Tall (reel)        Idea
+Wide (YouTube)                          Vertical (4:5)     Idea
 ┌──────────────────────────────────────┐ ┌────────────────┐ ┌┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┐
 │ VIDEO  [YT]               ● Published│ │ VIDEO [IG] ●Pub│ ┆ VIDEO              ● Idea┆
-│ ┌──────────────────────────────────┐ │ │ ┌────────────┐ │ ┆ Title in Archivo 600     ┆
+│ ┌──────────────────────────────────┐ │ │ ┌────────────┐ │ ┆ Title in Allo Sharp 600  ┆
 │ │  thumbnail 16:9        ▶ on hover│ ● │ │            │ ● ┆ The take, 2 lines max, ink-2 ●
-│ │                          ▶ 12:40 │ │ │ │  9:16  ▶   │ │ ┆ ■ AI  ■ WORK             ┆
+│ │                          ▶ 12:40 │ │ │ │  4:5   ▶   │ │ ┆ ■ AI  ■ WORK             ┆
 │ └──────────────────────────────────┘ │ │ │            │ │ └┄┄┄┄┄┄┄┄┄┄┄◆┄┄┄┄┄┄┄┄┄┄┄┄┘
-│ Title in Archivo 600 14.5px          │ │ └────────────┘ │
+│ Title in Allo Sharp 600 14.5px       │ │ └────────────┘ │
 │ 16 SEPT 2026 · host.com              │ │ Title          │
 │ ■ TOOLS  ■ AI WORKFLOWS              │ │ 6 OCT 2026     │
 └──────────────────◆───────────────────┘ └───────◆────────┘
 ```
 - Card: `--surface`, 1px `--line`, 4px radius, no shadow (flat on the grid). Notes use `--note`.
 - Header 32px, mono 9.5px uppercase `--ink-3`; platform outline badge; status badge right. Title balanced, up to 3 lines; meta mono 10px uppercase `--ink-3`; topic squares 7px + mono 9.5px.
-- **Thumbnails keep the platform's own frame** (16:9, 4:5, 9:16) on the card and in the inspector; the image is cropped to fill (`object-fit: cover`), never letterboxed. In the inspector, tall frames are capped at 56vh and centred.
+- **Two frames:** 16:9 for YouTube and X, and **4:5 for everything vertical** (Instagram posts, reels, YouTube Shorts), so vertical work reads as one consistent shape. The image is cropped to fill (`object-fit: cover`), never letterboxed, on the card and in the inspector.
 - **Play affordance:** a published video with a playable link shows a 36px round ▶ (`--thumb-ink` on `--thumb-bg` at 85%) centred on the thumbnail on card hover. Clicking the card still selects it; playback happens in the inspector, where the ▶ is a real button ("Play video"). Nothing from YouTube or Instagram loads until it is pressed (YouTube uses youtube-nocookie.com).
-- **Ideas and drafts** have nothing to show yet, so they are compact: no thumbnail, a **dashed** 1px `--line-2` border, the take (summary) under the title in `--ink-2`, clamped to 2 lines. The status badge says Idea or Draft.
+- **Ideas and drafts** have nothing to show yet, so they are compact: no thumbnail, a **dashed** 1px `--line-2` border, the take (summary) under the title in `--ink-2`, clamped to 2 lines.
+  - **Ideas are secondary** in the hierarchy: the header says **Idea** (not Video) and there is no status badge; the card is an outline on the grid (no fill) at 72% opacity with a 500-weight `--ink-2` title, back to full strength on hover or selection.
+  - **Drafts** (editor only) keep the Video header and a Draft badge.
 - **People** are pills (999px) with a 44px round avatar (topic-palette colour by name hash, white initials), kind label, name, `@handle · site`.
 - Generated thumbnail (no real image, or it fails to load): `references/thumbnail.js`. 14×7 cell sequencer pattern seeded by id + title, glyphs (solid, dot, ring, x, quad, bars, hatch, dots9) in the node's topic colours on `--thumb-bg`, cream-white corner brackets, duration chip bottom-right. Same in both themes; cropped to the frame like a real image.
 

@@ -17,9 +17,9 @@ import {
 } from "@xyflow/react";
 import { LayoutGrid, Undo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { EDGE_KIND_LABEL, KIND_LABEL, NODE_WIDTH, VIEWS } from "@/lib/map/constants";
+import { EDGE_KIND_LABEL, NODE_WIDTH, VIEWS } from "@/lib/map/constants";
 import { canConnect, kindFor, newEdgeId, newNode } from "@/lib/map/edit";
-import { displayTitle } from "@/lib/map/format";
+import { displayTitle, kindLabel } from "@/lib/map/format";
 import { distanceToRect } from "@/lib/map/geometry";
 import { computeLayout, layoutBounds, type Sized } from "@/lib/map/layouts";
 import { tidy } from "@/lib/map/tidy";
@@ -114,7 +114,7 @@ function toFlowNode(n: MapNode): FlowNode {
     type: "entry",
     position: { x: n.fx, y: n.fy },
     data: { node: n },
-    ariaLabel: `${KIND_LABEL[n.type]}: ${displayTitle(n)}`,
+    ariaLabel: `${kindLabel(n)}: ${displayTitle(n)}`,
   };
 }
 

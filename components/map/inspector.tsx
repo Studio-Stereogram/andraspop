@@ -5,8 +5,8 @@ import { ExternalLink, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { toggleVariants } from "@/components/ui/toggle";
-import { EDGE_KIND_LABEL, EDGE_TYPE_LABEL, KIND_LABEL, PLATFORMS, STATUS_LABEL } from "@/lib/map/constants";
-import { displayTitle, formatDate, handleOf, hostOf, isXUrl, linkLabel, personMeta, safeHref } from "@/lib/map/format";
+import { EDGE_KIND_LABEL, EDGE_TYPE_LABEL, PLATFORMS, STATUS_LABEL } from "@/lib/map/constants";
+import { displayTitle, formatDate, handleOf, hostOf, isXUrl, kindLabel, linkLabel, personMeta, safeHref } from "@/lib/map/format";
 import type { EdgeType, MapData, MapNode, Topic } from "@/lib/map/types";
 import { videoFrame } from "@/lib/map/links";
 import { formatViews } from "@/lib/map/youtube";
@@ -96,7 +96,7 @@ export function Inspector({
   const topics = node.topics.map((id) => topicById.get(id)).filter((t): t is Topic => Boolean(t));
   const handle = isPerson ? handleOf(node) : "";
   const label =
-    KIND_LABEL[node.type] + (isVideo && node.platform ? ` · ${PLATFORMS[node.platform].label}` : "");
+    kindLabel(node) + (isVideo && node.platform ? ` · ${PLATFORMS[node.platform].label}` : "");
 
   return (
     <aside
@@ -116,7 +116,7 @@ export function Inspector({
         {isVideo && videoFrame(node) !== "none" && <Player key={node.id} node={node} topicById={topicById} />}
         {isPerson && <Avatar node={node} large />}
         {!isVideo && !isPerson && <Cover key={node.id} node={node} large />}
-        <h2 className="m-0 text-[26px] leading-[1.08] font-[650] tracking-[-.01em] text-balance [font-stretch:104%]">
+        <h2 className="m-0 text-[26px] leading-[1.08] font-[650] tracking-[-.02em] text-balance">
           {displayTitle(node)}
         </h2>
         <div className="flex flex-wrap items-center gap-2.5 font-mono text-[11px] font-medium tracking-[.06em] text-ink-3 uppercase">
@@ -124,7 +124,7 @@ export function Inspector({
             <span className="normal-case">{personMeta(node)}</span>
           ) : (
             <>
-              {isVideo && node.status && (
+              {isVideo && node.status && node.status !== "idea" && (
                 <Badge tone={node.status} className="tracking-normal normal-case">
                   {STATUS_LABEL[node.status]}
                 </Badge>
