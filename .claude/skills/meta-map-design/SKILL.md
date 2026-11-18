@@ -31,14 +31,16 @@ When in doubt: content can be expressive, controls must be trivial to read.
 - Text on tints uses `color-mix(in srgb, var(--sc) 55%, var(--ink))`, not raw colour.
 
 ## Exception: /hi
-The "Say hi" page is a standalone static page (`public/hi/index.html`, served at `/hi` by a rewrite in `next.config.ts`), designed separately from this system (2026-11-17, "hi-v5"). It has its own font (Allo Sharp, SIL OFL), black-and-white palette, light/dark from the OS setting, and its own motion script. Don't apply these tokens or components to it, and don't carry its look into the map. Edit the HTML file directly; keep asset paths absolute (`/hi/assets/...`, `/hi/fonts/...`).
+The "Say hi" page is a standalone static page (`public/hi/index.html`, served at `/hi` by a rewrite in `next.config.ts`), designed separately from this system (2026-11-17, "hi-v5"). Its font, Allo Sharp, is shared with the map since 2026-11-18 (the map loads the same file); everything else stays its own: black-and-white palette, light/dark from the OS setting, and its motion script. Don't apply these tokens or components to it, and don't carry its palette or layout into the map. Edit the HTML file directly; keep asset paths absolute (`/hi/assets/...`, `/hi/fonts/...`).
 
 ## Type
+One family across the app and the /hi page: **Allo Sharp** (Allo by Josh Puckett, SIL OFL; `public/hi/fonts`), variable in weight (100–900) and optical size (9–32, automatic). It has no width axis, so roles differ by weight, size and tracking. IBM Plex Mono stays for metadata only.
+
 | Role | Face | Use |
 |---|---|---|
-| UI | Archivo 400/500, 13–14px, sentence case | buttons, tabs, inputs, menus, inspector body |
-| Titles | Archivo 600, 14.5px on cards, 26px in inspector | node titles, dialog titles |
-| Display | Archivo 650, width 112 | cluster labels (46px) and timeline lanes (26px) in UPPERCASE; the "mind-map" wordmark (15px) in lowercase |
+| UI | Allo Sharp 400/500, 13–14px, sentence case | buttons, tabs, inputs, menus, inspector body |
+| Titles | Allo Sharp 600, 14.5px on cards; 650 at 26px in the inspector, tracking −0.02em | node titles, dialog titles |
+| Display | Allo Sharp 650, tight tracking (−0.01 to −0.02em); optical size follows the font size | cluster labels (46px) and timeline lanes (26px) in UPPERCASE; the "mind-map" wordmark (16px) in lowercase |
 | Meta | IBM Plex Mono 500, 9.5–11px, UPPERCASE, letter-spacing .06–.12em | node headers, dates, tags, section labels, counts, kbd, stats |
 
 Rules: never uppercase UI controls; mono only for metadata and labels; balance headings (`text-wrap: balance`); tabular numbers wherever digits line up.
