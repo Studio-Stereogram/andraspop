@@ -30,6 +30,13 @@ describe("rows ↔ map", () => {
     expect(back.edges.every((e) => isUuid(e.id))).toBe(true);
   });
 
+  it("keeps extra links through a write and a read", () => {
+    const back = roundTrip();
+    const withLinks = map.nodes.filter((n) => n.links.length);
+    expect(withLinks.length).toBeGreaterThan(0);
+    for (const n of withLinks) expect(back.nodes.find((b) => b.id === n.id)!.links).toEqual(n.links);
+  });
+
   it("writes optional fields as null and only real ISO dates", () => {
     const n = { ...map.nodes[0], url: "", date: "soon", handle: "", fx: 10.6, fy: -3.2 };
     const row = nodeToRow(n);

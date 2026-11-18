@@ -26,6 +26,7 @@ export function newNode(type: NodeType, at: { x: number; y: number }, extra: Par
     thumbnail: "",
     handle: "",
     duration: "",
+    links: [],
     topics: [],
     private: type === "note",
     fx: Math.round(at.x),

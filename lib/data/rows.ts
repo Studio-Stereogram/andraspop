@@ -25,6 +25,7 @@ export interface NodeRow {
   handle: string | null;
   duration: string | null;
   thumbnail: string | null;
+  links: unknown;
   private: boolean;
   pos_x: number;
   pos_y: number;
@@ -46,7 +47,7 @@ export interface EdgeRow {
 /** The columns a node write sends. `id` (uuid) is left to the database; `slug` carries the app's id. */
 export type NodeWrite = Omit<NodeRow, "id">;
 
-export const NODE_COLUMNS = "id,slug,type,title,summary,platform,status,date,url,handle,duration,thumbnail,private,pos_x,pos_y";
+export const NODE_COLUMNS = "id,slug,type,title,summary,platform,status,date,url,handle,duration,thumbnail,links,private,pos_x,pos_y";
 
 /** Rows as read from Supabase → a well-formed map (normalizeMap drops anything malformed). */
 export function rowsToMap(rows: {
@@ -73,6 +74,7 @@ export function rowsToMap(rows: {
     thumbnail: n.thumbnail ?? "",
     handle: n.handle ?? "",
     duration: n.duration ?? "",
+    links: n.links ?? [],
     topics: topicsOf.get(n.id) ?? [],
     private: n.private,
     fx: n.pos_x,
@@ -103,6 +105,7 @@ export function nodeToRow(n: MapNode): NodeWrite {
     handle: n.handle || null,
     duration: n.duration || null,
     thumbnail: n.thumbnail || null,
+    links: n.links,
     private: n.private,
     pos_x: Math.round(n.fx),
     pos_y: Math.round(n.fy),
