@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { toggleVariants } from "@/components/ui/toggle";
 import { EDGE_KIND_LABEL, EDGE_TYPE_LABEL, KIND_LABEL, PLATFORMS, STATUS_LABEL } from "@/lib/map/constants";
-import { displayTitle, formatDate, handleOf, hostOf, isXUrl, personMeta, safeHref } from "@/lib/map/format";
+import { displayTitle, formatDate, handleOf, hostOf, isXUrl, linkLabel, personMeta, safeHref } from "@/lib/map/format";
 import type { EdgeType, MapData, MapNode, Topic } from "@/lib/map/types";
 import { videoFrame } from "@/lib/map/links";
 import { formatViews } from "@/lib/map/youtube";
@@ -170,6 +170,11 @@ export function Inspector({
               {isVideo && node.platform ? `Watch on ${PLATFORMS[node.platform].label}` : "Open link"}
             </LinkButton>
           )}
+          {node.links.map((l) => (
+            <LinkButton key={l.url} href={safeHref(l.url)}>
+              {linkLabel(l)}
+            </LinkButton>
+          ))}
         </div>
         <div className="border-t border-line" />
         <Connections node={node} map={map} onGo={onGo} />

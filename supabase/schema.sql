@@ -1,5 +1,7 @@
 -- Meta Map — starter schema (Supabase / Postgres)
 -- Run in the Supabase SQL editor. Public visitors use the anon key and only ever see public rows.
+-- Already ran an earlier version? Add the links column with:
+--   alter table public.nodes add column if not exists links jsonb not null default '[]'::jsonb;
 
 create extension if not exists "pgcrypto";
 
@@ -30,6 +32,7 @@ create table public.nodes (
   handle      text,                          -- people: X handle
   duration    text,
   thumbnail   text,
+  links       jsonb not null default '[]'::jsonb, -- more links besides url: [{"url": "…", "label": "…"}]
   private     boolean not null default false,
   pos_x       real not null default 0,       -- Free layout position (fx / fy in the JSON format)
   pos_y       real not null default 0,

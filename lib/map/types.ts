@@ -17,6 +17,13 @@ export interface Topic {
   color: string;
 }
 
+/** A further link on an entry, beside its main `url`: a profile, a mirror, a download. */
+export interface ExtraLink {
+  url: string;
+  /** What the button says; empty means "name it from the site" (Instagram, GitHub, host name). */
+  label: string;
+}
+
 export interface MapNode {
   id: string;
   type: NodeType;
@@ -35,6 +42,8 @@ export interface MapNode {
   /** People only: X handle. */
   handle: string;
   duration: string;
+  /** More links besides `url` (optional in the JSON format; [] when absent). */
+  links: ExtraLink[];
   /** From the platform at build time (YouTube only for now). Not part of the JSON import/export format. */
   views?: number | null;
   topics: string[];

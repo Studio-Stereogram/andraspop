@@ -1,5 +1,5 @@
 import { CONTINUITY_KINDS, REFERENCE_KINDS, TOPIC_PALETTE } from "./constants";
-import type { EdgeKind, EdgeType, MapData, MapEdge, MapNode, NodeType, Platform, Status, Topic } from "./types";
+import type { EdgeKind, EdgeType, ExtraLink, MapData, MapEdge, MapNode, NodeType, Platform, Status, Topic } from "./types";
 
 const NODE_TYPES: NodeType[] = ["video", "link", "bookmark", "person", "note"];
 const PLATFORM_IDS: Platform[] = ["youtube", "instagram", "x"];
@@ -18,6 +18,28 @@ const httpsUrl = (v: string) => {
 };
 const oneOf = <T extends string>(v: unknown, list: readonly T[]): T | null =>
   list.includes(v as T) ? (v as T) : null;
+
+const MAX_LINKS = 12;
+
+/** Extra links: http(s) only, no repeats, not the entry's main url. Accepts plain URL strings too. */
+export function normalizeLinks(v: unknown, mainUrl: string): ExtraLink[] {
+  if (!Array.isArray(v)) return [];
+  const seen = new Set([mainUrl]);
+  const out: ExtraLink[] = [];
+  for (const item of v) {
+    const raw = (typeof item === "string" ? { url: item } : (item ?? {})) as Raw;
+    let url = "";
+    try {
+      const u = new URL(str(raw.url).trim());
+      if (u.protocol === "https:" || u.protocol === "http:") url = u.href;
+    } catch {}
+    if (!url || seen.has(url)) continue;
+    seen.add(url);
+    out.push({ url, label: str(raw.label).trim().slice(0, 60) });
+    if (out.length === MAX_LINKS) break;
+  }
+  return out;
+}
 
 /** Older exports had no edge `type`; the kind decides it (same rule as the prototype). */
 export function edgeTypeOf(kind: string): EdgeType {
@@ -59,6 +81,7 @@ export function normalizeMap(input: unknown): MapData {
         thumbnail: httpsUrl(str(n.thumbnail)),
         handle: str(n.handle),
         duration: str(n.duration),
+        links: normalizeLinks(n.links, str(n.url)),
         topics: (Array.isArray(n.topics) ? n.topics : []).filter((id): id is string => topicIds.has(id as string)),
         private: n.private === true,
         fx: num(n.fx),

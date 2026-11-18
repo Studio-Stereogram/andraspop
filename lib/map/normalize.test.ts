@@ -44,3 +44,34 @@ describe("normalizeMap", () => {
     expect(() => normalizeMap({ topics: [] })).toThrow("Expected { topics, nodes, edges }");
   });
 });
+
+describe("extra links", () => {
+  it("keeps http(s) links once, skips the main url, and accepts plain strings", async () => {
+    const { normalizeLinks } = await import("./normalize");
+    expect(
+      normalizeLinks(
+        [
+          { url: "https://www.instagram.com/gabor.suhajda/", label: " IG " },
+          "https://github.com/someone",
+          { url: "javascript:alert(1)" },
+          { url: "https://gaborsuhajda.com/" },
+          "https://github.com/someone",
+          42,
+        ],
+        "https://gaborsuhajda.com/",
+      ),
+    ).toEqual([
+      { url: "https://www.instagram.com/gabor.suhajda/", label: "IG" },
+      { url: "https://github.com/someone", label: "" },
+    ]);
+    expect(normalizeLinks(undefined, "")).toEqual([]);
+  });
+
+  it("names a link from its label, the site, or the host", async () => {
+    const { linkLabel } = await import("./format");
+    expect(linkLabel({ url: "https://www.instagram.com/gabor.suhajda/", label: "" })).toBe("Instagram");
+    expect(linkLabel({ url: "https://x.com/someone", label: "" })).toBe("X");
+    expect(linkLabel({ url: "https://www.example.org/a", label: "" })).toBe("example.org");
+    expect(linkLabel({ url: "https://github.com/a", label: "Source" })).toBe("Source");
+  });
+});
