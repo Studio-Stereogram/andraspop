@@ -25,7 +25,8 @@
 - `components/map/{app-bar,filters-popover,inspector,overview,player,zoom-controls}.tsx` and `components/ui/*`: chrome (product register).
 - `public/hi/`: the standalone "Say hi" page (`/hi` via a rewrite in `next.config.ts`): plain HTML, CSS and JS with its own font and assets, outside the Next app and the design tokens.
 - `app/api/keepalive/route.ts` + `vercel.json`: daily cron that keeps the free Supabase project from pausing (a paused database blocks every Vercel deploy). Checks `CRON_SECRET` via `lib/cron.ts`.
-- `lib/map/*`: pure, tested logic ported from the prototype (`visibility`, `layouts`, `viewport`, `geometry`, `thumbnail`, `normalize`). `lib/tokens.test.ts` keeps `app/globals.css` in sync with the skill's `tokens.css`.
+- `lib/data/{map,link-preview,covers}.ts`: server-side data. Fills video titles, thumbnails, dates, durations and views from their links (YouTube Data API with `YOUTUBE_API_KEY`, else oEmbed; Instagram Open Graph). Instagram covers are copied to Vercel Blob (`BLOB_READ_WRITE_TOKEN`) because Instagram's links expire. Values written in the data always win.
+- `lib/map/*`: pure, tested logic ported from the prototype (`visibility`, `layouts`, `viewport`, `geometry`, `thumbnail`, `normalize`, `youtube`). `lib/tokens.test.ts` keeps `app/globals.css` in sync with the skill's `tokens.css`.
 
 ## Architecture rules
 - **Two hosts, one app.** The public domain is read-only. The `edit.` domain is the editor and is password-gated by `proxy.ts` (see `docs/snippets/proxy.ts`). Every server action and write route must re-check the editor gate itself; never rely on the proxy alone.
