@@ -2,27 +2,55 @@
 
 import { useState } from "react";
 
-// Design cycle: three phases on a line. Opening one shows what it delivers and who is involved;
-// opening Planning raises the "Singular source of truth" pin above it.
-// Content from the original "Design process — source of truth" artifact.
+// Design cycle: a double diamond (Research, Planning) in the designer's focus, and a third diamond
+// (Implementation) set apart, since it is often its own sub-cycle. Over them, Shape Up's hill
+// (Ryan Singer, Basecamp): uphill is figuring out what to do, downhill is execution. The peak, at
+// the end of Planning, is the singular source of truth. Opening a phase puts a dot on the hill.
+// Phase content from the original "Design process — source of truth" artifact.
 
 type Phase = {
   n: number;
   label: string;
-  sublabel: string;
+  /** The diamond's two halves: diverge, then converge. */
+  halves: [string, string];
   title: string;
+  /** Where the phase sits on the hill, 0–1 across, and how it feels there. */
+  hillAt: number;
+  hill: string;
   /** The phase's relation to the source of truth: lead-in, the bold verb, the rest. */
   sot: [string, string, string];
   deliverables: { title: string; desc: string }[];
   roles: { name: string; lead?: boolean }[];
+  note?: string;
 };
+
+// The hill peaks where Planning ends: two thirds across.
+const PEAK = 2 / 3;
+const HILL_H = 1; // the curve's height in its own units; CSS sets the drawn height
+
+/** Height of the hill (0 at the foot, 1 at the peak) at x, 0–1 across. Steeper going up, gentler coming down. */
+function hill(x: number) {
+  const t = x <= PEAK ? x / PEAK : (1 - x) / (1 - PEAK);
+  return HILL_H * (1 - Math.cos(Math.PI * Math.max(0, Math.min(1, t)))) * 0.5;
+}
+
+const HILL_PATH = (() => {
+  const pts: string[] = [];
+  for (let i = 0; i <= 120; i++) {
+    const x = i / 120;
+    pts.push(`${(x * 1000).toFixed(1)},${(100 - hill(x) * 92).toFixed(1)}`);
+  }
+  return `M${pts.join(" L")}`;
+})();
 
 const PHASES: Phase[] = [
   {
     n: 1,
     label: "Research",
-    sublabel: "Discover & define",
+    halves: ["Discover", "Define"],
     title: "Research & discovery",
+    hillAt: 1 / 6,
+    hill: "Uphill. Full of unknowns: still working out what the problem is.",
     sot: ["Output from this phase ", "feeds into", " the design documentation."],
     deliverables: [
       { title: "User research", desc: "Interviews, surveys, usability tests. Findings documented in a structured insights repository." },
@@ -35,8 +63,10 @@ const PHASES: Phase[] = [
   {
     n: 2,
     label: "Planning",
-    sublabel: "Design & document",
+    halves: ["Develop", "Document"],
     title: "Design & planning",
+    hillAt: 0.5,
+    hill: "Near the top. The approach is validated; at the end of this phase, “Now I know what to do.”",
     sot: ["This phase ", "is", " the source of truth. The designer owns it."],
     deliverables: [
       { title: "Design system", desc: "Components, tokens, patterns. The single source every UI decision derives from." },
@@ -48,9 +78,11 @@ const PHASES: Phase[] = [
   },
   {
     n: 3,
-    label: "Execution",
-    sublabel: "Build & deliver",
-    title: "Implementation & execution",
+    label: "Implementation",
+    halves: ["Build", "Deliver"],
+    title: "Implementation",
+    hillAt: 5 / 6,
+    hill: "Downhill. Certainty: all the work is visible, and it is a matter of doing it.",
     sot: ["This phase ", "consumes and validates", " the design documentation."],
     deliverables: [
       { title: "Dev handoff", desc: "Figma specs, token exports, assets. The design file stays the reference." },
@@ -59,16 +91,16 @@ const PHASES: Phase[] = [
       { title: "Iteration log", desc: "Post-launch findings fed back into the design system. The loop closes here." },
     ],
     roles: [{ name: "Frontend dev" }, { name: "Backend dev" }, { name: "Designer (QA)", lead: true }, { name: "Designer (code)", lead: true }],
+    note: "Often its own sub-cycle, run by the people who build it.",
   },
 ];
-
-const SOURCE = 2;
 
 export function DesignCycle() {
   const [open, setOpen] = useState<number | null>(null);
   // The last opened phase stays rendered while the panel closes, so it folds away instead of vanishing.
   const [shown, setShown] = useState<number | null>(null);
   const phase = PHASES.find((p) => p.n === shown);
+  const active = PHASES.find((p) => p.n === open);
   const toggle = (n: number) => {
     setOpen(open === n ? null : n);
     if (open !== n) setShown(n);
@@ -83,31 +115,63 @@ export function DesignCycle() {
         </h1>
       </header>
 
-      <div className="dc-row-wrap">
-        <div className="dc-pin" data-visible={open === SOURCE || undefined} aria-hidden={open !== SOURCE}>
-          <span className="dc-pin-label">Singular source of truth</span>
-          <span className="dc-pin-stem" />
-          <span className="dc-pin-dot" />
+      <div className="dc-map">
+        <div className="dc-hill" aria-hidden>
+          <svg viewBox="0 0 1000 100" preserveAspectRatio="none">
+            <path className="dc-hill-fill" d={`${HILL_PATH} L1000,100 L0,100 Z`} />
+            <path className="dc-hill-line" d={HILL_PATH} vectorEffect="non-scaling-stroke" />
+          </svg>
+          <span className="dc-slope dc-slope-up">
+            <strong>Uphill</strong> · figuring it out
+          </span>
+          <span className="dc-slope dc-slope-down">
+            <strong>Downhill</strong> · execution
+          </span>
+          <span className="dc-peak" style={{ left: `${PEAK * 100}%` }} data-active={open === 2 || undefined}>
+            <span className="dc-peak-label">Singular source of truth</span>
+            <span className="dc-peak-stem" />
+          </span>
+          <span
+            className="dc-dot"
+            data-visible={active ? true : undefined}
+            style={{ left: `${(active?.hillAt ?? 0) * 100}%`, bottom: `${hill(active?.hillAt ?? 0) * 92}%` }}
+          />
         </div>
-        <div className="dc-row" role="group" aria-label="Phases">
+
+        <div className="dc-diamonds" role="group" aria-label="Phases">
           {PHASES.map((p) => (
-            <button
-              key={p.n}
-              type="button"
-              className="dc-phase"
-              data-open={open === p.n || undefined}
-              data-source={p.n === SOURCE || undefined}
-              aria-expanded={open === p.n}
-              aria-controls="dc-panel"
-              onClick={() => toggle(p.n)}
-            >
-              <span className="dc-diamond">
-                <span className="dc-num in-serif">{p.n}</span>
-              </span>
-              <span className="dc-label">{p.label}</span>
-              <span className="dc-sublabel">{p.sublabel}</span>
-            </button>
+            <div key={p.n} className="dc-col" data-apart={p.n === 3 || undefined}>
+              <button
+                type="button"
+                className="dc-phase"
+                data-open={open === p.n || undefined}
+                data-source={p.n === 2 || undefined}
+                aria-expanded={open === p.n}
+                aria-controls="dc-panel"
+                onClick={() => toggle(p.n)}
+              >
+                <span className="dc-shape">
+                  <svg viewBox="0 0 200 100" preserveAspectRatio="none" aria-hidden>
+                    <path className="dc-rhomb" d="M1,50 L100,1 L199,50 L100,99 Z" vectorEffect="non-scaling-stroke" />
+                    <path className="dc-mid" d="M100,8 L100,92" vectorEffect="non-scaling-stroke" />
+                  </svg>
+                  <span className="dc-half dc-half-l">{p.halves[0]}</span>
+                  <span className="dc-half dc-half-r">{p.halves[1]}</span>
+                </span>
+                <span className="dc-label">
+                  <span className="dc-num in-serif">{p.n}</span> {p.label}
+                </span>
+                <span className="dc-sublabel">
+                  {p.halves[0]} & {p.halves[1].toLowerCase()}
+                </span>
+              </button>
+            </div>
           ))}
+        </div>
+
+        <div className="dc-groups" aria-hidden>
+          <span className="dc-group dc-group-focus">Designer&rsquo;s focus</span>
+          <span className="dc-group dc-group-impl">Often its own sub-cycle</span>
         </div>
       </div>
 
@@ -123,6 +187,10 @@ export function DesignCycle() {
                 {phase.sot[0]}
                 <strong>{phase.sot[1]}</strong>
                 {phase.sot[2]}
+              </p>
+              <p className="dc-onhill">
+                <span className="dc-onhill-label">On the hill</span>
+                {phase.hill}
               </p>
               <ul className="dc-deliverables">
                 {phase.deliverables.map((d) => (
@@ -140,6 +208,7 @@ export function DesignCycle() {
                   </li>
                 ))}
               </ul>
+              {phase.note && <p className="dc-note">{phase.note}</p>}
             </div>
           )}
         </div>
@@ -147,6 +216,13 @@ export function DesignCycle() {
 
       <p className="dc-hint" data-hidden={open !== null || undefined}>
         Select a phase to open it.
+      </p>
+      <p className="dc-credit">
+        The hill is from{" "}
+        <a href="https://basecamp.com/shapeup/3.4-chapter-13" target="_blank" rel="noreferrer">
+          Shape Up
+        </a>{" "}
+        by Ryan Singer: uphill is figuring out what to do, downhill is execution.
       </p>
     </div>
   );
