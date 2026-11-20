@@ -6,7 +6,7 @@ import { INSETS, cardStyle, directionBetween, type Inset } from "@/lib/inset/ins
 import { insetPath } from "@/lib/inset/routing";
 import { CARD_H, CARD_W, CardFace, cardName, titleName } from "./card";
 import { InsetLink } from "./inset-link";
-import { Sticker } from "./sticker";
+import { CardArt } from "./card-art";
 
 // The smart dropdown in the top-left of every inset. Its tile is the card itself, shrunk:
 // coming from home the card flies into it. It lists every inset, so you can jump sideways
@@ -58,8 +58,8 @@ export function Switcher({ current }: { current: Inset }) {
                   aria-current={isCurrent ? "page" : undefined}
                   transitionTypes={[directionBetween(current.slug, inset.slug)]}
                 >
-                  <span className="in-menu-swatch">
-                    <Sticker shape={inset.token.shape} size={18} />
+                  <span className="in-menu-thumb in-grain" aria-hidden>
+                    <CardArt kind={inset.art} ink={inset.ink} width={96} height={96} />
                   </span>
                   <span className="in-menu-text">
                     <span className="in-menu-title">{inset.title}</span>

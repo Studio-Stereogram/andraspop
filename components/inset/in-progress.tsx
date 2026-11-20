@@ -6,7 +6,7 @@ import { CardArt } from "./card-art";
 export function InProgress({ inset }: { inset: Inset }) {
   return (
     <div className="ip" style={cardStyle(inset)}>
-      <div className="ip-art">
+      <div className="ip-art in-grain">
         <CardArt kind={inset.art} ink={inset.ink} width={560} height={240} />
       </div>
       <p className="in-kicker">In progress</p>

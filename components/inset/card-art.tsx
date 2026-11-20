@@ -15,8 +15,9 @@ type Draw = (ctx: CanvasRenderingContext2D, w: number, h: number, t: number, ink
 const smooth = (x: number) => x * x * (3 - 2 * x);
 
 const lattice: Draw = (ctx, w, h, t, ink) => {
-  const cols = 13;
-  const rows = 7;
+  // Density follows size, so a square thumbnail shows a crop rather than a squeezed grid.
+  const cols = Math.max(4, Math.round(w / 15));
+  const rows = Math.max(3, Math.round(h / 17));
   const cw = w / cols;
   const ch = h / rows;
   const size = Math.min(cw, ch) * 0.62;
@@ -82,8 +83,8 @@ const lanes: Draw = (ctx, w, h, t, ink) => {
 };
 
 const gestalt: Draw = (ctx, w, h, t, ink) => {
-  const cols = 16;
-  const rows = 8;
+  const cols = Math.max(6, Math.round(w / 12));
+  const rows = Math.max(4, Math.round(h / 15));
   const centres = [
     [w * 0.2, h * 0.35],
     [w * 0.52, h * 0.66],

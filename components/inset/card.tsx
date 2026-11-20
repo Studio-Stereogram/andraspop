@@ -26,7 +26,7 @@ type Props = {
 
 export function CardFace({ inset, index, bare }: Props) {
   return (
-    <div className="in-card" style={cardStyle(inset)}>
+    <div className="in-card in-grain" style={cardStyle(inset)}>
       <div className="in-card-art">
         <CardArt kind={inset.art} ink={inset.ink} width={ART_W} height={ART_H} still={bare} />
       </div>
