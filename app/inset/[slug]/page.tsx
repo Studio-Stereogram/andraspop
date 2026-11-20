@@ -4,6 +4,7 @@ import { ViewTransition } from "react";
 import { DesignCycle } from "@/components/inset/design-cycle";
 import { InProgress } from "@/components/inset/in-progress";
 import { Switcher } from "@/components/inset/switcher";
+import { VehicleForLogic } from "@/components/inset/vehicle-for-logic";
 import { Wordmark } from "@/components/inset/wordmark";
 import { INSETS, getInset } from "@/lib/inset/insets";
 
@@ -19,6 +20,7 @@ export async function generateMetadata({ params }: PageProps<"/inset/[slug]">): 
 
 const PIECES: Record<string, () => React.ReactNode> = {
   "design-cycle": () => <DesignCycle />,
+  "vehicle-for-logic": () => <VehicleForLogic />,
 };
 
 export default async function InsetPage({ params }: PageProps<"/inset/[slug]">) {
