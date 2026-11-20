@@ -13,8 +13,10 @@
   "dependencies": {
     "@vercel/blob": "2.8.2",
     "@xyflow/react": "^12.12.0",
+    "allo-font": "^1.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "geist": "^1.9.2",
     "lucide-react": "^1.53.0",
     "next": "16.4.5",
     "radix-ui": "^1.7.0",

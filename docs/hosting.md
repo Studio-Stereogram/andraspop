@@ -53,6 +53,7 @@ Start with the password gate (`docs/snippets/proxy.ts`). The schema already cont
 ## Domains
 
 - Public: `andraspop.com` (apex: add the `A` record Vercel shows; optionally redirect `www.andraspop.com` to it in Vercel → Domains).
+- Insets: `inset.andraspop.com`. Add it in Vercel → Settings → Domains, then at Rackhost add a `CNAME` named `inset` with the value Vercel shows (like the `www` record's `…vercel-dns-016.com`). `proxy.ts` serves it from the `/inset` pages; `andraspop.com/inset` and preview deployments show the same pages.
 - Editor: `edit.andraspop.com` (`CNAME` to the target Vercel shows). Kept out of search engines with `X-Robots-Tag: noindex` (the proxy snippet does this).
 
 ## How the password and auto-refresh work
