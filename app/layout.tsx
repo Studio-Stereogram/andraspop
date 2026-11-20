@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { allo, plexMono } from "./fonts";
 import { themeScript } from "@/lib/theme";
 import "./globals.css";
@@ -22,7 +23,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        {/* Vercel Web Analytics: page views and visitors, cookieless. /hi has its own script tag (public/hi/index.html). */}
+        <Analytics />
+      </body>
     </html>
   );
 }
