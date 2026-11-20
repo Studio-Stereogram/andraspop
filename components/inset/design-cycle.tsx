@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { EdList, Spread, type SpreadItem } from "./spread";
 
 // Design cycle: a double diamond (Research, Planning) in the designer's focus, and a third diamond
 // (Implementation) set apart, since it is often its own sub-cycle. Over them, Shape Up's hill
@@ -11,6 +12,10 @@ import { useState } from "react";
 type Phase = {
   n: number;
   label: string;
+  /** A few words under the diamond. */
+  brief: string;
+  /** The opened spread's lede. */
+  lede: string;
   /** The diamond's two halves: diverge, then converge. */
   halves: [string, string];
   title: string;
@@ -21,7 +26,6 @@ type Phase = {
   sot: [string, string, string];
   deliverables: { title: string; desc: string }[];
   roles: { name: string; lead?: boolean }[];
-  note?: string;
 };
 
 // The hill peaks where Planning ends: two thirds across.
@@ -47,6 +51,8 @@ const PHASES: Phase[] = [
   {
     n: 1,
     label: "Research",
+    brief: "Find the real problem.",
+    lede: "Discover what people need, then define the problem worth solving.",
     halves: ["Discover", "Define"],
     title: "Research & discovery",
     hillAt: 1 / 6,
@@ -63,6 +69,8 @@ const PHASES: Phase[] = [
   {
     n: 2,
     label: "Planning",
+    brief: "Decide the solution.",
+    lede: "Develop the solution and document it. This is the source of truth, and the designer owns it.",
     halves: ["Develop", "Document"],
     title: "Design & planning",
     hillAt: 0.5,
@@ -79,6 +87,8 @@ const PHASES: Phase[] = [
   {
     n: 3,
     label: "Implementation",
+    brief: "Build and ship it.",
+    lede: "Build it and deliver it, checked against the documentation. Often its own sub-cycle, run by the people who build it.",
     halves: ["Build", "Deliver"],
     title: "Implementation",
     hillAt: 5 / 6,
@@ -90,21 +100,54 @@ const PHASES: Phase[] = [
       { title: "Design in code", desc: "Framer, Webflow or coded components, closing the implementation gap directly." },
       { title: "Iteration log", desc: "Post-launch findings fed back into the design system. The loop closes here." },
     ],
-    roles: [{ name: "Frontend dev" }, { name: "Backend dev" }, { name: "Designer (QA)", lead: true }, { name: "Designer (code)", lead: true }],
-    note: "Often its own sub-cycle, run by the people who build it.",
+    roles: [{ name: "Frontend dev" }, { name: "Backend dev" }, { name: "Designer doing QA", lead: true }, { name: "Designer working in code", lead: true }],
   },
 ];
 
+function spreadFor(p: Phase): SpreadItem {
+  // Role names read mid-sentence: lowercase the first letter unless it starts an acronym (UI, UX).
+  const inline = (name: string) => (/^[A-Z]{2}/.test(name) ? name : name[0].toLowerCase() + name.slice(1));
+  const leads = p.roles.filter((r) => r.lead).map((r) => inline(r.name));
+  const others = p.roles.filter((r) => !r.lead).map((r) => inline(r.name));
+  return {
+    key: `phase-${p.n}`,
+    kicker: `Phase ${String(p.n).padStart(2, "0")} · ${p.halves[0]}, then ${p.halves[1].toLowerCase()}`,
+    title: p.label,
+    lede: <p>{p.lede}</p>,
+    rows: [
+      { label: "On the hill", content: <p>{p.hill}</p> },
+      // Planning's lede already says it is the source of truth.
+      ...(p.n === 2
+        ? []
+        : [
+            {
+              label: "Source of truth",
+              content: (
+                <p>
+                  {p.sot[0]}
+                  <strong>{p.sot[1]}</strong>
+                  {p.sot[2]}
+                </p>
+              ),
+            },
+          ]),
+      { label: "What it delivers", content: <EdList items={p.deliverables} /> },
+      {
+        label: "Who",
+        content: (
+          <p>
+            Led by the {leads.join(" and ")}, with the {others.join(" and ")}.
+          </p>
+        ),
+      },
+    ],
+  };
+}
+
 export function DesignCycle() {
   const [open, setOpen] = useState<number | null>(null);
-  // The last opened phase stays rendered while the panel closes, so it folds away instead of vanishing.
-  const [shown, setShown] = useState<number | null>(null);
-  const phase = PHASES.find((p) => p.n === shown);
   const active = PHASES.find((p) => p.n === open);
-  const toggle = (n: number) => {
-    setOpen(open === n ? null : n);
-    if (open !== n) setShown(n);
-  };
+  const item = useMemo(() => (active ? spreadFor(active) : null), [active]);
 
   return (
     <div className="dc">
@@ -113,6 +156,7 @@ export function DesignCycle() {
         <h1 className="dc-title in-serif">
           From ambiguity <span className="dc-to">to</span> execution
         </h1>
+        <p className="dc-sub">Two diamonds to decide what to make, one to make it.</p>
       </header>
 
       <div className="dc-map">
@@ -128,7 +172,7 @@ export function DesignCycle() {
             <strong>Downhill</strong> · execution
           </span>
           <span className="dc-peak" style={{ left: `${PEAK * 100}%` }} data-active={open === 2 || undefined}>
-            <span className="dc-peak-label">Singular source of truth</span>
+            <span className="dc-peak-label">Source of truth</span>
             <span className="dc-peak-stem" />
           </span>
           <span
@@ -147,23 +191,17 @@ export function DesignCycle() {
                 data-open={open === p.n || undefined}
                 data-source={p.n === 2 || undefined}
                 aria-expanded={open === p.n}
-                aria-controls="dc-panel"
-                onClick={() => toggle(p.n)}
+                aria-controls="dc-spread"
+                onClick={() => setOpen(open === p.n ? null : p.n)}
               >
                 <span className="dc-shape">
                   <svg viewBox="0 0 200 100" preserveAspectRatio="none" aria-hidden>
                     <path className="dc-rhomb" d="M1,50 L100,1 L199,50 L100,99 Z" vectorEffect="non-scaling-stroke" />
                     <path className="dc-mid" d="M100,8 L100,92" vectorEffect="non-scaling-stroke" />
                   </svg>
-                  <span className="dc-half dc-half-l">{p.halves[0]}</span>
-                  <span className="dc-half dc-half-r">{p.halves[1]}</span>
                 </span>
-                <span className="dc-label">
-                  <span className="dc-num in-serif">{p.n}</span> {p.label}
-                </span>
-                <span className="dc-sublabel">
-                  {p.halves[0]} & {p.halves[1].toLowerCase()}
-                </span>
+                <span className="dc-label">{p.label}</span>
+                <span className="dc-sublabel">{p.brief}</span>
               </button>
             </div>
           ))}
@@ -171,58 +209,18 @@ export function DesignCycle() {
 
         <div className="dc-groups" aria-hidden>
           <span className="dc-group dc-group-focus">Designer&rsquo;s focus</span>
-          <span className="dc-group dc-group-impl">Often its own sub-cycle</span>
+          <span className="dc-group dc-group-impl">Its own sub-cycle</span>
         </div>
       </div>
 
-      <div className="dc-panel" id="dc-panel" data-open={open !== null || undefined} role="region" aria-label={phase?.title} inert={open === null}>
-        <div className="dc-panel-clip">
-          {phase && (
-            <div className="dc-panel-inner" key={phase.n}>
-              <div className="dc-panel-head">
-                <h2 className="dc-panel-title in-serif">{phase.title}</h2>
-                <span className="dc-tag">Phase {String(phase.n).padStart(2, "0")}</span>
-              </div>
-              <p className="dc-sot">
-                {phase.sot[0]}
-                <strong>{phase.sot[1]}</strong>
-                {phase.sot[2]}
-              </p>
-              <p className="dc-onhill">
-                <span className="dc-onhill-label">On the hill</span>
-                {phase.hill}
-              </p>
-              <ul className="dc-deliverables">
-                {phase.deliverables.map((d) => (
-                  <li key={d.title} className="dc-deliverable">
-                    <span className="dc-deliverable-title">{d.title}</span>
-                    <span className="dc-deliverable-desc">{d.desc}</span>
-                  </li>
-                ))}
-              </ul>
-              <p className="dc-roles-label">Roles involved</p>
-              <ul className="dc-roles">
-                {phase.roles.map((r) => (
-                  <li key={r.name} className="dc-role" data-lead={r.lead || undefined}>
-                    {r.name}
-                  </li>
-                ))}
-              </ul>
-              {phase.note && <p className="dc-note">{phase.note}</p>}
-            </div>
-          )}
-        </div>
-      </div>
+      <Spread id="dc-spread" item={item} />
 
-      <p className="dc-hint" data-hidden={open !== null || undefined}>
-        Select a phase to open it.
-      </p>
       <p className="dc-credit">
         The hill is from{" "}
         <a href="https://basecamp.com/shapeup/3.4-chapter-13" target="_blank" rel="noreferrer">
           Shape Up
         </a>{" "}
-        by Ryan Singer: uphill is figuring out what to do, downhill is execution.
+        by Ryan Singer.
       </p>
     </div>
   );

@@ -1,18 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { Spread, type SpreadItem } from "./spread";
 
 // A vehicle for logic: what an LLM's output can become, as a ladder from a read-once answer (4)
-// up to a tool others work and build with (1). Each rung is scored on the same four axes, so the
-// list reads as an index; opening a rung shows what it is best used for, who meets it and what it is made of.
+// up to a tool others work and build with (1). The surface is the ladder: a name and a few words
+// per level. Opening a level shows its spread; "Read more" adds what it's best used for, who meets it,
+// what it's made of and its index scores.
 
 type Axis = { key: "reach" | "lifespan" | "agency" | "effort"; label: string; hint: string };
 
 const AXES: Axis[] = [
-  { key: "reach", label: "Reach", hint: "How many people can use it" },
-  { key: "lifespan", label: "Lifespan", hint: "How long it stays useful" },
-  { key: "agency", label: "Agency", hint: "How much others can do with it" },
-  { key: "effort", label: "Effort", hint: "What it takes to make" },
+  { key: "reach", label: "Reach", hint: "how many people can use it" },
+  { key: "lifespan", label: "Lifespan", hint: "how long it stays useful" },
+  { key: "agency", label: "Agency", hint: "how much others can do with it" },
+  { key: "effort", label: "Effort", hint: "what it takes to make" },
 ];
 
 const MAX = 4;
@@ -20,6 +22,7 @@ const MAX = 4;
 type Level = {
   n: number;
   name: string;
+  brief: string;
   line: string;
   bestFor: string[];
   who: string;
@@ -33,49 +36,53 @@ const LEVELS: Level[] = [
   {
     n: 1,
     name: "Tool or system",
+    brief: "Others work with it, or build on it.",
     line: "Others use the underlying system to do an operative task, or a number of tasks, or to come up with new tools.",
     bestFor: ["Operative, repeatable tasks", "Running a number of tasks", "Making new tools"],
     who: "Operator, builder",
-    whoHint: "Uses it to get work done, or builds on it",
+    whoHint: "uses it to get work done, or builds on it",
     modalities: ["Code", "Data", "Any as input and output"],
     scores: { reach: 4, lifespan: 4, agency: 4, effort: 4 },
   },
   {
     n: 2,
     name: "Interactive artifact",
+    brief: "Others explore scenarios with it.",
     line: "Others can interface with it and explore different scenarios on a specific idea or problem. It allows for a wider spectrum of messages.",
     bestFor: ["Exploring scenarios", "One idea or problem, seen from many sides", "Messages a page can't hold"],
     who: "Explorer",
-    whoHint: "Changes inputs and sees what follows",
+    whoHint: "changes inputs and sees what follows",
     modalities: ["Text", "Image", "Sound", "Code"],
     scores: { reach: 3, lifespan: 3, agency: 3, effort: 3 },
   },
   {
     n: 3,
     name: "Standalone document",
+    brief: "A record others read and follow.",
     line: "A fixed record that holds up on its own, outside the conversation that made it.",
     bestFor: ["Strategic decisions", "Logs of events", "Rules, or a set of rules"],
     who: "Reader",
-    whoHint: "Reads it, cites it, follows it",
+    whoHint: "reads it, cites it, follows it",
     modalities: ["Text", "Image", "Tables"],
     scores: { reach: 2, lifespan: 3, agency: 2, effort: 2 },
   },
   {
     n: 4,
     name: "Answer",
+    brief: "Read once, in the chat.",
     line: "The plain reply in a chat. Read once, then it stays in the conversation.",
     bestFor: ["A quick question", "A one-off explanation"],
     who: "You",
-    whoHint: "Only whoever asked",
+    whoHint: "only whoever asked",
     modalities: ["Text", "Image"],
     scores: { reach: 1, lifespan: 1, agency: 1, effort: 1 },
     baseline: true,
   },
 ];
 
-function Meter({ value, label }: { value: number; label: string }) {
+function Meter({ value, label, cost }: { value: number; label: string; cost?: boolean }) {
   return (
-    <span className="vl-meter" role="img" aria-label={`${label}: ${value} of ${MAX}`}>
+    <span className="vl-meter" data-cost={cost || undefined} role="img" aria-label={`${label}: ${value} of ${MAX}`}>
       {Array.from({ length: MAX }, (_, i) => (
         <span key={i} className="vl-pip" data-on={i < value || undefined} />
       ))}
@@ -83,103 +90,84 @@ function Meter({ value, label }: { value: number; label: string }) {
   );
 }
 
+function spreadFor(level: Level): SpreadItem {
+  return {
+    key: `level-${level.n}`,
+    kicker: `Level ${level.n}${level.baseline ? " · the baseline" : ""}`,
+    title: level.name,
+    lede: <p>{level.line}</p>,
+    rows: [
+      { label: "Best used for", content: <p>{level.bestFor.join(". ")}.</p> },
+      {
+        label: "Who interacts",
+        content: (
+          <p>
+            <strong>{level.who}</strong>, {level.whoHint}.
+          </p>
+        ),
+      },
+      { label: "Made of", content: <p>{level.modalities.map((m, i) => (i === 0 ? m : m.toLowerCase())).join(", ")}.</p> },
+      {
+        label: "Index",
+        content: (
+          <ul className="vl-index">
+            {AXES.map((axis) => (
+              <li key={axis.key}>
+                <span className="vl-index-label">
+                  {axis.label} <span>· {axis.hint}</span>
+                </span>
+                <Meter value={level.scores[axis.key]} label={axis.label} cost={axis.key === "effort"} />
+              </li>
+            ))}
+          </ul>
+        ),
+      },
+    ],
+  };
+}
+
 export function VehicleForLogic() {
   const [open, setOpen] = useState<number | null>(null);
+  const active = LEVELS.find((l) => l.n === open);
+  const item = useMemo(() => (active ? spreadFor(active) : null), [active]);
 
   return (
     <div className="vl">
       <header className="vl-head">
         <p className="in-kicker">LLM outputs, indexed</p>
         <h1 className="vl-title in-serif">A vehicle for logic</h1>
-        <p className="vl-sub">What a model&rsquo;s output can become, from a read-once answer to a tool others build with.</p>
+        <p className="vl-sub">From a read-once answer to a tool others build with.</p>
       </header>
 
       <div className="vl-ladder">
         <div className="vl-axis" aria-hidden>
           <span>More leverage</span>
         </div>
-
-        <div className="vl-list">
-          <div className="vl-legend" aria-hidden>
-            <span className="vl-legend-spacer" />
-            {AXES.map((axis) => (
-              <span key={axis.key} className="vl-legend-item" title={axis.hint}>
-                {axis.label}
-              </span>
-            ))}
-          </div>
-
-          <ol className="vl-rungs">
-            {LEVELS.map((level) => {
-              const isOpen = open === level.n;
-              return (
-                <li key={level.n} className="vl-rung" data-open={isOpen || undefined} data-baseline={level.baseline || undefined}>
-                  <button
-                    type="button"
-                    className="vl-rung-head"
-                    aria-expanded={isOpen}
-                    aria-controls={`vl-detail-${level.n}`}
-                    onClick={() => setOpen(isOpen ? null : level.n)}
-                  >
-                    <span className="vl-num in-serif">{level.n}</span>
-                    <span className="vl-name">
-                      <span className="vl-level">Level {level.n}</span>
-                      {level.name}
-                    </span>
-                    <span className="vl-scores">
-                      {AXES.map((axis) => (
-                        <span key={axis.key} className="vl-score">
-                          <span className="vl-score-label">{axis.label}</span>
-                          <Meter value={level.scores[axis.key]} label={axis.label} />
-                        </span>
-                      ))}
-                    </span>
-                  </button>
-
-                  <div className="vl-detail" id={`vl-detail-${level.n}`} inert={!isOpen}>
-                    <div className="vl-detail-clip">
-                      <div className="vl-detail-inner">
-                        <p className="vl-line">{level.line}</p>
-                        <dl className="vl-facts">
-                          <div>
-                            <dt>Best used for</dt>
-                            <dd>
-                              <ul className="vl-chips">
-                                {level.bestFor.map((item) => (
-                                  <li key={item}>{item}</li>
-                                ))}
-                              </ul>
-                            </dd>
-                          </div>
-                          <div>
-                            <dt>Who interacts</dt>
-                            <dd>
-                              <span className="vl-who">{level.who}</span>
-                              <span className="vl-who-hint">{level.whoHint}</span>
-                            </dd>
-                          </div>
-                          <div>
-                            <dt>Made of</dt>
-                            <dd>
-                              <ul className="vl-chips vl-chips-quiet">
-                                {level.modalities.map((item) => (
-                                  <li key={item}>{item}</li>
-                                ))}
-                              </ul>
-                            </dd>
-                          </div>
-                        </dl>
-                      </div>
-                    </div>
-                  </div>
-                </li>
-              );
-            })}
-          </ol>
-        </div>
+        <ol className="vl-rungs">
+          {LEVELS.map((level) => {
+            const isOpen = open === level.n;
+            return (
+              <li key={level.n}>
+                <button
+                  type="button"
+                  className="vl-rung"
+                  data-open={isOpen || undefined}
+                  data-baseline={level.baseline || undefined}
+                  aria-expanded={isOpen}
+                  aria-controls="vl-spread"
+                  onClick={() => setOpen(isOpen ? null : level.n)}
+                >
+                  <span className="vl-num in-serif">{level.n}</span>
+                  <span className="vl-name">{level.name}</span>
+                  <span className="vl-brief">{level.brief}</span>
+                </button>
+              </li>
+            );
+          })}
+        </ol>
       </div>
 
-      <p className="vl-hint">Select a level to open it. Scores run from 1 to {MAX}.</p>
+      <Spread id="vl-spread" item={item} />
     </div>
   );
 }
