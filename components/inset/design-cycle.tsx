@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { ViewTransition, startTransition, useMemo, useState, type CSSProperties } from "react";
 import { EdList, Spread, type SpreadItem } from "./spread";
 
 // Design cycle: a double diamond (Research, Planning) in the designer's focus, and a third diamond
@@ -28,11 +28,17 @@ type Phase = {
   roles: { name: string; lead?: boolean }[];
 };
 
-// The hill peaks where Planning ends: two thirds across.
-const PEAK = 2 / 3;
+// Layout across the map, as fractions of its width. The diamonds are squares turned 45°: Research and
+// Planning touch (the designer's double diamond); Implementation stands apart after a gap. The hill's
+// peak sits exactly where Planning ends, and each diamond hangs under its own point on the hill.
+const LEFT = 0.12;
+const D = 0.22; // a diamond's width (and height)
+const GAP = 0.1;
+const CENTRES = [LEFT + D / 2, LEFT + D * 1.5, LEFT + D * 2 + GAP + D / 2];
+const PEAK = LEFT + D * 2;
 const HILL_H = 1; // the curve's height in its own units; CSS sets the drawn height
 
-/** Height of the hill (0 at the foot, 1 at the peak) at x, 0–1 across. Steeper going up, gentler coming down. */
+/** Height of the hill (0 at the foot, 1 at the peak) at x, 0–1 across. Longer climb, shorter descent. */
 function hill(x: number) {
   const t = x <= PEAK ? x / PEAK : (1 - x) / (1 - PEAK);
   return HILL_H * (1 - Math.cos(Math.PI * Math.max(0, Math.min(1, t)))) * 0.5;
@@ -55,7 +61,7 @@ const PHASES: Phase[] = [
     lede: "Discover what people need, then define the problem worth solving.",
     halves: ["Discover", "Define"],
     title: "Research & discovery",
-    hillAt: 1 / 6,
+    hillAt: CENTRES[0],
     hill: "Uphill. Full of unknowns: still working out what the problem is.",
     sot: ["Output from this phase ", "feeds into", " the design documentation."],
     deliverables: [
@@ -73,7 +79,7 @@ const PHASES: Phase[] = [
     lede: "Develop the solution and document it. This is the source of truth, and the designer owns it.",
     halves: ["Develop", "Document"],
     title: "Design & planning",
-    hillAt: 0.5,
+    hillAt: CENTRES[1],
     hill: "Near the top. The approach is validated; at the end of this phase, “Now I know what to do.”",
     sot: ["This phase ", "is", " the source of truth. The designer owns it."],
     deliverables: [
@@ -91,7 +97,7 @@ const PHASES: Phase[] = [
     lede: "Build it and deliver it, checked against the documentation. Often its own sub-cycle, run by the people who build it.",
     halves: ["Build", "Deliver"],
     title: "Implementation",
-    hillAt: 5 / 6,
+    hillAt: CENTRES[2],
     hill: "Downhill. Certainty: all the work is visible, and it is a matter of doing it.",
     sot: ["This phase ", "consumes and validates", " the design documentation."],
     deliverables: [
@@ -148,80 +154,95 @@ export function DesignCycle() {
   const [open, setOpen] = useState<number | null>(null);
   const active = PHASES.find((p) => p.n === open);
   const item = useMemo(() => (active ? spreadFor(active) : null), [active]);
+  const toggle = (n: number) => {
+    const next = open === n ? null : n;
+    // Opening the first phase (or closing the last) changes the layout on wide screens: animate that move.
+    if ((open === null) !== (next === null)) startTransition(() => setOpen(next));
+    else setOpen(next);
+  };
 
   return (
-    <div className="dc">
-      <header className="dc-head">
-        <p className="in-kicker">Design process overview</p>
-        <h1 className="dc-title in-serif">
-          From ambiguity <span className="dc-to">to</span> execution
-        </h1>
-        <p className="dc-sub">Two diamonds to decide what to make, one to make it.</p>
-      </header>
+    <div className="dc split" data-open={open !== null || undefined}>
+      <ViewTransition update="in-layout" default="none">
+        <div className="split-nav">
+          <header className="dc-head">
+            <p className="in-kicker">Design process overview</p>
+            <h1 className="dc-title in-serif">
+              From ambiguity <span className="dc-to">to</span> execution
+            </h1>
+            <p className="dc-sub">Two diamonds to decide what to make, one to make it.</p>
+          </header>
 
-      <div className="dc-map">
-        <div className="dc-hill" aria-hidden>
-          <svg viewBox="0 0 1000 100" preserveAspectRatio="none">
-            <path className="dc-hill-fill" d={`${HILL_PATH} L1000,100 L0,100 Z`} />
-            <path className="dc-hill-line" d={HILL_PATH} vectorEffect="non-scaling-stroke" />
-          </svg>
-          <span className="dc-slope dc-slope-up">
-            <strong>Uphill</strong> · figuring it out
-          </span>
-          <span className="dc-slope dc-slope-down">
-            <strong>Downhill</strong> · execution
-          </span>
-          <span className="dc-peak" style={{ left: `${PEAK * 100}%` }} data-active={open === 2 || undefined}>
-            <span className="dc-peak-label">Source of truth</span>
-            <span className="dc-peak-stem" />
-          </span>
-          <span
-            className="dc-dot"
-            data-visible={active ? true : undefined}
-            style={{ left: `${(active?.hillAt ?? 0) * 100}%`, bottom: `${hill(active?.hillAt ?? 0) * 92}%` }}
-          />
-        </div>
-
-        <div className="dc-diamonds" role="group" aria-label="Phases">
-          {PHASES.map((p) => (
-            <div key={p.n} className="dc-col" data-apart={p.n === 3 || undefined}>
-              <button
-                type="button"
-                className="dc-phase"
-                data-open={open === p.n || undefined}
-                data-source={p.n === 2 || undefined}
-                aria-expanded={open === p.n}
-                aria-controls="dc-spread"
-                onClick={() => setOpen(open === p.n ? null : p.n)}
-              >
-                <span className="dc-shape">
-                  <svg viewBox="0 0 200 100" preserveAspectRatio="none" aria-hidden>
-                    <path className="dc-rhomb" d="M1,50 L100,1 L199,50 L100,99 Z" vectorEffect="non-scaling-stroke" />
-                    <path className="dc-mid" d="M100,8 L100,92" vectorEffect="non-scaling-stroke" />
-                  </svg>
-                </span>
-                <span className="dc-label">{p.label}</span>
-                <span className="dc-sublabel">{p.brief}</span>
-              </button>
+          <div className="dc-map">
+            <div className="dc-hill" aria-hidden>
+              <svg viewBox="0 0 1000 100" preserveAspectRatio="none">
+                <path className="dc-hill-fill" d={`${HILL_PATH} L1000,100 L0,100 Z`} />
+                <path className="dc-hill-line" d={HILL_PATH} vectorEffect="non-scaling-stroke" />
+              </svg>
+              <span className="dc-slope dc-slope-up">
+                <strong>Uphill</strong>
+                <span className="dc-slope-note"> · figuring it out</span>
+              </span>
+              <span className="dc-slope dc-slope-down">
+                <strong>Downhill</strong>
+                <span className="dc-slope-note"> · execution</span>
+              </span>
+              <span className="dc-peak" style={{ left: `${PEAK * 100}%` }} data-active={open === 2 || undefined}>
+                <span className="dc-peak-label">Source of truth</span>
+                <span className="dc-peak-stem" />
+              </span>
+              <span
+                className="dc-dot"
+                data-visible={active ? true : undefined}
+                style={{ left: `${(active?.hillAt ?? 0) * 100}%`, bottom: `${hill(active?.hillAt ?? 0) * 92}%` }}
+              />
             </div>
-          ))}
-        </div>
 
-        <div className="dc-groups" aria-hidden>
-          <span className="dc-group dc-group-focus">Designer&rsquo;s focus</span>
-          <span className="dc-group dc-group-impl">Its own sub-cycle</span>
+            <div className="dc-diamonds" role="group" aria-label="Phases">
+              {PHASES.map((p, i) => (
+                <button
+                  key={p.n}
+                  type="button"
+                  className="dc-phase"
+                  style={{ gridColumn: i === 2 ? 5 : i + 2, "--h": hill(p.hillAt) } as CSSProperties}
+                  data-open={open === p.n || undefined}
+                  data-source={p.n === 2 || undefined}
+                  aria-expanded={open === p.n}
+                  aria-controls="dc-spread"
+                  onClick={() => toggle(p.n)}
+                >
+                  <span className="dc-shape">
+                    {/* a dashed line up from the diamond's tip to its point on the hill */}
+                    <span className="dc-drop" aria-hidden />
+                    <svg viewBox="0 0 100 100" aria-hidden>
+                      <path className="dc-rhomb" d="M50,1 L99,50 L50,99 L1,50 Z" vectorEffect="non-scaling-stroke" />
+                      <path className="dc-mid" d="M50,8 L50,92" vectorEffect="non-scaling-stroke" />
+                    </svg>
+                  </span>
+                  <span className="dc-label">{p.label}</span>
+                  <span className="dc-sublabel">{p.brief}</span>
+                </button>
+              ))}
+              <span className="dc-divider" aria-hidden />
+            </div>
+
+            <div className="dc-groups" aria-hidden>
+              <span className="dc-group dc-group-focus">Designer&rsquo;s focus</span>
+              <span className="dc-group dc-group-impl">Its own sub-cycle</span>
+            </div>
+          </div>
+
+          <p className="dc-credit">
+            The hill is from{" "}
+            <a href="https://basecamp.com/shapeup/3.4-chapter-13" target="_blank" rel="noreferrer">
+              Shape Up
+            </a>{" "}
+            by Ryan Singer.
+          </p>
         </div>
-      </div>
+      </ViewTransition>
 
       <Spread id="dc-spread" item={item} />
-
-      <p className="dc-credit">
-        The hill is from{" "}
-        <a href="https://basecamp.com/shapeup/3.4-chapter-13" target="_blank" rel="noreferrer">
-          Shape Up
-        </a>{" "}
-        by Ryan Singer.
-      </p>
     </div>
   );
 }

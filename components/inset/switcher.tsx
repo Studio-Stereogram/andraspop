@@ -4,36 +4,34 @@ import { DropdownMenu } from "radix-ui";
 import { ViewTransition } from "react";
 import { INSETS, cardStyle, directionBetween, type Inset } from "@/lib/inset/insets";
 import { insetPath } from "@/lib/inset/routing";
-import { CARD_H, CARD_W, CardFace, cardName, titleName } from "./card";
+import { cardName, titleName } from "./card";
 import { InsetLink } from "./inset-link";
 import { CardArt } from "./card-art";
 
-// The smart dropdown in the top-left of every inset. Its tile is the card itself, shrunk:
+// The smart dropdown in the top-left of every inset. Its tile is a square crop of the card's art:
 // coming from home the card flies into it. It lists every inset, so you can jump sideways
 // without going home; moving to another inset slides the page in that direction and flips the tile.
 
-const TILE_W = 30;
-const SCALE = TILE_W / CARD_W;
+const TILE = 34;
+const ART = 96; // the art is drawn at 96px and shown at 34px: a square crop, like the menu thumbnails
 
-function Tile({ inset, index }: { inset: Inset; index: number }) {
+function Tile({ inset }: { inset: Inset }) {
   return (
-    <span className="in-tile" style={{ width: TILE_W, height: Math.round(CARD_H * SCALE) }}>
-      <span className="in-tile-card" style={{ transform: `scale(${SCALE})` }}>
-        <CardFace inset={inset} index={index} bare />
+    <span className="in-tile in-grain" style={{ width: TILE, height: TILE, ...cardStyle(inset) }}>
+      <span className="in-tile-art" style={{ transform: `scale(${TILE / ART})` }}>
+        <CardArt kind={inset.art} ink={inset.ink} width={ART} height={ART} still />
       </span>
     </span>
   );
 }
 
 export function Switcher({ current }: { current: Inset }) {
-  const index = INSETS.findIndex((inset) => inset.slug === current.slug);
-
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger className="in-switch" aria-label={`${current.title}. Switch inset`}>
         <ViewTransition name={cardName(current.slug)} share="in-morph" enter="in-flip-in" exit="in-flip-out" default="none">
           <span className="in-switch-tile">
-            <Tile inset={current} index={index} />
+            <Tile inset={current} />
           </span>
         </ViewTransition>
         <ViewTransition name={titleName(current.slug)} share="in-morph" enter="in-flip-in" exit="in-flip-out" default="none">

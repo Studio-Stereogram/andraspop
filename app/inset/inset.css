@@ -332,9 +332,10 @@ html:has(.inset-root) body {
   position: relative;
   display: block;
   overflow: hidden;
-  border-radius: 5px;
+  border-radius: 8px;
+  background: var(--card);
 }
-.in-tile-card {
+.in-tile-art {
   position: absolute;
   left: 0;
   top: 0;
@@ -548,6 +549,7 @@ html:has(.inset-root) body {
   from { opacity: 0; transform: translateY(14px); filter: blur(4px); }
 }
 .ed-inner {
+  container-type: inline-size;
   max-width: 1360px;
   margin: 0 auto;
   padding: 22px clamp(16px, 3vw, 40px) 56px;
@@ -560,7 +562,7 @@ html:has(.inset-root) body {
 }
 .ed-title {
   margin: 10px 0 0 -0.04em;
-  font-size: clamp(40px, 12.5vw, 184px);
+  font-size: clamp(40px, 12.5cqi, 184px);
   overflow-wrap: anywhere;
   line-height: 0.88;
   letter-spacing: -0.035em;
@@ -694,13 +696,15 @@ html:has(.inset-root) body {
 
 /* the map: hill on top, diamonds below, group labels under them */
 .dc-map {
+  --hill-h: 130px;
+  --gap: 18px;
   position: relative;
   padding-top: 44px;
 }
 
 .dc-hill {
   position: relative;
-  height: 150px;
+  height: var(--hill-h);
 }
 .dc-hill svg {
   position: absolute;
@@ -720,7 +724,6 @@ html:has(.inset-root) body {
 }
 .dc-slope {
   position: absolute;
-  bottom: 8px;
   font-size: 13px;
   color: var(--ink-2);
   white-space: nowrap;
@@ -729,12 +732,15 @@ html:has(.inset-root) body {
   font-weight: 650;
   color: var(--ink);
 }
-/* both sit under the curve, inside the shaded hill */
+/* above the curve at either foot, clear of the drop lines */
 .dc-slope-up {
-  left: 22%;
+  left: 1%;
+  bottom: 46%;
 }
 .dc-slope-down {
-  right: 11%;
+  right: 0;
+  bottom: 46%;
+  text-align: right;
 }
 
 /* the peak: where Planning ends and the source of truth is fixed */
@@ -786,27 +792,27 @@ html:has(.inset-root) body {
   scale: 1;
 }
 
-.dc-diamonds {
-  container-type: inline-size;
+.dc-diamonds,
+.dc-groups {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  margin-top: 18px;
+  /* margin, Research, Planning, gap, Implementation, margin: the same fractions as the hill.
+     minmax(0, …) keeps a long label from widening its column (and its diamond). */
+  grid-template-columns: minmax(0, 12fr) minmax(0, 22fr) minmax(0, 22fr) minmax(0, 10fr) minmax(0, 22fr) minmax(0, 12fr);
 }
-.dc-col[data-apart] {
-  position: relative;
-  padding-left: 22px;
+.dc-diamonds {
+  margin-top: var(--gap);
 }
 /* the break between the designer's double diamond and implementation */
-.dc-col[data-apart]::before {
-  content: "";
-  position: absolute;
-  left: 10px;
-  top: -10px;
-  bottom: -40px;
+.dc-divider {
+  grid-column: 4;
+  grid-row: 1;
+  justify-self: center;
+  margin: -6px 0 -40px;
   border-left: 1.5px dashed var(--line-2);
 }
 
 .dc-phase {
+  grid-row: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -828,8 +834,21 @@ html:has(.inset-root) body {
   position: relative;
   display: block;
   width: 100%;
-  height: calc(100cqw / 6); /* half a column wide, the same for all three diamonds */
+  aspect-ratio: 1;
   margin-bottom: 10px;
+}
+/* from the diamond's tip up to its point on the hill (--h is the hill's height there, 0–1) */
+.dc-drop {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  height: calc(var(--gap) + var(--hill-h) * var(--h) * 0.92);
+  border-left: 1.5px dashed var(--line-2);
+  transition: border-color 0.2s var(--ease);
+}
+.dc-phase[data-open] .dc-drop {
+  border-left-style: solid;
+  border-color: var(--accent);
 }
 .dc-shape svg {
   position: absolute;
@@ -859,6 +878,7 @@ html:has(.inset-root) body {
 }
 .dc-sublabel {
   font-size: 14px;
+  line-height: 1.35;
   color: var(--ink-3);
 }
 
@@ -875,9 +895,7 @@ html:has(.inset-root) body {
 
 /* group labels: a bracket under the double diamond, another under implementation */
 .dc-groups {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  margin-top: 6px;
+  margin-top: 8px;
 }
 .dc-group {
   position: relative;
@@ -898,9 +916,9 @@ html:has(.inset-root) body {
   border-top: 0;
   border-radius: 0 0 6px 6px;
 }
-.dc-group-focus { color: var(--ink-2); }
+.dc-group-focus { grid-column: 2 / 4; color: var(--ink-2); }
 .dc-group-focus::before { border-color: var(--ink-2); }
-.dc-group-impl { margin-left: 22px; }
+.dc-group-impl { grid-column: 5; }
 
 .dc-credit {
   margin-top: 40px;
@@ -914,18 +932,65 @@ html:has(.inset-root) body {
 }
 
 @media (max-width: 640px) {
-  .dc-map { padding-top: 40px; }
-  .dc-hill { height: 110px; }
-  .dc-slope { font-size: 11px; bottom: 4px; }
-  .dc-slope-up { left: 21%; }
-  .dc-slope-down { right: 9%; }
+  .dc-map { padding-top: 40px; --hill-h: 96px; --gap: 14px; }
+  .dc-slope { font-size: 11px; bottom: 40%; }
+  .dc-slope-note { display: none; }
   .dc-peak-label { font-size: 11px; padding: 4px 10px; }
-  .dc-col[data-apart] { padding-left: 14px; }
-  .dc-col[data-apart]::before { left: 6px; }
-  .dc-group-impl { margin-left: 14px; }
   .dc-label { font-size: 14px; }
   .dc-sublabel { font-size: 12px; line-height: 1.3; }
   .dc-group { font-size: 11px; }
+}
+
+/* ---- two columns: on a landscape laptop screen an opened item sits beside its diagram ---- */
+
+@media (min-width: 1100px) and (min-aspect-ratio: 4/3) {
+  .split[data-open] {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    column-gap: clamp(40px, 5vw, 96px);
+    align-items: start;
+    max-width: 1400px;
+  }
+  .split[data-open] .split-nav {
+    position: sticky;
+    top: 88px;
+  }
+  .split[data-open] .dc-head,
+  .split[data-open] .vl-head,
+  .split[data-open] .dc-credit {
+    text-align: left;
+  }
+  .split[data-open] .dc-title,
+  .split[data-open] .vl-title {
+    font-size: clamp(36px, 3.4vw, 52px);
+  }
+  .split[data-open] .dc-map {
+    --hill-h: 110px;
+    padding-top: 36px;
+  }
+  .split[data-open] .dc-slope-note {
+    display: none;
+  }
+  .split[data-open] .dc-label {
+    font-size: 15px;
+  }
+  .split[data-open] .dc-sublabel {
+    font-size: 13px;
+  }
+  .split[data-open] .ed-fold {
+    width: auto;
+    margin: 0;
+  }
+  .split[data-open] .ed-inner {
+    max-width: none;
+    padding: 18px 0 64px;
+  }
+  .split[data-open] .ed-row {
+    grid-template-columns: minmax(110px, 1fr) 3fr;
+  }
+  .split[data-open] .vl-head {
+    margin-bottom: 28px;
+  }
 }
 
 /* ---- a vehicle for logic ---- */
@@ -1149,6 +1214,12 @@ html:has(.inset-root) body {
 }
 @keyframes in-flip-in {
   from { opacity: 0; transform: translateY(12px) rotate(3deg); }
+}
+
+/* the diagram moving between centred and the left column */
+::view-transition-group(.in-layout) {
+  animation-duration: 480ms;
+  animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 /* whole pages */

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { ViewTransition, startTransition, useMemo, useState } from "react";
 import { Spread, type SpreadItem } from "./spread";
 
 // A vehicle for logic: what an LLM's output can become, as a ladder from a read-once answer (4)
@@ -130,42 +130,52 @@ export function VehicleForLogic() {
   const [open, setOpen] = useState<number | null>(null);
   const active = LEVELS.find((l) => l.n === open);
   const item = useMemo(() => (active ? spreadFor(active) : null), [active]);
+  const toggle = (n: number) => {
+    const next = open === n ? null : n;
+    // Opening the first level (or closing the last) changes the layout on wide screens: animate that move.
+    if ((open === null) !== (next === null)) startTransition(() => setOpen(next));
+    else setOpen(next);
+  };
 
   return (
-    <div className="vl">
-      <header className="vl-head">
-        <p className="in-kicker">LLM outputs, indexed</p>
-        <h1 className="vl-title in-serif">A vehicle for logic</h1>
-        <p className="vl-sub">From a read-once answer to a tool others build with.</p>
-      </header>
+    <div className="vl split" data-open={open !== null || undefined}>
+      <ViewTransition update="in-layout" default="none">
+        <div className="split-nav">
+          <header className="vl-head">
+            <p className="in-kicker">LLM outputs, indexed</p>
+            <h1 className="vl-title in-serif">A vehicle for logic</h1>
+            <p className="vl-sub">From a read-once answer to a tool others build with.</p>
+          </header>
 
-      <div className="vl-ladder">
-        <div className="vl-axis" aria-hidden>
-          <span>More leverage</span>
+          <div className="vl-ladder">
+            <div className="vl-axis" aria-hidden>
+              <span>More leverage</span>
+            </div>
+            <ol className="vl-rungs">
+              {LEVELS.map((level) => {
+                const isOpen = open === level.n;
+                return (
+                  <li key={level.n}>
+                    <button
+                      type="button"
+                      className="vl-rung"
+                      data-open={isOpen || undefined}
+                      data-baseline={level.baseline || undefined}
+                      aria-expanded={isOpen}
+                      aria-controls="vl-spread"
+                      onClick={() => toggle(level.n)}
+                    >
+                      <span className="vl-num in-serif">{level.n}</span>
+                      <span className="vl-name">{level.name}</span>
+                      <span className="vl-brief">{level.brief}</span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
         </div>
-        <ol className="vl-rungs">
-          {LEVELS.map((level) => {
-            const isOpen = open === level.n;
-            return (
-              <li key={level.n}>
-                <button
-                  type="button"
-                  className="vl-rung"
-                  data-open={isOpen || undefined}
-                  data-baseline={level.baseline || undefined}
-                  aria-expanded={isOpen}
-                  aria-controls="vl-spread"
-                  onClick={() => setOpen(isOpen ? null : level.n)}
-                >
-                  <span className="vl-num in-serif">{level.n}</span>
-                  <span className="vl-name">{level.name}</span>
-                  <span className="vl-brief">{level.brief}</span>
-                </button>
-              </li>
-            );
-          })}
-        </ol>
-      </div>
+      </ViewTransition>
 
       <Spread id="vl-spread" item={item} />
     </div>
