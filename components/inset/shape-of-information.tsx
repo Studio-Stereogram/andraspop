@@ -306,7 +306,10 @@ export function ShapeOfInformation() {
 
           <ol className="si-stream" aria-label="From information to meaning">
             {STAGES.map((stage) => (
-              <li key={stage.key}>
+              <li key={stage.key} data-step={stage.n}>
+                {/* node ports: a ring where the stream comes in, a dot where it goes on; the li draws the tie between them */}
+                {stage.n > 1 && <span className="si-port si-port-in" aria-hidden />}
+                {stage.n < STAGES.length && <span className="si-port si-port-out" aria-hidden />}
                 <button
                   type="button"
                   className="si-seg"
