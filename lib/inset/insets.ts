@@ -55,14 +55,13 @@ export const INSETS: Inset[] = [
     slug: "shape-of-information",
     title: "The shape of information",
     cardTitle: "The shape of\ninformation",
-    summary: "How web anatomy and gestalt shape the message you deliver.",
+    summary: "Information takes a shape before it takes a meaning.",
     token: { word: "form", shape: "circle" },
     color: "#FF8FB8",
     ink: "#5C0B2E",
     tint: "#FFE3EE",
     art: "gestalt",
-    status: "in-progress",
-    notes: ["Web anatomy", "Visual hierarchy", "Gestalt"],
+    status: "live",
   },
 ];
 

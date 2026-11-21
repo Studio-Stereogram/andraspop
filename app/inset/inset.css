@@ -1060,6 +1060,243 @@ html:has(.inset-root) body {
   .dc-group { font-size: 11px; }
 }
 
+/* ---- the shape of information ---- */
+
+.si {
+  --accent: #ff8fb8;
+  --accent-ink: #5c0b2e;
+  --accent-tint: #ffe3ee;
+  --accent-text: #9c2c55; /* APCA Lc 77 on paper */
+  width: 100%;
+  max-width: 900px;
+}
+.si-head {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.si-title {
+  margin-top: 10px;
+  font-size: clamp(40px, 7vw, 68px);
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+.si-sub {
+  margin-top: 12px;
+  font-size: clamp(16px, 2vw, 19px);
+  color: var(--ink-2);
+}
+
+/* the specimen: seven pieces on a stage, rearranged into shapes */
+.si-specimen {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface);
+}
+.si-stage {
+  position: relative;
+  aspect-ratio: 2 / 1;
+  border-radius: 10px;
+  background: var(--paper);
+  overflow: hidden;
+}
+.si-piece {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 8px;
+  border: 1px solid var(--line-2);
+  border-radius: 7px;
+  background: var(--surface);
+  overflow: hidden;
+  transition:
+    left 0.7s var(--ease),
+    top 0.7s var(--ease),
+    width 0.7s var(--ease),
+    height 0.7s var(--ease),
+    rotate 0.7s var(--ease),
+    background 0.4s var(--ease),
+    border-color 0.4s var(--ease);
+}
+.si-piece-date,
+.si-piece-region {
+  display: none;
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.1;
+  white-space: nowrap;
+  color: var(--ink);
+}
+.si-piece-bar {
+  flex: none;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--line);
+}
+.si-piece-bar-short {
+  width: 60%;
+}
+.si-stage[data-shape="timeline"] .si-piece-date,
+.si-stage[data-shape="page"] .si-piece-region {
+  display: block;
+}
+.si-stage[data-shape="timeline"] .si-piece-bar-short {
+  display: none;
+}
+/* groups: each kind takes its own tint, the same families as the role tags */
+.si-stage[data-shape="groups"] .si-piece[data-kind="0"] { background: #d3f0ea; border-color: #0e6d63; }
+.si-stage[data-shape="groups"] .si-piece[data-kind="1"] { background: #e5e1ff; border-color: #4f3ad6; }
+.si-stage[data-shape="groups"] .si-piece[data-kind="2"] { background: #fbe8c2; border-color: #9a5400; }
+.si-stage[data-shape="groups"] .si-piece-bar { background: rgba(23, 23, 26, 0.14); }
+/* page: the headline region reads larger */
+.si-stage[data-shape="page"] .si-piece:nth-child(n) .si-piece-region { font-size: 12px; }
+
+/* cues: fade in once the pieces have arrived */
+.si-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.si-cue {
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
+}
+.si-lines .si-cue {
+  fill: none;
+  stroke: var(--accent-text);
+  stroke-width: 1.5;
+}
+.si-stage[data-shape="timeline"] .si-cue-timeline,
+.si-stage[data-shape="hierarchy"] .si-cue-hierarchy,
+.si-stage[data-shape="groups"] .si-cue-groups {
+  opacity: 1;
+  transition: opacity 0.5s var(--ease) 0.45s;
+}
+.si-tick {
+  position: absolute;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  border-radius: 50%;
+  background: var(--accent-text);
+  box-shadow: 0 0 0 3px var(--paper);
+}
+.si-enclosure {
+  position: absolute;
+  border: 1.5px dashed var(--accent-text);
+  border-radius: 12px;
+}
+
+.si-shapes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+.si-shape-btn {
+  padding: 6px 14px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--ink-2);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.si-shape-btn:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+.si-shape-btn[aria-pressed="true"] {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* the causal stream: information → distribution → shape → meaning */
+.si-stream {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+  margin-top: 28px;
+  list-style: none;
+}
+.si-stream li {
+  position: relative;
+  display: flex;
+}
+.si-stream li:not(:last-child)::after {
+  content: "→";
+  position: absolute;
+  top: 50%;
+  right: -17px;
+  translate: 0 -50%;
+  font-size: 15px;
+  color: var(--ink-3);
+}
+.si-seg {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  padding: 14px 16px 16px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--surface);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+}
+.si-seg:hover {
+  border-color: var(--line-2);
+}
+.si-seg[data-open] {
+  border-color: var(--accent-ink);
+  background: var(--accent-tint);
+}
+.si-seg-label {
+  font-size: 15px;
+  font-weight: 650;
+}
+.si-seg-n {
+  font-weight: 400;
+  color: var(--accent-text);
+}
+.si-seg-value {
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--ink-2);
+  animation: si-swap 0.45s var(--ease);
+}
+@keyframes si-swap {
+  from { opacity: 0; transform: translateY(4px); filter: blur(2px); }
+}
+
+@media (max-width: 760px) {
+  .si-stage { aspect-ratio: 4 / 3; }
+  .si-piece { padding: 5px 3px; gap: 4px; }
+  .si-piece-date, .si-piece-region { font-size: 9.5px; letter-spacing: -0.01em; }
+  .si-stream { grid-template-columns: 1fr; gap: 18px; }
+  .si-stream li:not(:last-child)::after {
+    content: "↓";
+    top: auto;
+    bottom: -18px;
+    right: auto;
+    left: 24px;
+    translate: 0 0;
+  }
+}
+
 /* ---- two columns: on a landscape laptop screen an opened item sits beside its diagram ---- */
 
 @media (min-width: 1100px) and (min-aspect-ratio: 4/3) {
@@ -1076,11 +1313,13 @@ html:has(.inset-root) body {
   }
   .split[data-open] .dc-head,
   .split[data-open] .vl-head,
+  .split[data-open] .si-head,
   .split[data-open] .dc-credit {
     text-align: left;
   }
   .split[data-open] .dc-title,
-  .split[data-open] .vl-title {
+  .split[data-open] .vl-title,
+  .split[data-open] .si-title {
     font-size: clamp(36px, 3.4vw, 52px);
   }
   .split[data-open] .dc-map {
@@ -1107,8 +1346,28 @@ html:has(.inset-root) body {
   .split[data-open] .ed-row {
     grid-template-columns: minmax(110px, 1fr) 3fr;
   }
-  .split[data-open] .vl-head {
-    margin-bottom: 28px;
+  .split[data-open] .vl-head,
+  .split[data-open] .si-head {
+    margin-bottom: 24px;
+  }
+  /* keep the whole left column on one laptop screen */
+  .split[data-open] .si-stage {
+    aspect-ratio: 2.3 / 1;
+  }
+  .split[data-open] .si-stream {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .split[data-open] .si-seg {
+    padding: 10px 14px 12px;
+    gap: 3px;
+  }
+  .split[data-open] .si-seg-value {
+    font-size: 13px;
+  }
+  .split[data-open] .si-stream li::after {
+    display: none;
   }
 }
 
@@ -1260,8 +1519,10 @@ html:has(.inset-root) body {
   stroke-dasharray: 10 90;
   animation: in-orbit 18s linear infinite;
 }
-.vl-rung[data-open] .vl-orbit-track { opacity: 0.3; }
-.vl-rung[data-open] .vl-orbit-dash { opacity: 1; }
+.vl-rung[data-open] .vl-orbit-track,
+.si-seg[data-open] .vl-orbit-track { opacity: 0.3; }
+.vl-rung[data-open] .vl-orbit-dash,
+.si-seg[data-open] .vl-orbit-dash { opacity: 1; }
 
 /* index scores, inside "Read more" */
 .vl-index {
@@ -1415,6 +1676,9 @@ html:has(.inset-root) body {
     animation-duration: 0s !important;
   }
   /* the ambient outline stays as a still track and dash */
+  .si-piece {
+    transition: none !important;
+  }
   .dc-orbit,
   .vl-orbit-dash,
   .dc-dot[data-visible] {
