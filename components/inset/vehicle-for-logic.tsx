@@ -1,6 +1,8 @@
 "use client";
 
 import { ViewTransition, startTransition, useMemo, useState } from "react";
+import type { Participant } from "@/lib/inset/roles";
+import { RoleTags } from "./role-tags";
 import { Spread, type SpreadItem } from "./spread";
 
 // A vehicle for logic: what an LLM's output can become, as a ladder from a read-once answer (4)
@@ -25,8 +27,7 @@ type Level = {
   brief: string;
   line: string;
   bestFor: string[];
-  who: string;
-  whoHint: string;
+  who: Participant[];
   modalities: string[];
   scores: Record<Axis["key"], number>;
   baseline?: boolean;
@@ -39,8 +40,7 @@ const LEVELS: Level[] = [
     brief: "Others work with it, or build on it.",
     line: "Others use the underlying system to do an operative task, or a number of tasks, or to come up with new tools.",
     bestFor: ["Operative, repeatable tasks", "Running a number of tasks", "Making new tools"],
-    who: "Operator, builder",
-    whoHint: "uses it to get work done, or builds on it",
+    who: [{ id: "operator" }, { id: "builder" }],
     modalities: ["Code", "Data", "Any as input and output"],
     scores: { reach: 4, lifespan: 4, agency: 4, effort: 4 },
   },
@@ -50,8 +50,7 @@ const LEVELS: Level[] = [
     brief: "Others explore scenarios with it.",
     line: "Others can interface with it and explore different scenarios on a specific idea or problem. It allows for a wider spectrum of messages.",
     bestFor: ["Exploring scenarios", "One idea or problem, seen from many sides", "Messages a page can't hold"],
-    who: "Explorer",
-    whoHint: "changes inputs and sees what follows",
+    who: [{ id: "explorer" }],
     modalities: ["Text", "Image", "Sound", "Code"],
     scores: { reach: 3, lifespan: 3, agency: 3, effort: 3 },
   },
@@ -61,8 +60,7 @@ const LEVELS: Level[] = [
     brief: "A record others read and follow.",
     line: "A fixed record that holds up on its own, outside the conversation that made it.",
     bestFor: ["Strategic decisions", "Logs of events", "Rules, or a set of rules"],
-    who: "Reader",
-    whoHint: "reads it, cites it, follows it",
+    who: [{ id: "reader" }],
     modalities: ["Text", "Image", "Tables"],
     scores: { reach: 2, lifespan: 3, agency: 2, effort: 2 },
   },
@@ -72,8 +70,7 @@ const LEVELS: Level[] = [
     brief: "Read once, in the chat.",
     line: "The plain reply in a chat. Read once, then it stays in the conversation.",
     bestFor: ["A quick question", "A one-off explanation"],
-    who: "You",
-    whoHint: "only whoever asked",
+    who: [{ id: "you" }],
     modalities: ["Text", "Image"],
     scores: { reach: 1, lifespan: 1, agency: 1, effort: 1 },
     baseline: true,
@@ -96,16 +93,9 @@ function spreadFor(level: Level): SpreadItem {
     kicker: `Level ${level.n}${level.baseline ? " · the baseline" : ""}`,
     title: level.name,
     lede: <p>{level.line}</p>,
+    people: <RoleTags participants={level.who} legend={false} />,
     rows: [
       { label: "Best used for", content: <p>{level.bestFor.join(". ")}.</p> },
-      {
-        label: "Who interacts",
-        content: (
-          <p>
-            <strong>{level.who}</strong>, {level.whoHint}.
-          </p>
-        ),
-      },
       { label: "Made of", content: <p>{level.modalities.map((m, i) => (i === 0 ? m : m.toLowerCase())).join(", ")}.</p> },
       {
         label: "Index",
@@ -168,6 +158,11 @@ export function VehicleForLogic() {
                       <span className="vl-num in-serif">{level.n}</span>
                       <span className="vl-name">{level.name}</span>
                       <span className="vl-brief">{level.brief}</span>
+                  {/* the focused rung's ambient outline: a faint track with one dash circling it slowly */}
+                  <svg className="vl-orbit" aria-hidden>
+                    <rect className="vl-orbit-track" width="100%" height="100%" rx="18" pathLength={100} />
+                    <rect className="vl-orbit-dash" width="100%" height="100%" rx="18" pathLength={100} />
+                  </svg>
                     </button>
                   </li>
                 );

@@ -11,6 +11,8 @@ export type SpreadItem = {
   kicker: string;
   title: string;
   lede: ReactNode;
+  /** Shown under the lede, before Read more: e.g. who takes part. */
+  people?: ReactNode;
   rows: { label: string; content: ReactNode }[];
 };
 
@@ -49,6 +51,7 @@ function SpreadBody({ item }: { item: SpreadItem }) {
         <p className="ed-kicker">{item.kicker}</p>
         <h2 className="ed-title in-serif">{item.title}</h2>
         <div className="ed-lede">{item.lede}</div>
+        {item.people ? <div className="ed-people">{item.people}</div> : null}
         <button type="button" className="ed-reveal" aria-expanded={more} aria-controls={moreId} onClick={() => setMore(!more)}>
           {more ? "Show less" : "Read more"}
           <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden>

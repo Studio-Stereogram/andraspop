@@ -1,6 +1,8 @@
 "use client";
 
 import { ViewTransition, startTransition, useMemo, useState, type CSSProperties } from "react";
+import type { Participant } from "@/lib/inset/roles";
+import { RoleTags } from "./role-tags";
 import { EdList, Spread, type SpreadItem } from "./spread";
 
 // Design cycle: a double diamond (Research, Planning) in the designer's focus, and a third diamond
@@ -25,7 +27,7 @@ type Phase = {
   /** The phase's relation to the source of truth: lead-in, the bold verb, the rest. */
   sot: [string, string, string];
   deliverables: { title: string; desc: string }[];
-  roles: { name: string; lead?: boolean }[];
+  roles: Participant[];
 };
 
 // Layout across the map, as fractions of its width. The diamonds are squares turned 45°: Research and
@@ -37,6 +39,8 @@ const GAP = 0.1;
 const CENTRES = [LEFT + D / 2, LEFT + D * 1.5, LEFT + D * 2 + GAP + D / 2];
 const PEAK = LEFT + D * 2;
 const HILL_H = 1; // the curve's height in its own units; CSS sets the drawn height
+// A diamond 9% larger all round, drawn around the open one.
+const ORBIT = "M50,-9 L109,50 L50,109 L-9,50 Z";
 
 /** Height of the hill (0 at the foot, 1 at the peak) at x, 0–1 across. Longer climb, shorter descent. */
 function hill(x: number) {
@@ -70,7 +74,7 @@ const PHASES: Phase[] = [
       { title: "Problem definition", desc: "How Might We statements, Jobs To Be Done, and validated problem framing." },
       { title: "Personas & journey maps", desc: "Living documents, updated as new research emerges throughout the project." },
     ],
-    roles: [{ name: "UX researcher", lead: true }, { name: "Product designer", lead: true }, { name: "Product manager" }, { name: "Stakeholders" }],
+    roles: [{ id: "ux-researcher", lead: true }, { id: "product-designer", lead: true }, { id: "product-manager" }, { id: "stakeholders" }],
   },
   {
     n: 2,
@@ -88,7 +92,7 @@ const PHASES: Phase[] = [
       { title: "High-fidelity prototypes", desc: "Annotated Figma files. The definitive visual and interaction spec." },
       { title: "Handoff documentation", desc: "Spacing, states, edge cases, copy. Everything a developer needs, without asking." },
     ],
-    roles: [{ name: "Product designer", lead: true }, { name: "UI designer", lead: true }, { name: "Product manager" }, { name: "Tech lead" }],
+    roles: [{ id: "product-designer", lead: true }, { id: "ui-designer", lead: true }, { id: "product-manager" }, { id: "tech-lead" }],
   },
   {
     n: 3,
@@ -106,20 +110,17 @@ const PHASES: Phase[] = [
       { title: "Design in code", desc: "Framer, Webflow or coded components, closing the implementation gap directly." },
       { title: "Iteration log", desc: "Post-launch findings fed back into the design system. The loop closes here." },
     ],
-    roles: [{ name: "Frontend dev" }, { name: "Backend dev" }, { name: "Designer doing QA", lead: true }, { name: "Designer working in code", lead: true }],
+    roles: [{ id: "designer-qa", lead: true }, { id: "designer-code", lead: true }, { id: "frontend-dev" }, { id: "backend-dev" }],
   },
 ];
 
 function spreadFor(p: Phase): SpreadItem {
-  // Role names read mid-sentence: lowercase the first letter unless it starts an acronym (UI, UX).
-  const inline = (name: string) => (/^[A-Z]{2}/.test(name) ? name : name[0].toLowerCase() + name.slice(1));
-  const leads = p.roles.filter((r) => r.lead).map((r) => inline(r.name));
-  const others = p.roles.filter((r) => !r.lead).map((r) => inline(r.name));
   return {
     key: `phase-${p.n}`,
     kicker: `Phase ${String(p.n).padStart(2, "0")} · ${p.halves[0]}, then ${p.halves[1].toLowerCase()}`,
     title: p.label,
     lede: <p>{p.lede}</p>,
+    people: <RoleTags participants={p.roles} />,
     rows: [
       { label: "On the hill", content: <p>{p.hill}</p> },
       // Planning's lede already says it is the source of truth.
@@ -138,14 +139,6 @@ function spreadFor(p: Phase): SpreadItem {
             },
           ]),
       { label: "What it delivers", content: <EdList items={p.deliverables} /> },
-      {
-        label: "Who",
-        content: (
-          <p>
-            Led by the {leads.join(" and ")}, with the {others.join(" and ")}.
-          </p>
-        ),
-      },
     ],
   };
 }
@@ -217,6 +210,9 @@ export function DesignCycle() {
                     <svg viewBox="0 0 100 100" aria-hidden>
                       <path className="dc-rhomb" d="M50,1 L99,50 L50,99 L1,50 Z" vectorEffect="non-scaling-stroke" />
                       <path className="dc-mid" d="M50,8 L50,92" vectorEffect="non-scaling-stroke" />
+                      {/* the focused diamond's ambient outline: a faint track with one dash circling it slowly */}
+                      <path className="dc-orbit-track" d={ORBIT} pathLength={100} vectorEffect="non-scaling-stroke" />
+                      <path className="dc-orbit" d={ORBIT} pathLength={100} vectorEffect="non-scaling-stroke" />
                     </svg>
                   </span>
                   <span className="dc-label">{p.label}</span>

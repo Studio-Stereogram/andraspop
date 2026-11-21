@@ -7,7 +7,8 @@
 
 /* tokens: also on the dropdown, which renders in a portal outside .inset-root */
 .inset-root,
-.in-menu {
+.in-menu,
+.rt-tip {
   --paper: #f6f4ef;
   --surface: #ffffff;
   --line: #e4e1d9;
@@ -95,6 +96,10 @@ html:has(.inset-root) body {
   font-variation-settings: "ELSH" 100; /* the i's dot becomes a heart */
 }
 
+.in-wordmark,
+.in-bar-link {
+  flex: none;
+}
 .in-bar-link {
   font-size: 14px;
   color: var(--ink-3);
@@ -103,6 +108,12 @@ html:has(.inset-root) body {
 }
 .in-bar-link:hover {
   color: var(--ink);
+}
+
+@media (max-width: 640px) {
+  .in-bar { padding: 12px 16px; gap: 12px; }
+  .in-bar .in-switch-label { min-width: 0; font-size: 19px; line-height: 1.1; white-space: normal; }
+  .in-wordmark { font-size: 23px; }
 }
 
 /* ---- home ---- */
@@ -310,6 +321,8 @@ html:has(.inset-root) body {
 
 /* the switcher: the card shrunk to a tile, its title beside it */
 .in-switch {
+  min-width: 0; /* lets a long title wrap instead of pushing the wordmark off screen */
+  text-align: left;
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -326,6 +339,7 @@ html:has(.inset-root) body {
   background: var(--chip);
 }
 .in-switch-tile {
+  flex: none;
   display: block;
 }
 .in-tile {
@@ -348,6 +362,7 @@ html:has(.inset-root) body {
   white-space: nowrap;
 }
 .in-switch-chevron {
+  flex: none;
   color: var(--ink-3);
   transition: transform 0.3s var(--spring);
 }
@@ -532,6 +547,9 @@ html:has(.inset-root) body {
 .ed-clip {
   min-height: 0;
   overflow: hidden;
+  /* the fold clips vertically; this margin keeps a title's overhanging serifs (the A's foot) in view */
+  margin-inline: -32px;
+  padding-inline: 32px;
 }
 
 .ed-fold {
@@ -576,6 +594,9 @@ html:has(.inset-root) body {
   font-weight: 350;
   letter-spacing: -0.01em;
   text-wrap: pretty;
+}
+.ed-people {
+  margin-top: 24px;
 }
 .ed-reveal {
   display: inline-flex;
@@ -656,6 +677,83 @@ html:has(.inset-root) body {
   .ed-row { grid-template-columns: 1fr; }
   .ed-row dd { font-size: 17px; }
   .ed-list { grid-template-columns: 1fr; }
+}
+
+/* ---- participants: colour-coded tags with a definition on hover ---- */
+
+.rt-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+}
+.rt-tag {
+  padding: 6px 14px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: var(--tag-bg);
+  color: var(--tag-ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  cursor: help;
+  transition: transform 0.3s var(--spring), box-shadow 0.2s var(--ease);
+}
+.rt-tag:hover,
+.rt-tag[data-state$="open"] {
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 2px var(--paper), 0 0 0 3.5px var(--tag-edge);
+}
+.inset-root .rt-tag:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--paper), 0 0 0 3.5px var(--tag-edge);
+}
+.rt-legend {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--ink-3);
+}
+.rt-tip {
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 260px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--f-sans);
+  font-variation-settings: var(--rond);
+  font-size: 13px;
+  line-height: 1.4;
+  box-shadow: 0 12px 28px -10px rgba(23, 23, 26, 0.45);
+  transform-origin: var(--radix-tooltip-content-transform-origin);
+  animation: rt-in 0.22s var(--ease);
+}
+@keyframes rt-in {
+  from { opacity: 0; transform: translateY(4px) scale(0.97); }
+}
+.rt-tip-name {
+  font-weight: 650;
+}
+.rt-tip-lead,
+.rt-tip-def {
+  color: #d9d6ce; /* APCA Lc 75+ on the tooltip's ink (roles.test.ts) */
+  font-weight: 400;
+}
+.rt-tip-arrow {
+  fill: var(--ink);
+}
+
+/* ---- ambient focus: a faint track around the focused item, with one dash circling it slowly ---- */
+
+@keyframes in-orbit {
+  to { stroke-dashoffset: -100; }
+}
+@keyframes in-breathe {
+  50% { box-shadow: 0 0 0 3px var(--paper), 0 0 0 4.5px var(--accent), 0 0 0 10px color-mix(in srgb, var(--accent) 16%, transparent); }
 }
 
 /* ---- design cycle ---- */
@@ -893,6 +991,27 @@ html:has(.inset-root) body {
 .dc-phase[data-open] .dc-mid { stroke: var(--accent-ink); opacity: 0.6; }
 .dc-phase[data-open] .dc-label { color: var(--ink); }
 
+.dc-orbit-track,
+.dc-orbit {
+  fill: none;
+  stroke: var(--accent);
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+}
+.dc-orbit-track { stroke-width: 1; }
+.dc-orbit {
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 14 86;
+  animation: in-orbit 16s linear infinite;
+}
+.dc-phase[data-open] .dc-orbit-track { opacity: 0.3; }
+.dc-phase[data-open] .dc-orbit { opacity: 1; }
+/* the dot on the hill breathes, just as slowly */
+.dc-dot[data-visible] {
+  animation: in-breathe 5s ease-in-out infinite;
+}
+
 /* group labels: a bracket under the double diamond, another under implementation */
 .dc-groups {
   margin-top: 8px;
@@ -1062,6 +1181,7 @@ html:has(.inset-root) body {
   list-style: none;
 }
 .vl-rung {
+  position: relative;
   display: grid;
   grid-template-columns: 44px 1fr auto;
   align-items: center;
@@ -1118,6 +1238,30 @@ html:has(.inset-root) body {
   color: var(--ink-2);
   text-align: right;
 }
+
+.vl-orbit {
+  position: absolute;
+  inset: -6px;
+  width: calc(100% + 12px);
+  height: calc(100% + 12px);
+  overflow: visible;
+  pointer-events: none;
+}
+.vl-orbit rect {
+  fill: none;
+  stroke: var(--accent-text);
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+}
+.vl-orbit-track { stroke-width: 1; }
+.vl-orbit-dash {
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 10 90;
+  animation: in-orbit 18s linear infinite;
+}
+.vl-rung[data-open] .vl-orbit-track { opacity: 0.3; }
+.vl-rung[data-open] .vl-orbit-dash { opacity: 1; }
 
 /* index scores, inside "Read more" */
 .vl-index {
@@ -1265,8 +1409,15 @@ html:has(.inset-root) body {
     animation-delay: 0s !important;
   }
   .inset-root *,
-  .in-menu {
+  .in-menu,
+  .rt-tip {
     transition-duration: 0s !important;
     animation-duration: 0s !important;
+  }
+  /* the ambient outline stays as a still track and dash */
+  .dc-orbit,
+  .vl-orbit-dash,
+  .dc-dot[data-visible] {
+    animation: none !important;
   }
 }
