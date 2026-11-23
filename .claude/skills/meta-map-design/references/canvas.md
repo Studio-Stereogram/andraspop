@@ -33,6 +33,13 @@ Wide (YouTube)                          Vertical (4:5)     Idea
   - **Ideas are secondary** in the hierarchy: the header says **Idea** (not Video) and there is no status badge; the card is an outline on the grid (no fill) at 72% opacity with a 500-weight `--ink-2` title, back to full strength on hover or selection.
   - **Drafts** (editor only) keep the Video header and a Draft badge.
 - **People** are pills (999px) with a 44px round avatar (topic-palette colour by name hash, white initials), kind label, name, `@handle · site`.
+- **Intro** (`type: intro`, at most one per map): the map's statement, the thing that gives sense to the rest. **No card**: big type set straight on the grid, the way cluster labels sit on the ground, 624px wide.
+  - Eyebrow: mono 10.5px uppercase, `--ink-3` (the node's title, e.g. "Hi · start here").
+  - Statement (the node's summary): display face 650, 44px/1.04, tracking −0.03em, `text-wrap: pretty`. Two-tone like the /hi headline: the sentence in `--ink-3`, `*marked*` phrases and topic words in `--ink`.
+  - Topic words (`{topic}` or `{topic|label}`) carry a 0.3em square in the topic colour and are buttons. **Hover or focus** traces the topic: its entries stay sharp, the rest dim to 16%, and a fan of 1.5px lines in the topic colour runs from the intro to each entry (passing state, drawn in the edge layer behind the cards; nothing is stored). **Click** filters to the topic, again to clear. With a topic filter on, only the filtered topic words stay ink and the picked one gets a 3px underline in its topic colour.
+  - Footer: a 1px `--line` rule, then the map's grammar in mono (● next in a series, ◆ what it draws on) and the node's links ("Say hi →", 15px ink, underlined). A mono hint under it: "Hover a topic to trace it, click to filter" ("Tap a topic to filter" on touch).
+  - Not selectable, never filtered or faded, no topics of its own. **Only the ◆ reference point** (for "start here" picks): it is in no series. This is the one exception to "two connection points per node".
+  - Placement: Freeform, wherever it was put (a first visit opens on it at a readable zoom when the whole map won't fit legibly); Clusters, the centre of the topic ring; Timeline, before the first date, left of the lane labels.
 - Generated thumbnail (no real image, or it fails to load): `references/thumbnail.js`. 14×7 cell sequencer pattern seeded by id + title, glyphs (solid, dot, ring, x, quad, bars, hatch, dots9) in the node's topic colours on `--thumb-bg`, cream-white corner brackets, duration chip bottom-right. Same in both themes; cropped to the frame like a real image.
 
 ## Connection points (handles)

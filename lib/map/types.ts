@@ -1,7 +1,11 @@
 // The map's data model, in the JSON import/export shape ({ topics, nodes, edges }) used by
 // data/seed.json and the prototype's "Copy JSON". See SPEC.md §3 and the field mapping in §8.
 
-export type NodeType = "video" | "link" | "bookmark" | "person" | "note";
+/**
+ * `intro` is the map's one statement: big type that says who this is and what the map holds. At most one per map,
+ * no topics of its own (its text names them), never filtered. See canvas.md → Intro.
+ */
+export type NodeType = "video" | "link" | "bookmark" | "person" | "note" | "intro";
 export type Platform = "youtube" | "instagram" | "x";
 export type Status = "idea" | "draft" | "scheduled" | "published";
 

@@ -1,5 +1,6 @@
 import { PLATFORMS } from "@/lib/map/constants";
 import { displayTitle, formatDate, kindLabel, linkLabel, safeHref } from "@/lib/map/format";
+import { findIntro, parseStatement, statementText } from "@/lib/map/intro";
 import type { MapData } from "@/lib/map/types";
 
 /**
@@ -8,6 +9,9 @@ import type { MapData } from "@/lib/map/types";
  * canvas reach it too, so it shows itself as a panel while it has focus.
  */
 export function EntryList({ map }: { map: MapData }) {
+  const intro = findIntro(map.nodes);
+  const topicById = new Map(map.topics.map((t) => [t.id, t]));
+  const entries = map.nodes.filter((n) => n !== intro);
   return (
     <section
       className="sr-only focus-within:not-sr-only focus-within:fixed focus-within:inset-x-3 focus-within:bottom-3 focus-within:z-50 focus-within:max-h-[50dvh] focus-within:overflow-auto focus-within:rounded-[var(--r-panel)] focus-within:border focus-within:border-line-2 focus-within:bg-surface focus-within:p-4 focus-within:shadow-[var(--shadow-pop)] [&_a]:text-ink [&_a]:underline-offset-3 [&_li]:py-1 [&_p]:m-0 [&_p]:text-[13px] [&_p]:text-ink-3"
@@ -16,8 +20,19 @@ export function EntryList({ map }: { map: MapData }) {
       <h1 id="entries-title" className="lbl mb-2">
         mind-map: everything András publishes while building in public
       </h1>
+      {intro && (
+        <p className="!mb-2 !text-[15px] !text-ink">
+          {statementText(parseStatement(intro.summary, topicById))}
+          {intro.links.map((l) => (
+            <span key={l.url}>
+              {" "}
+              <a href={safeHref(l.url) ?? undefined}>{linkLabel(l)}</a>
+            </span>
+          ))}
+        </p>
+      )}
       <ul>
-        {map.nodes.map((n) => {
+        {entries.map((n) => {
           const href = safeHref(n.url);
           const kind = n.type === "video" && n.platform ? `Video on ${PLATFORMS[n.platform].label}` : kindLabel(n);
           return (

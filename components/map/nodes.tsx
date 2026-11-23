@@ -8,11 +8,12 @@ import { displayTitle, formatDate, hostOf, kindLabel, nodeWidth, personMeta } fr
 import { embedUrl, videoFrame } from "@/lib/map/links";
 import type { MapNode, Topic } from "@/lib/map/types";
 import { cn } from "@/lib/utils";
+import { IntroNode } from "./intro-node";
 import { useMapVisual, useNodeState } from "./map-context";
 import { Avatar, Cover, Thumb, TopicTags } from "./pieces";
 
 export type FlowNodeData = { node: MapNode };
-export type FlowNode = Node<FlowNodeData, "entry">;
+export type FlowNode = Node<FlowNodeData, "entry" | "intro">;
 
 /**
  * Exactly two connection points per node: ● continuity on the right edge, ◆ reference on the bottom edge.
@@ -91,4 +92,4 @@ export const EntryNode = memo(function EntryNode({ id, data, selected }: NodePro
   return n.type === "person" ? <PersonCard n={n} state={state} /> : <EntryCard n={n} state={state} topicById={topicById} />;
 });
 
-export const nodeTypes = { entry: EntryNode };
+export const nodeTypes = { entry: EntryNode, intro: IntroNode };

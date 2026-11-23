@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { TimelineBackground } from "./layouts";
-import { TODAY_AT, TODAY_MAX_ZOOM, TODAY_MIN_ZOOM, todayViewport } from "./viewport";
+import { OPEN_MIN_ZOOM, openingViewport, TODAY_AT, TODAY_MAX_ZOOM, TODAY_MIN_ZOOM, todayViewport } from "./viewport";
 
 const bg = (w: number, h: number, today: number): TimelineBackground => ({
   type: "timeline",
@@ -49,5 +49,26 @@ describe("todayViewport", () => {
     const v = todayViewport(bg(13000, 3000, 6000), area, 50, 60);
     expect(v.zoom).toBe(TODAY_MIN_ZOOM);
     expect(v.y + -40 * v.zoom).toBeCloseTo(50);
+  });
+});
+
+describe("openingViewport", () => {
+  const intro = { x: -720, y: -160, w: 624, h: 520 };
+
+  it("fits the whole map when it stays readable", () => {
+    const v = openingViewport({ x: -720, y: -160, w: 1200, h: 600 }, intro, area, 50, 60, 0.15, 1.1);
+    expect(v.zoom).toBeGreaterThanOrEqual(OPEN_MIN_ZOOM);
+  });
+
+  it("otherwise opens on the intro at a readable zoom, against the left edge", () => {
+    const v = openingViewport({ x: -720, y: -160, w: 3000, h: 900 }, intro, area, 50, 60, 0.15, 1.1);
+    expect(v.zoom).toBe(OPEN_MIN_ZOOM);
+    expect(screenX(v, intro.x)).toBeCloseTo(50);
+  });
+
+  it("shows the intro's full width on a phone", () => {
+    const phone = { left: 0, top: 0, right: 390, bottom: 760 };
+    const v = openingViewport({ x: -720, y: -160, w: 3000, h: 900 }, intro, phone, 16, 60, 0.15, 1.1);
+    expect(screenX(v, intro.x + intro.w)).toBeLessThanOrEqual(390 - 16 + 0.001);
   });
 });

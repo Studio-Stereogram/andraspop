@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import seed from "./__fixtures__/sample-map.json";
 import { normalizeMap } from "./normalize";
 import type { MapData, MapNode } from "./types";
-import { applyFilters, hiddenFromPublic, NO_FILTERS, toPublicMap } from "./visibility";
+import { applyFilters, entryCount, hiddenFromPublic, NO_FILTERS, toPublicMap } from "./visibility";
 
 const node = (id: string, over: Partial<MapNode> = {}): MapNode => ({
   id, type: "link", title: id, summary: "", platform: null, status: null, date: "", url: "", thumbnail: "",
@@ -103,5 +103,16 @@ describe("filters", () => {
   it("matches platform on videos only and searches titles and takes", () => {
     expect([...applyFilters(nodes, { ...NO_FILTERS, platforms: new Set(["youtube"] as const) }).dim]).toEqual(["b", "c"]);
     expect([...applyFilters(nodes, { ...NO_FILTERS, q: "POSTER" }).dim]).toEqual(["b"]);
+  });
+});
+
+describe("the intro", () => {
+  it("is never filtered, never hidden for its connections, and not counted as an entry", () => {
+    const intro = node("intro", { type: "intro" });
+    const map: MapData = { topics: [], nodes: [intro, video("d", "draft")], edges: [{ id: "e", from: "intro", to: "d", type: "reference", kind: "related" }] };
+    expect(hiddenFromPublic(map).has("intro")).toBe(false);
+    const f = applyFilters(map.nodes, { ...NO_FILTERS, q: "nothing matches", hide: true });
+    expect(f.hidden.has("intro") || f.dim.has("intro")).toBe(false);
+    expect(entryCount(map.nodes)).toBe(1);
   });
 });

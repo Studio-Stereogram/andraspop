@@ -17,7 +17,7 @@ create table public.topics (
 );
 
 -- Nodes (entries) ------------------------------------------------------
-create type node_type   as enum ('video','link','bookmark','person','note');
+create type node_type   as enum ('video','link','bookmark','person','note','intro');
 create type node_status as enum ('idea','draft','scheduled','published');
 create type platform    as enum ('youtube','instagram','x');
 
@@ -47,6 +47,8 @@ create table public.nodes (
   )
 );
 create index on public.nodes (type, status);
+-- One intro per map: the statement that explains the rest (big type on the canvas).
+create unique index one_intro on public.nodes ((true)) where type = 'intro';
 create unique index nodes_one_new on public.nodes ((true)) where is_new;  -- at most one New entry
 create unique index nodes_platform_external on public.nodes (platform, external_id) where external_id is not null;
 
