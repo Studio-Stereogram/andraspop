@@ -17,7 +17,7 @@ import { VIEWS } from "@/lib/map/constants";
 import { displayTitle, kindLabel } from "@/lib/map/format";
 import { computeLayout, layoutBounds, type Sized } from "@/lib/map/layouts";
 import type { MapData, Rect, View, XY } from "@/lib/map/types";
-import { todayViewport } from "@/lib/map/viewport";
+import { fitViewport, openingViewport, todayViewport } from "@/lib/map/viewport";
 import { applyFilters, type Filters, NO_FILTERS, neighbourMap } from "@/lib/map/visibility";
 import { cn } from "@/lib/utils";
 import { AppBar } from "./app-bar";
@@ -95,13 +95,18 @@ function useToast() {
 }
 
 function toFlowNodes(map: MapData): FlowNode[] {
-  return map.nodes.map((n) => ({
-    id: n.id,
-    type: "entry",
-    position: { x: n.fx, y: n.fy },
-    data: { node: n },
-    ariaLabel: `${kindLabel(n)}: ${displayTitle(n)}`,
-  }));
+  return map.nodes.map((n) =>
+    n.type === "intro"
+      ? // Not a selectable entry: its topic words and links are the controls, and they take focus themselves.
+        { id: n.id, type: "intro", position: { x: n.fx, y: n.fy }, data: { node: n }, selectable: false, focusable: false }
+      : {
+          id: n.id,
+          type: "entry",
+          position: { x: n.fx, y: n.fy },
+          data: { node: n },
+          ariaLabel: `${kindLabel(n)}: ${displayTitle(n)}`,
+        },
+  );
 }
 
 export function MapApp({ map }: { map: MapData }) {
@@ -123,6 +128,7 @@ function MapShell({ map }: { map: MapData }) {
   const [view, setView] = useState<View>("free");
   const [filters, setFilters] = useState<Filters>(NO_FILTERS);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [tracing, setTracing] = useState<string | null>(null);
   const initialNodes = useMemo(() => toFlowNodes(map), [map]);
   const [nodes, setNodes, onNodesChange] = useNodesState<FlowNode>(initialNodes);
   // The first layout is placed and fitted without animation; until then the canvas stays invisible.
@@ -133,18 +139,38 @@ function MapShell({ map }: { map: MapData }) {
   const nodeById = useMemo(() => new Map(map.nodes.map((n) => [n.id, n])), [map.nodes]);
   const neighbours = useMemo(() => neighbourMap(map.edges), [map.edges]);
   const vis = useMemo(() => applyFilters(map.nodes, filters), [map.nodes, filters]);
+  // Tracing a topic from the intro dims every entry outside it, on top of what the filters dim.
+  const dim = useMemo(() => {
+    if (!tracing) return vis.dim;
+    const out = new Set(vis.dim);
+    for (const n of map.nodes) if (n.type !== "intro" && !n.topics.includes(tracing)) out.add(n.id);
+    return out;
+  }, [vis.dim, tracing, map.nodes]);
   const selectedId = nodes.find((n) => n.selected)?.id ?? null;
   const selected = selectedId ? nodeById.get(selectedId) : undefined;
+
+  const pickTopic = useCallback(
+    (id: string) => {
+      const only = filters.topics.size === 1 && filters.topics.has(id);
+      setFilters({ ...filters, topics: new Set(only ? [] : [id]) });
+      toast(only ? "Topic filter cleared" : `Filtered to ${topicById.get(id)?.name ?? "topic"}`);
+    },
+    [filters, topicById, toast],
+  );
 
   const visual = useMemo<MapVisual>(
     () => ({
       topicById,
       selectedId,
       neighbours: new Set(selectedId ? (neighbours.get(selectedId) ?? []) : []),
-      dim: vis.dim,
+      dim,
       topicFilter: filters.topics,
+      tracing,
+      litTopics: tracing ? new Set([tracing]) : filters.topics,
+      traceTopic: setTracing,
+      pickTopic,
     }),
-    [topicById, selectedId, neighbours, vis.dim, filters.topics],
+    [topicById, selectedId, neighbours, dim, filters.topics, tracing, pickTopic],
   );
 
   // React Flow sees the node state plus `hidden` from the filters ("Hide non-matching").
@@ -157,9 +183,11 @@ function MapShell({ map }: { map: MapData }) {
     [nodes, vis.hidden],
   );
 
+  const introId = useMemo(() => map.nodes.find((n) => n.type === "intro")?.id, [map.nodes]);
+
   const flowEdges = useMemo<FlowEdge[]>(
-    () =>
-      map.edges.map((e) => {
+    () => [
+      ...map.edges.map((e): FlowEdge => {
         const hl = selectedId !== null && (e.from === selectedId || e.to === selectedId);
         return {
           id: e.id,
@@ -170,10 +198,28 @@ function MapShell({ map }: { map: MapData }) {
           type: "floating",
           zIndex: hl ? 1 : 0,
           hidden: vis.hidden.has(e.from) || vis.hidden.has(e.to),
-          data: { type: e.type, kind: e.kind, hl, dim: !hl && (vis.dim.has(e.from) || vis.dim.has(e.to)) },
+          data: { type: e.type, kind: e.kind, hl, dim: !hl && (dim.has(e.from) || dim.has(e.to)) },
         };
       }),
-    [map.edges, selectedId, vis],
+      // Tracing a topic from the intro: a fan of lines to its entries, drawn in the edge layer behind the cards.
+      ...(tracing && introId && !vis.hidden.has(introId)
+        ? map.nodes
+            .filter((n) => n.id !== introId && n.topics.includes(tracing) && !vis.hidden.has(n.id))
+            .map(
+              (n): FlowEdge => ({
+                id: `trace-${n.id}`,
+                source: introId,
+                target: n.id,
+                sourceHandle: "reference",
+                targetHandle: "reference",
+                type: "floating",
+                selectable: false,
+                data: { type: "reference", kind: "related", hl: false, dim: false, trace: topicById.get(tracing)?.color },
+              }),
+            )
+        : []),
+    ],
+    [map.edges, map.nodes, selectedId, vis.hidden, dim, tracing, introId, topicById],
   );
 
   // Measured sizes, as a string so layouts only recompute when a size changes (not on every animation frame).
@@ -208,14 +254,10 @@ function MapShell({ map }: { map: MapData }) {
   const fitTo = useCallback(
     (b: Rect | null, animate: boolean) => {
       if (!b || !stageRef.current) return;
-      const a = visibleArea();
-      const aw = a.right - a.left - FIT_PAD * 2,
-        ah = a.bottom - a.top - FIT_PAD * 2 - BOTTOM_ROOM;
-      const k = clamp(Math.min(aw / b.w, ah / b.h), MIN_ZOOM, FIT_MAX_ZOOM);
-      rf.setViewport(
-        { zoom: k, x: a.left + FIT_PAD + (aw - b.w * k) / 2 - b.x * k, y: a.top + FIT_PAD + (ah - b.h * k) / 2 - b.y * k },
-        { duration: animate ? VIEW_MS : 0, ease: easeOutCubic },
-      );
+      rf.setViewport(fitViewport(b, visibleArea(), FIT_PAD, BOTTOM_ROOM, MIN_ZOOM, FIT_MAX_ZOOM), {
+        duration: animate ? VIEW_MS : 0,
+        ease: easeOutCubic,
+      });
     },
     [rf, visibleArea],
   );
@@ -265,7 +307,22 @@ function MapShell({ map }: { map: MapData }) {
     const first = fitRequest.current === "instant";
     const instant = first || reduced;
     if (fitRequest.current) {
+      const intro = layout.sized.find((s) => s.node.type === "intro");
+      const introAt = intro && layout.positions.get(intro.node.id);
       if (layout.background?.type === "timeline") goToday(!instant);
+      else if (first && !layout.background && layout.bounds && stageRef.current)
+        // First visit, Freeform: open on the intro at a readable zoom when the whole map won't fit legibly.
+        rf.setViewport(
+          openingViewport(
+            layout.bounds,
+            intro && introAt ? { ...introAt, w: intro.w, h: intro.h } : null,
+            visibleArea(),
+            FIT_PAD,
+            BOTTOM_ROOM,
+            MIN_ZOOM,
+            FIT_MAX_ZOOM,
+          ),
+        );
       else fitTo(layout.bounds, !instant);
       fitRequest.current = null;
     }
@@ -293,7 +350,7 @@ function MapShell({ map }: { map: MapData }) {
     };
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
-  }, [layout, reduced, rf, setNodes, fitTo, goToday]);
+  }, [layout, reduced, rf, setNodes, fitTo, goToday, visibleArea]);
 
   const changeView = useCallback(
     (v: View) => {

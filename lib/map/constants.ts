@@ -6,6 +6,7 @@ export const KIND_LABEL: Record<NodeType, string> = {
   bookmark: "Bookmark",
   person: "Person",
   note: "Note",
+  intro: "Intro",
 };
 
 export const PLATFORMS: Record<Platform, { label: string; short: string }> = {
@@ -55,6 +56,7 @@ export const NODE_WIDTH: Record<NodeType, number> = {
   bookmark: 224,
   person: 236,
   note: 224,
+  intro: 624,
 };
 
 /** Video card widths by thumbnail frame (canvas.md → Node anatomy). "none" is the compact idea/draft card. */
@@ -67,6 +69,7 @@ export const NODE_HEIGHT_ESTIMATE: Record<NodeType, number> = {
   bookmark: 104,
   person: 62,
   note: 104,
+  intro: 520,
 };
 
 /** Topic palette, in assignment order (tokens.css --topic-1 … --topic-10). */

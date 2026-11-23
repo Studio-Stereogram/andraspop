@@ -9,6 +9,24 @@
   ],
   "nodes": [
     {
+      "id": "intro",
+      "type": "intro",
+      "title": "Hi · start here",
+      "summary": "*I'm András,* a designer, studio founder and teacher, building in public. Talks, videos and notes on {ai}, {work|work}, {community|community}, {music|art & music} and {web|web culture}, plus a {podcast|podcast}. *This is almost all of it, connected.*",
+      "platform": null,
+      "status": null,
+      "date": "",
+      "url": "",
+      "thumbnail": "",
+      "handle": "",
+      "duration": "",
+      "links": [{ "url": "https://andraspop.com/hi", "label": "Say hi" }],
+      "topics": [],
+      "private": false,
+      "fx": -720,
+      "fy": -160
+    },
+    {
       "id": "off-brief",
       "type": "link",
       "title": "Off-Brief",

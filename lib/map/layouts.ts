@@ -42,12 +42,20 @@ export function freeLayout(nodes: Sized[]): Layout {
   return { positions: new Map(nodes.map(({ node }) => [node.id, { x: node.fx, y: node.fy }])), background: null };
 }
 
+/** The intro sits outside the views' own logic: each layout places it in its own spot. */
+function splitIntro(all: Sized[]): [Sized | undefined, Sized[]] {
+  const intro = all.find((s) => s.node.type === "intro");
+  return [intro, intro ? all.filter((s) => s !== intro) : all];
+}
+
 /**
  * Clusters: topic gravity. Topics sit on a ring, ordered so often co-tagged topics are neighbours. Every node is
  * pulled equally towards all of its topics, so multi-topic items land in between; untagged nodes settle next to
  * what they connect to. Overlaps are pushed apart without moving the topic labels.
+ * The intro holds the centre of the ring, so each topic word in it faces its cluster.
  */
-export function clusterLayout(nodes: Sized[], edges: MapEdge[], topics: Topic[]): Layout {
+export function clusterLayout(input: Sized[], edges: MapEdge[], topics: Topic[]): Layout {
+  const [intro, nodes] = splitIntro(input);
   const has = (n: MapNode, id: string) => n.topics.includes(id);
   const cnt = (id: string) => nodes.filter((s) => has(s.node, id)).length;
   const co = (a: string, b: string) => nodes.filter((s) => has(s.node, a) && has(s.node, b)).length;
@@ -62,7 +70,7 @@ export function clusterLayout(nodes: Sized[], edges: MapEdge[], topics: Topic[])
   }
 
   const N = Math.max(order.length, 1),
-    R = Math.max(420, N * 150);
+    R = Math.max(420, N * 150, intro ? Math.hypot(intro.w, intro.h) / 2 + 300 : 0);
   const anchor: Record<string, XY> = {};
   order.forEach((t, i) => {
     const a = -Math.PI / 2 + (i * 2 * Math.PI) / N;
@@ -107,6 +115,7 @@ export function clusterLayout(nodes: Sized[], edges: MapEdge[], topics: Topic[])
   const pins: Item[] = order.map((t) => ({
     fixed: true, hx: 0, hy: 0, x: anchor[t.id].x, y: anchor[t.id].y, w: t.name.length * 31 + 110, h: 70,
   }));
+  if (intro) pins.push({ fixed: true, hx: 0, hy: 0, x: 0, y: 0, w: intro.w, h: intro.h });
   const all = items.concat(pins),
     M = 30;
   for (let k = 0; k < 280; k++) {
@@ -139,6 +148,7 @@ export function clusterLayout(nodes: Sized[], edges: MapEdge[], topics: Topic[])
   }
 
   const positions = new Map<string, XY>(items.map((p) => [p.id!, { x: p.x - p.w / 2, y: p.y - p.h / 2 }]));
+  if (intro) positions.set(intro.node.id, { x: -intro.w / 2, y: -intro.h / 2 });
   const P = 44;
   const halos: ClusterBackground["halos"] = [];
   const labels: ClusterBackground["labels"] = [];
@@ -158,6 +168,7 @@ export function clusterLayout(nodes: Sized[], edges: MapEdge[], topics: Topic[])
 }
 
 const DAY = 864e5;
+const TIMELINE_INTRO_GAP = 120;
 const ms = (d: string) => Date.parse(`${d}T00:00:00Z`);
 const LANES: [string, string][] = [
   ["youtube", "YouTube"],
@@ -170,9 +181,10 @@ const LANES: [string, string][] = [
 
 /**
  * Timeline: x = date (30px a day), one lane per platform, plus Ideas (videos without a platform yet), links/notes
- * and people; undated items in a Backlog.
+ * and people; undated items in a Backlog. The intro stands before the first date, at the start of the story.
  */
-export function timelineLayout(nodes: Sized[], today: string): Layout {
+export function timelineLayout(all: Sized[], today: string): Layout {
+  const [intro, nodes] = splitIntro(all);
   const PX = 30;
   const dated = nodes.filter((s) => s.node.date),
     undated = nodes.filter((s) => !s.node.date);
@@ -220,6 +232,9 @@ export function timelineLayout(nodes: Sized[], today: string): Layout {
     lanes.push({ y, h, label });
     y += h;
   }
+
+  // Left of the lane labels (which start at x −60), top-aligned with the first lane.
+  if (intro) positions.set(intro.node.id, { x: -60 - TIMELINE_INTRO_GAP - intro.w, y: 0 });
 
   const ticks: TimelineBackground["ticks"] = [];
   for (let t = t0; t <= t1; t += DAY) {

@@ -31,7 +31,7 @@ Visitors never see nodes with status `draft`, nodes marked private, or attachmen
 | Field | Type | Notes |
 |---|---|---|
 | id | uuid | |
-| type | `video` · `link` · `bookmark` · `person` · `note` | `link` = own artifact (template, sheet, repo); `bookmark` = someone else's *thing*; `person` = someone else, the author behind things |
+| type | `video` · `link` · `bookmark` · `person` · `note` · `intro` | `link` = own artifact (template, sheet, repo); `bookmark` = someone else's *thing*; `person` = someone else, the author behind things; `intro` = the map's statement (see below) |
 | title | text | required to publish |
 | summary | text | the "take", 1–3 sentences, shown in the inspector |
 | platform | `youtube` · `instagram` · `x` · null | videos only in v1 |
@@ -65,6 +65,9 @@ Visitors never see nodes with status `draft`, nodes marked private, or attachmen
 
 ### People vs bookmarks
 A bookmark is a single piece of work (a talk, an article). A person is the recurring source behind work: one person node can be the author of several bookmarks (`made-by`), be featured in videos (`features`), or inspire them (`inspired-by`). Over time people become hubs on the map, which is the point: visitors can see whose thinking feeds which takes. People render as round pills with an avatar, carry an X handle and/or a website, and get a "Follow on X" / "Visit site" action in public view. They get their own lane in Timeline.
+
+### Intro
+One per map (decided 2026-11-23): a statement in big type that gives sense to the rest, set on the grid without a card. `title` is its eyebrow ("Hi · start here"); `summary` is the statement, with `*phrase*` for the words set in full ink and `{topic}` / `{topic|label}` for topic words; `links` holds its calls to action ("Say hi" → /hi). It carries no topics, is never filtered, isn't selectable and has only the ◆ reference point (no series). Hovering a topic word traces that topic (its entries stay sharp and a fan of lines runs to them); clicking it filters to the topic. Freeform keeps its stored position, Clusters puts it in the centre of the topic ring, Timeline before the first date. The server-rendered entry list uses it as the page's opening paragraph. Visual rules: `canvas.md` → Intro.
 
 ### Topic
 `id`, `name`, `color`. Order of topics defines cluster order.

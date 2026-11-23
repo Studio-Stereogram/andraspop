@@ -9,7 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Toggle, ToggleCount } from "@/components/ui/toggle";
 import { PLATFORMS, STATUS_LABEL } from "@/lib/map/constants";
 import type { MapData, Platform, Status } from "@/lib/map/types";
-import { activeFilterCount, type Filters, NO_FILTERS } from "@/lib/map/visibility";
+import { activeFilterCount, entryCount, type Filters, NO_FILTERS } from "@/lib/map/visibility";
 
 function toggled<T>(set: ReadonlySet<T>, v: T): Set<T> {
   const next = new Set(set);
@@ -40,7 +40,7 @@ export function FiltersPopover({
   excluded: number;
 }) {
   const count = activeFilterCount(filters);
-  const shown = map.nodes.length - excluded;
+  const shown = entryCount(map.nodes) - excluded;
   const platforms = Object.keys(PLATFORMS) as Platform[];
   const statusCount = (s: Status) => map.nodes.filter((n) => n.type === "video" && n.status === s).length;
   const statuses = (Object.keys(STATUS_LABEL) as Status[]).filter((s) => statusCount(s) > 0);
