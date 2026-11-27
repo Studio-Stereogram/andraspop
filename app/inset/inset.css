@@ -2104,10 +2104,34 @@ html:has(.inset-root) body {
   color: var(--ink-2);
 }
 
+.vl-tb {
+  /* the stage toolbar's box, at full width and in the flow */
+  display: block;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  translate: none;
+}
+.vl-track {
+  position: relative;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--chip);
+}
+.vl-thumb {
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgba(23, 23, 26, 0.12), 0 2px 6px -2px rgba(23, 23, 26, 0.18);
+  transition: top 0.25s cubic-bezier(0.22, 1, 0.36, 1), height 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
 .vl-rungs {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 2px;
   list-style: none;
 }
 .vl-rung {
@@ -2117,26 +2141,28 @@ html:has(.inset-root) body {
   align-items: center;
   gap: 4px 12px;
   width: 100%;
-  padding: 16px 20px;
-  border: 1px solid var(--line);
-  border-radius: 13px;
-  background: var(--surface);
-  color: inherit;
+  padding: 14px 18px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--ink-2);
   font: inherit;
   text-align: left;
   cursor: pointer;
-  transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+  transition: background 0.15s var(--ease), color 0.15s var(--ease);
 }
 .vl-rung:hover {
-  border-color: var(--line-2);
+  color: var(--ink);
+  background: color-mix(in srgb, var(--surface) 45%, transparent);
 }
-.vl-rung[data-open] {
-  border-color: var(--accent-ink);
-  background: var(--accent-tint);
+.vl-rung[data-open],
+.vl-rung[data-open]:hover {
+  color: var(--ink);
+  background: none; /* the thumb is the white behind it */
 }
-.vl-rung[data-baseline] {
-  background: transparent;
-  border-style: dashed;
+.inset-root .vl-rung:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: -2px;
 }
 .vl-num {
   display: grid;
@@ -2163,6 +2189,9 @@ html:has(.inset-root) body {
   font-size: 18px;
   font-weight: 650;
 }
+.vl-rung:not([data-open]) .vl-name {
+  color: var(--ink);
+}
 .vl-brief {
   font-size: 15px;
   color: var(--ink-2);
@@ -2171,9 +2200,9 @@ html:has(.inset-root) body {
 
 .vl-orbit {
   position: absolute;
-  inset: -6px;
-  width: calc(100% + 12px);
-  height: calc(100% + 12px);
+  inset: -5px;
+  width: calc(100% + 10px);
+  height: calc(100% + 10px);
   overflow: visible;
   pointer-events: none;
 }

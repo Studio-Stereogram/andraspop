@@ -1,6 +1,6 @@
 "use client";
 
-import { ViewTransition, startTransition, useMemo, useState } from "react";
+import { ViewTransition, startTransition, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import type { Participant } from "@/lib/inset/roles";
 import { RoleTags } from "./role-tags";
 import { Spread, type SpreadItem } from "./spread";
@@ -120,6 +120,35 @@ export function VehicleForLogic() {
   const [open, setOpen] = useState<number | null>(null);
   const active = LEVELS.find((l) => l.n === open);
   const item = useMemo(() => (active ? spreadFor(active) : null), [active]);
+  // the thumb under the open rung, measured (again on resize, as rungs reflow on narrow screens)
+  const rungs = useRef<(HTMLButtonElement | null)[]>([]);
+  const [thumb, setThumb] = useState<{ y: number; h: number } | null>(null);
+  useLayoutEffect(() => {
+    const el = open === null ? null : rungs.current[LEVELS.findIndex((l) => l.n === open)];
+    if (!el) {
+      setThumb(null);
+      return;
+    }
+    const measure = () => setThumb({ y: el.offsetTop, h: el.offsetHeight });
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [open]);
+
+  // Up/Down move between rungs, Home/End jump; Enter or Space opens one
+  const onKey = (e: KeyboardEvent<HTMLOListElement>) => {
+    const i = rungs.current.findIndex((el) => el === document.activeElement);
+    if (i < 0) return;
+    const go = (j: number) => rungs.current[(j + LEVELS.length) % LEVELS.length]?.focus();
+    if (e.key === "ArrowDown") go(i + 1);
+    else if (e.key === "ArrowUp") go(i - 1);
+    else if (e.key === "Home") go(0);
+    else if (e.key === "End") go(LEVELS.length - 1);
+    else return;
+    e.preventDefault();
+  };
+
   const toggle = (n: number) => {
     const next = open === n ? null : n;
     // Opening the first level (or closing the last) changes the layout on wide screens: animate that move.
@@ -141,12 +170,19 @@ export function VehicleForLogic() {
             <div className="vl-axis" aria-hidden>
               <span>More leverage</span>
             </div>
-            <ol className="vl-rungs">
-              {LEVELS.map((level) => {
+            {/* the same toolbar as the stages: a soft track, and a white thumb that slides to the open level */}
+            <div className="tb vl-tb">
+            <div className="vl-track">
+            {thumb && <span className="vl-thumb" aria-hidden style={{ top: thumb.y, height: thumb.h }} />}
+            <ol className="vl-rungs" onKeyDown={onKey}>
+              {LEVELS.map((level, i) => {
                 const isOpen = open === level.n;
                 return (
                   <li key={level.n}>
                     <button
+                      ref={(el) => {
+                        rungs.current[i] = el;
+                      }}
                       type="button"
                       className="vl-rung"
                       data-open={isOpen || undefined}
@@ -160,14 +196,16 @@ export function VehicleForLogic() {
                       <span className="vl-brief">{level.brief}</span>
                   {/* the focused rung's ambient outline: a faint track with one dash circling it slowly */}
                   <svg className="vl-orbit" aria-hidden>
-                    <rect className="vl-orbit-track" width="100%" height="100%" rx="18" pathLength={100} />
-                    <rect className="vl-orbit-dash" width="100%" height="100%" rx="18" pathLength={100} />
+                    <rect className="vl-orbit-track" width="100%" height="100%" rx="13" pathLength={100} />
+                    <rect className="vl-orbit-dash" width="100%" height="100%" rx="13" pathLength={100} />
                   </svg>
                     </button>
                   </li>
                 );
               })}
             </ol>
+            </div>
+            </div>
           </div>
         </div>
       </ViewTransition>
