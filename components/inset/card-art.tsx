@@ -119,11 +119,16 @@ const gestalt: Draw = (ctx, w, h, t, ink) => {
 // an exploded view on a loop. The top plane carries swatches, the middle one blocks, the bottom one a page.
 const layers: Draw = (ctx, w, h, t, ink) => {
   const k = smooth((Math.sin(t * 0.6) + 1) / 2); // 0 stacked, 1 exploded
-  const pw = Math.min(w * 0.62, h * 1.25);
-  const ph = pw * 0.42;
+  // Sized so the fully exploded stack (three planes, two gaps of up to 0.6 × a plane's height) fits the
+  // art box with a margin, centred both ways: never cropped, in the card or in a square thumbnail.
+  const ASPECT = 0.42; // plane height / width
+  const MAX_GAP = 0.6;
+  const margin = 6;
+  const ph = Math.min(((w - margin * 2) * 0.9) * ASPECT, (h - margin * 2) / (1 + 2 * MAX_GAP));
+  const pw = ph / ASPECT;
   const cx = w / 2;
-  const base = h / 2 + ph * 0.3;
-  const gap = ph * (0.18 + 0.42 * k);
+  const base = h / 2;
+  const gap = ph * (0.18 + (MAX_GAP - 0.18) * k);
   ctx.strokeStyle = ink;
   ctx.fillStyle = ink;
   ctx.lineWidth = 1.2;

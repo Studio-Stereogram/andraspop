@@ -1,11 +1,11 @@
 // Themes for the design system inset: the same sign-up card, dressed by four token sets.
 // Each is a set of semantic tokens (what a value is for, not what it is), applied as CSS variables.
-// "No theme" is the whitelabel baseline; Inset and Meta Map are this site's real looks; Sherbet is an
-// invented, deliberately loud brand. Every text and fill pair is checked with APCA (ds-themes.test.ts).
+// "No theme" is the whitelabel baseline; Inset is this site's own look; Sherbet is an invented,
+// deliberately loud brand, there for contrast. Every text and fill pair is checked with APCA (ds-themes.test.ts).
 
 import type { CSSProperties } from "react";
 
-export type ThemeKey = "none" | "inset" | "metamap" | "sherbet";
+export type ThemeKey = "none" | "inset" | "sherbet";
 
 export type DsTheme = {
   key: ThemeKey;
@@ -97,35 +97,6 @@ export const DS_THEMES: DsTheme[] = [
     headWeight: 400,
     bodyWeight: 400,
     rond: 45,
-  },
-  {
-    key: "metamap",
-    name: "Meta Map",
-    tokens: "Graphite, signal orange, Allo Sharp, mono labels, 8px corners.",
-    components: "Dark surfaces, ink buttons, an orange signal.",
-    screens: "A focused, technical sign-up.",
-    feel: "Precise and technical.",
-    colour: {
-      bg: "#101215",
-      surface: "#1a1d22",
-      text: "#edf0f4",
-      muted: "#ccd2da",
-      border: "#2f343c",
-      action: "#edf0f4",
-      onAction: "#101215",
-      accent: "#3a1a14",
-      onAccent: "#ffcabd",
-    },
-    radius: "8px",
-    buttonRadius: "6px",
-    borderWidth: "1px",
-    shadow: "0 1px 2px rgba(0,0,0,.4), 0 10px 26px rgba(0,0,0,.35)",
-    fontHead: 'var(--font-allo), "Helvetica Neue", sans-serif',
-    fontBody: 'var(--font-allo), "Helvetica Neue", sans-serif',
-    fontLabel: "var(--font-plex-mono), ui-monospace, monospace",
-    headWeight: 600,
-    bodyWeight: 400,
-    rond: 0,
   },
   {
     key: "sherbet",

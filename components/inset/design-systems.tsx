@@ -20,6 +20,15 @@ const CHAIN: Layer[] = [
 ];
 const THEME_LAYER: Layer = { n: 5, key: "theme", label: "Theme layer" };
 
+// The exploded stack, top to bottom, with the buttons that focus each plane.
+type PlaneKey = Exclude<LayerKey, "theme">;
+const PLANES: { key: PlaneKey; label: string }[] = [
+  { key: "tokens", label: "Tokens" },
+  { key: "components", label: "Components" },
+  { key: "patterns", label: "Patterns" },
+  { key: "screens", label: "Screen" },
+];
+
 function readout(key: LayerKey, t: DsTheme): string {
   switch (key) {
     case "tokens":
@@ -224,14 +233,21 @@ export function DesignSystems() {
   const [themeKey, setThemeKey] = useState<ThemeKey>("inset");
   const [exploded, setExploded] = useState(false);
   const [open, setOpen] = useState<number | null>(null);
+  // the plane being inspected in the exploded view: picked beside the stack, or by opening it in the chain
+  const [focus, setFocus] = useState<PlaneKey | null>(null);
   const theme = DS_THEMES.find((t) => t.key === themeKey) ?? DS_THEMES[1];
   const active = [...CHAIN, THEME_LAYER].find((l) => l.n === open);
+  const focused = PLANES.find((p) => p.key === focus);
   const item = useMemo<SpreadItem | null>(() => (active ? { key: active.key, ...SPREADS[active.key] } : null), [active]);
 
   const toggle = (n: number) => {
     const next = open === n ? null : n;
-    // opening a layer explodes the card, so the layer can be seen in place
-    if (next !== null && next <= CHAIN.length) setExploded(true);
+    // opening a layer explodes the card and focuses that layer, so it can be seen in place
+    const layer = CHAIN.find((l) => l.n === next);
+    if (layer) {
+      setExploded(true);
+      setFocus(layer.key as PlaneKey);
+    } else if (next === null) setFocus(null);
     // Opening the first layer (or closing the last) changes the layout on wide screens: animate that move.
     if ((open === null) !== (next === null)) startTransition(() => setOpen(next));
     else setOpen(next);
@@ -252,14 +268,32 @@ export function DesignSystems() {
               className="ds-stage"
               data-theme={theme.key}
               data-exploded={exploded || undefined}
-              data-focus={active?.key}
+              data-focus={exploded ? (focus ?? undefined) : undefined}
               style={themeVars(theme)}
-              role="img"
-              aria-label={`A sign-up card in the ${theme.name} theme${exploded ? ", pulled apart into tokens, components, patterns and screen" : ""}.`}
             >
-              <span className="ds-stack">
+              <span
+                className="ds-stack"
+                role="img"
+                aria-label={`A sign-up card in the ${theme.name} theme${exploded ? ", pulled apart into tokens, components, patterns and screen" : ""}.`}
+              >
                 <Planes theme={theme} />
               </span>
+
+              {/* inspect one layer at a time: it lifts out, the rest fade back */}
+              <div className="ds-inspect" role="group" aria-label="Inspect a layer" inert={!exploded}>
+                {PLANES.map((p) => (
+                  <button key={p.key} type="button" className="ds-inspect-btn" aria-pressed={focus === p.key} onClick={() => setFocus(focus === p.key ? null : p.key)}>
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+              <p className="ds-caption" aria-live="polite" data-visible={(exploded && focused) || undefined}>
+                {exploded && focused ? (
+                  <>
+                    <strong>{focused.label}.</strong> {readout(focused.key, theme)}
+                  </>
+                ) : null}
+              </p>
             </div>
 
             <div className="ds-controls">
@@ -270,7 +304,10 @@ export function DesignSystems() {
                   </button>
                 ))}
               </div>
-              <button type="button" className="ds-explode" aria-pressed={exploded} onClick={() => setExploded(!exploded)}>
+              <button type="button" className="ds-explode" aria-pressed={exploded} onClick={() => {
+                  setExploded(!exploded);
+                  if (exploded) setFocus(null);
+                }}>
                 <span className="ds-explode-icon" aria-hidden />
                 {exploded ? "Stack layers" : "Explode layers"}
               </button>

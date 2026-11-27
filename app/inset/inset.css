@@ -1396,7 +1396,7 @@ html:has(.inset-root) body {
   border-radius: 14px;
   opacity: 0;
   transform: translateZ(0);
-  transition: transform 0.9s var(--ease), opacity 0.5s var(--ease), box-shadow 0.3s var(--ease);
+  transition: transform 0.9s var(--ease), translate 0.9s var(--ease), opacity 0.5s var(--ease), box-shadow 0.3s var(--ease);
 }
 .ds-plane[data-layer="screens"] { opacity: 1; }
 .ds-stage[data-exploded] .ds-plane {
@@ -1407,17 +1407,103 @@ html:has(.inset-root) body {
 .ds-stage[data-exploded] .ds-plane[data-layer="patterns"] { transform: translateZ(130px); }
 .ds-stage[data-exploded] .ds-plane[data-layer="components"] { transform: translateZ(260px); }
 .ds-stage[data-exploded] .ds-plane[data-layer="tokens"] { transform: translateZ(390px); }
-/* the layer opened in the chain is outlined in place */
-.ds-stage[data-exploded][data-focus="tokens"] .ds-plane[data-layer="tokens"],
-.ds-stage[data-exploded][data-focus="components"] .ds-plane[data-layer="components"],
-.ds-stage[data-exploded][data-focus="patterns"] .ds-plane[data-layer="patterns"],
-.ds-stage[data-exploded][data-focus="screens"] .ds-plane[data-layer="screens"] {
-  box-shadow: 0 0 0 3px var(--accent-text), 0 30px 60px -30px rgba(23, 23, 26, 0.35);
+/* inspecting a layer: it lifts out of the stack with an outline, the others fade back */
+.ds-stage[data-focus] .ds-plane {
+  opacity: 0.14;
+}
+.ds-stage[data-focus="tokens"] .ds-plane[data-layer="tokens"],
+.ds-stage[data-focus="components"] .ds-plane[data-layer="components"],
+.ds-stage[data-focus="patterns"] .ds-plane[data-layer="patterns"],
+.ds-stage[data-focus="screens"] .ds-plane[data-layer="screens"] {
+  opacity: 1;
+  background: color-mix(in srgb, var(--ds-bg) 96%, transparent);
+  box-shadow: 0 0 0 3px var(--accent-text), 0 40px 70px -30px rgba(23, 23, 26, 0.45);
+}
+.ds-stage[data-focus="tokens"] .ds-plane[data-layer="tokens"] { transform: translateZ(450px); }
+.ds-stage[data-focus="components"] .ds-plane[data-layer="components"] { transform: translateZ(320px); }
+.ds-stage[data-focus="patterns"] .ds-plane[data-layer="patterns"] { transform: translateZ(190px); }
+.ds-stage[data-focus="screens"] .ds-plane[data-layer="screens"] { transform: translateZ(60px); }
+/* the planes above the focused one (later in the DOM) drift further up and almost vanish, so nothing
+   sits in front of the layer being inspected */
+.ds-stage[data-focus="screens"] .ds-plane[data-layer="screens"] ~ .ds-plane,
+.ds-stage[data-focus="patterns"] .ds-plane[data-layer="patterns"] ~ .ds-plane,
+.ds-stage[data-focus="components"] .ds-plane[data-layer="components"] ~ .ds-plane {
+  opacity: 0.05;
+  translate: 0 0 60px; /* no higher than the focused top plane, which still fits the stage */
+}
+
+/* the layer buttons beside the stack, top to bottom like the planes */
+.ds-inspect {
+  position: absolute;
+  z-index: 2;
+  left: 14px;
+  top: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  translate: 0 -50%;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+}
+.ds-stage[data-exploded] .ds-inspect {
+  opacity: 1;
+  transition-delay: 0.3s;
+}
+.ds-inspect-btn {
+  padding: 5px 12px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+  color: var(--ink-2);
+  font-family: var(--f-sans);
+  font-variation-settings: var(--rond);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.ds-inspect-btn:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+.ds-inspect-btn[aria-pressed="true"] {
+  border-color: var(--accent-ink);
+  background: var(--accent-tint);
+  color: var(--accent-ink);
+}
+.ds-caption {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: 12px;
+  max-width: min(520px, 86%);
+  padding: 7px 14px;
+  border-radius: 12px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--f-sans);
+  font-variation-settings: var(--rond);
+  font-size: 13px;
+  line-height: 1.35;
+  text-align: center;
+  translate: -50% 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease), translate 0.3s var(--ease);
+}
+.ds-caption[data-visible] {
+  opacity: 1;
+  translate: -50% 0;
+}
+.ds-caption strong {
+  font-weight: 650;
 }
 .ds-plane-label {
   position: absolute;
-  left: 14px;
-  top: 10px;
+  left: 6px;
+  bottom: 100%; /* just above the plane's edge, clear of its contents */
+  padding-bottom: 6px;
   font-family: var(--f-sans);
   font-variation-settings: var(--rond);
   font-size: 22px;
@@ -1581,8 +1667,6 @@ html:has(.inset-root) body {
 .ds-stage[data-theme="none"] .ds-tag,
 .ds-stage[data-theme="none"] .ds-label { font-weight: 400; }
 .ds-stage[data-theme="none"] .ds-btn-primary { border-color: var(--ds-border); }
-.ds-stage[data-theme="metamap"] .ds-label,
-.ds-stage[data-theme="metamap"] .ds-tag { letter-spacing: 0.04em; text-transform: uppercase; font-size: 10px; }
 .ds-stage[data-theme="sherbet"] .ds-btn { font-weight: 800; box-shadow: 2px 2px 0 var(--ds-border); }
 .ds-stage[data-theme="sherbet"] .ds-btn-primary { border-color: var(--ds-border); }
 
@@ -1737,6 +1821,16 @@ html:has(.inset-root) body {
 
 @media (max-width: 760px) {
   .ds-stage { height: 430px; --stack-scale: 0.86; }
+  .ds-inspect {
+    left: 50%;
+    top: 10px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: calc(100% - 20px);
+    translate: -50% 0;
+  }
+  .ds-inspect-btn { padding: 4px 10px; font-size: 12px; }
   .ds-rail-tie { display: none; }
   .ds-rail { margin-top: 24px; }
 }
