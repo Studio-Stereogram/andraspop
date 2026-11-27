@@ -2,7 +2,7 @@ import { CONTINUITY_KINDS, REFERENCE_KINDS, TOPIC_PALETTE } from "./constants";
 import { isAllowedThumbnail } from "./links";
 import type { EdgeKind, EdgeType, ExtraLink, MapData, MapEdge, MapNode, NodeType, Platform, Status, Topic } from "./types";
 
-const NODE_TYPES: NodeType[] = ["video", "link", "bookmark", "person", "note"];
+const NODE_TYPES: NodeType[] = ["video", "link", "bookmark", "person", "note", "intro"];
 const PLATFORM_IDS: Platform[] = ["youtube", "instagram", "x"];
 const STATUSES: Status[] = ["idea", "draft", "scheduled", "published"];
 const HEX = /^#[0-9a-f]{3}(?:[0-9a-f]{3})?$/i;
@@ -66,8 +66,10 @@ export function normalizeMap(input: unknown): MapData {
   const topicIds = new Set(topics.map((t) => t.id));
 
   let newTaken = false; // at most one entry carries the New tag, so it keeps its weight: the first one wins
+  let introTaken = false; // one intro per map: the first one wins
   const nodes: MapNode[] = (data.nodes as Raw[])
     .filter((n) => str(n.id) && oneOf(n.type, NODE_TYPES))
+    .filter((n) => n.type !== "intro" || (!introTaken && (introTaken = true)))
     .map((n) => {
       const type = n.type as NodeType;
       const isVideo = type === "video";
@@ -84,7 +86,9 @@ export function normalizeMap(input: unknown): MapData {
         handle: str(n.handle),
         duration: str(n.duration),
         links: normalizeLinks(n.links, str(n.url)),
-        topics: (Array.isArray(n.topics) ? n.topics : []).filter((id): id is string => topicIds.has(id as string)),
+        // The intro names topics in its text instead of carrying them, so filters never dim it.
+        topics:
+          type === "intro" ? [] : (Array.isArray(n.topics) ? n.topics : []).filter((id): id is string => topicIds.has(id as string)),
         private: n.private === true,
         fx: num(n.fx),
         fy: num(n.fy),
@@ -92,12 +96,15 @@ export function normalizeMap(input: unknown): MapData {
       };
     });
   const nodeIds = new Set(nodes.map((n) => n.id));
+  const introId = nodes.find((n) => n.type === "intro")?.id;
 
   const edges: MapEdge[] = (data.edges as Raw[])
     .filter((e) => nodeIds.has(str(e.from)) && nodeIds.has(str(e.to)) && e.from !== e.to)
-    .map((e, i) => {
+    .map((e) => ({ e, type: oneOf(e.type, ["continuity", "reference"] as const) ?? edgeTypeOf(str(e.kind)) }))
+    // The intro is in no series: it only has the ◆ reference point, for its "start here" picks.
+    .filter(({ e, type }) => type === "reference" || (e.from !== introId && e.to !== introId))
+    .map(({ e, type }, i) => {
       const kind = str(e.kind);
-      const type = oneOf(e.type, ["continuity", "reference"] as const) ?? edgeTypeOf(kind);
       const kinds: Record<string, string> = type === "continuity" ? CONTINUITY_KINDS : REFERENCE_KINDS;
       return {
         id: str(e.id) || `e${i + 1}`,

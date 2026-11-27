@@ -51,7 +51,7 @@ Rules: never uppercase UI controls; mono only for metadata and labels; balance h
 - Selection = corner brackets, not outlines.
 
 ## Non-negotiables
-1. Two connection points per node: **● continuity** on the right edge, **◆ reference** on the bottom edge. Same shapes everywhere (handles, inspector headings, legends).
+1. Two connection points per node: **● continuity** on the right edge, **◆ reference** on the bottom edge. Same shapes everywhere (handles, inspector headings, legends). The one exception is the intro (big-type statement, see `canvas.md`), which has only ◆ reference.
 2. Continuity lines are solid and heavier. Reference lines are thinner and dashed (dash varies by kind). No arrows: every line ends in a dot at both ends.
 3. Exactly one primary (filled) button per view region. The rest use outline, secondary or ghost.
 4. Every interactive element has hover, focus-visible (accent ring, `box-shadow: var(--focus-ring)`) and pressed/selected states. `--ring` is shadcn's ring *colour* (= `--hot`), not a shadow.

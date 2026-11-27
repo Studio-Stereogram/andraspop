@@ -4,6 +4,7 @@ import { NODE_HEIGHT_ESTIMATE, NODE_WIDTH } from "./constants";
 import { facing, link } from "./geometry";
 import { clusterLayout, layoutBounds, timelineLayout, type Sized } from "./layouts";
 import { normalizeMap } from "./normalize";
+import type { Rect } from "./types";
 import { toPublicMap } from "./visibility";
 
 const map = toPublicMap(normalizeMap(seed));
@@ -80,5 +81,32 @@ describe("timelineLayout", () => {
     expect(bg.ticks.some((t) => t.month && t.label === "1 Sept")).toBe(true);
     expect(bg.today).toBeGreaterThan(layout.positions.get("v12")!.x);
     expect(layoutBounds(layout, sized)!.w).toBeGreaterThanOrEqual(bg.w);
+  });
+});
+
+describe("the intro in each layout", () => {
+  const intro: Sized = {
+    node: { ...sized[0].node, id: "intro", type: "intro", topics: [], date: "", platform: null, status: null },
+    w: NODE_WIDTH.intro,
+    h: NODE_HEIGHT_ESTIMATE.intro,
+  };
+  const withIntro = [intro, ...sized];
+  const overlaps = (a: Rect, b: Rect) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+  const box = (l: { positions: Map<string, { x: number; y: number }> }, s: Sized): Rect => ({ ...l.positions.get(s.node.id)!, w: s.w, h: s.h });
+
+  it("holds the centre of the cluster ring, clear of every entry", () => {
+    const l = clusterLayout(withIntro, map.edges, map.topics);
+    expect(l.positions.get("intro")).toEqual({ x: -intro.w / 2, y: -intro.h / 2 });
+    for (const s of sized) expect(overlaps(box(l, intro), box(l, s))).toBe(false);
+    if (l.background?.type !== "cluster") throw new Error("expected clusters");
+    expect(l.background.halos.every((g) => g.rects.length === sized.filter((s) => s.node.topics.includes(g.topic.id)).length)).toBe(true);
+  });
+
+  it("stands before the first date on the timeline, outside the lanes", () => {
+    const l = timelineLayout(withIntro, "2026-10-08");
+    const p = l.positions.get("intro")!;
+    expect(p.x + intro.w).toBeLessThan(-60);
+    expect(p.y).toBe(0);
+    for (const s of sized) expect(l.positions.get(s.node.id)!.x).toBeGreaterThan(p.x + intro.w);
   });
 });

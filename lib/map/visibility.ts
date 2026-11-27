@@ -28,7 +28,7 @@ export function hiddenFromPublic(map: MapData): Set<string> {
   const nb = neighbourMap(map.edges);
   const hidden = new Set(base);
   for (const n of map.nodes) {
-    if (n.type === "video" || base.has(n.id)) continue;
+    if (n.type === "video" || n.type === "intro" || base.has(n.id)) continue;
     const ids = nb.get(n.id) ?? [];
     if (ids.length && ids.every((id) => base.has(id))) hidden.add(n.id);
   }
@@ -62,6 +62,11 @@ export interface Filters {
 
 export const NO_FILTERS: Filters = { topics: new Set(), platforms: new Set(), statuses: new Set(), q: "", hide: false };
 
+/** Entries a visitor can filter: everything except the intro. */
+export function entryCount(nodes: MapNode[]): number {
+  return nodes.filter((n) => n.type !== "intro").length;
+}
+
 export function activeFilterCount(f: Filters): number {
   return f.topics.size + f.platforms.size + f.statuses.size + (f.q.trim() ? 1 : 0);
 }
@@ -73,6 +78,7 @@ export function applyFilters(nodes: MapNode[], f: Filters): { hidden: Set<string
   if (!activeFilterCount(f)) return { hidden, dim };
   const q = f.q.trim().toLowerCase();
   for (const n of nodes) {
+    if (n.type === "intro") continue; // the statement about the whole map is never filtered out
     const ok =
       (!f.topics.size || n.topics.some((t) => f.topics.has(t))) &&
       (!f.platforms.size || (n.type === "video" && n.platform !== null && f.platforms.has(n.platform))) &&

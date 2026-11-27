@@ -344,8 +344,95 @@
 }
 .mm-overview svg:hover .mm-ov-view { stroke: var(--ink); }
 
+/* ---------- intro: the map's statement, set straight on the grid in big type (no card) ---------- */
+.mm-canvas .react-flow__node-intro { cursor: default; }
+/* React Flow turns pointer events off on a node that can't be selected; the type stays pass-through (dragging
+   across it pans), only its controls take the pointer. */
+.mm-intro-topic, .mm-intro-link { pointer-events: auto; }
+.mm-intro { position: relative; display: flex; flex-direction: column; gap: 28px; color: var(--ink); }
+.mm-intro-eyebrow { font: 500 10.5px var(--f-mono); text-transform: uppercase; letter-spacing: .12em; color: var(--ink-3); }
+/* Two-tone, like the /hi headline: the sentence is quiet, *strong* phrases and topic words are full ink. */
+.mm-intro-text {
+  margin: 0;
+  font: 650 44px/1.04 var(--f-title);
+  letter-spacing: -.03em;
+  color: var(--ink-3);
+  text-wrap: pretty;
+}
+.mm-intro-text strong { font-weight: inherit; color: var(--ink); }
+.mm-intro-topic {
+  font: inherit;
+  letter-spacing: inherit;
+  color: var(--ink-3);
+  background: none;
+  border: 0;
+  border-radius: 2px;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline 3px transparent;
+  text-underline-offset: .12em;
+  transition: color .15s, text-decoration-color .15s;
+}
+.mm-intro-topic::before {
+  content: "";
+  display: inline-block;
+  width: .3em;
+  height: .3em;
+  margin: 0 .14em 0 .02em;
+  vertical-align: .2em;
+  background: var(--tc);
+}
+.mm-intro-topic.on { color: var(--ink); }
+.mm-intro-topic:hover { text-decoration-color: color-mix(in srgb, var(--tc) 45%, transparent); }
+.mm-intro-topic.picked { text-decoration-color: var(--tc); }
+.mm-intro-topic:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.mm-intro-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+.mm-intro-legend { display: flex; gap: 22px; font: 500 10px var(--f-mono); text-transform: uppercase; letter-spacing: .1em; color: var(--ink-3); }
+.mm-intro-legend span { display: inline-flex; align-items: center; gap: 7px; }
+.mm-intro-legend i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-2); }
+.mm-intro-legend i.ref { width: 7px; height: 7px; border-radius: 1px; transform: rotate(45deg); background: var(--edge); }
+.mm-intro-link {
+  font: 500 15px var(--f-ui);
+  color: var(--ink);
+  white-space: nowrap;
+  text-decoration: underline 1px var(--ink-3);
+  text-underline-offset: 4px;
+  border-radius: 2px;
+  transition: text-decoration-color .12s;
+}
+.mm-intro-link:hover { text-decoration-color: var(--ink); }
+.mm-intro-link:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.mm-intro-hint { margin-top: -12px; font: 500 10px var(--f-mono); text-transform: uppercase; letter-spacing: .1em; color: var(--ink-3); }
+.mm-intro-hint .touch { display: none; }
+@media (hover: none) {
+  .mm-intro-hint .touch { display: inline; }
+  .mm-intro-hint .mouse { display: none; }
+}
+/* Tracing a topic: a passing fan of lines from the intro to the topic's entries (not stored edges). */
+.mm-edge.mm-trace { stroke: color-mix(in srgb, var(--tc) 85%, transparent); stroke-width: 1.5; animation: mm-fan-in .24s ease-out; }
+.mm-trace-cap {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--tc);
+  pointer-events: none;
+  animation: mm-fan-in .24s ease-out;
+}
+@keyframes mm-fan-in { from { opacity: 0; } }
+
 @media (prefers-reduced-motion: reduce) {
-  .mm-node, .mm-edge, .mm-node::after, .mm-play, .mm-playbtn span { transition: none; }
+  .mm-node, .mm-edge, .mm-node::after, .mm-play, .mm-playbtn span, .mm-intro-topic { transition: none; }
+  .mm-trace, .mm-trace-cap { animation: none; }
 }
 
 /* React Flow's attribution, in the chrome's quiet mono style */

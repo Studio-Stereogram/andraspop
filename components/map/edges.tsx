@@ -1,13 +1,14 @@
 "use client";
 
-import { memo } from "react";
+import { memo, type CSSProperties } from "react";
 import { useInternalNode, ViewportPortal, type Edge, type EdgeProps, type InternalNode } from "@xyflow/react";
 import { EDGE_KIND_LABEL } from "@/lib/map/constants";
 import { link } from "@/lib/map/geometry";
 import type { EdgeKind, EdgeType, Rect } from "@/lib/map/types";
 import { cn } from "@/lib/utils";
 
-export type FlowEdgeData = { type: EdgeType; kind: EdgeKind; hl: boolean; dim: boolean };
+/** `trace`: a passing line from the intro to an entry of the hovered topic (its colour); not stored data. */
+export type FlowEdgeData = { type: EdgeType; kind: EdgeKind; hl: boolean; dim: boolean; trace?: string };
 export type FlowEdge = Edge<FlowEdgeData, "floating">;
 
 /** End-dot radius per type: continuity lines are heavier, so their dots are too. */
@@ -33,6 +34,18 @@ export const FloatingEdge = memo(function FloatingEdge({ source, target, data }:
   if (!a || !b || !data) return null;
 
   const g = link(a, b);
+  if (data.trace) {
+    const style = { "--tc": data.trace } as CSSProperties;
+    return (
+      <>
+        <path className="mm-edge mm-trace" style={style} d={g.d} />
+        <ViewportPortal>
+          <span className="mm-trace-cap" style={{ ...style, transform: `translate(${g.a.x - 3}px, ${g.a.y - 3}px)` }} />
+          <span className="mm-trace-cap" style={{ ...style, transform: `translate(${g.b.x - 3}px, ${g.b.y - 3}px)` }} />
+        </ViewportPortal>
+      </>
+    );
+  }
   const cont = data.type === "continuity";
   const state = cn(data.hl && "hl", data.dim && "dim");
   const capClass = cn("mm-ecap", cont && "cont", state);

@@ -13,6 +13,13 @@ export interface MapVisual {
   dim: ReadonlySet<string>;
   /** Topics the filter narrows to; cluster regions of other topics fade. */
   topicFilter: ReadonlySet<string>;
+  /** The topic whose word is hovered or focused in the intro (its entries are traced), or null. */
+  tracing: string | null;
+  /** Topic words shown in full ink: the traced one, else the filtered ones; empty means all. */
+  litTopics: ReadonlySet<string>;
+  traceTopic: (id: string | null) => void;
+  /** Filter to this topic, or clear the filter when it is the only one on. */
+  pickTopic: (id: string) => void;
 }
 
 export const MapVisualContext = createContext<MapVisual | null>(null);
