@@ -2128,7 +2128,7 @@ html:has(.inset-root) body {
   transition: top 0.25s cubic-bezier(0.22, 1, 0.36, 1), height 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .vl-rungs {
-  position: relative;
+  /* not positioned: the rungs' offsets are then measured from the track, where the thumb is drawn */
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -2205,6 +2205,12 @@ html:has(.inset-root) body {
   height: calc(100% + 10px);
   overflow: visible;
   pointer-events: none;
+}
+/* on the ladder the outline hugs the thumb, inside the track, instead of floating outside the box */
+.vl-rung .vl-orbit {
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 .vl-orbit rect {
   fill: none;

@@ -196,8 +196,8 @@ export function VehicleForLogic() {
                       <span className="vl-brief">{level.brief}</span>
                   {/* the focused rung's ambient outline: a faint track with one dash circling it slowly */}
                   <svg className="vl-orbit" aria-hidden>
-                    <rect className="vl-orbit-track" width="100%" height="100%" rx="13" pathLength={100} />
-                    <rect className="vl-orbit-dash" width="100%" height="100%" rx="13" pathLength={100} />
+                    <rect className="vl-orbit-track" width="100%" height="100%" rx="8" pathLength={100} />
+                    <rect className="vl-orbit-dash" width="100%" height="100%" rx="8" pathLength={100} />
                   </svg>
                     </button>
                   </li>
