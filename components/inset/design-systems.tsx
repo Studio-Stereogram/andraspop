@@ -3,6 +3,7 @@
 import { ViewTransition, startTransition, useMemo, useState } from "react";
 import { DS_THEMES, themeVars, type DsTheme, type ThemeKey } from "@/lib/inset/ds-themes";
 import { EdList, Spread, type SpreadItem } from "./spread";
+import { Segmented, SwatchDots } from "./segmented";
 import { TickRail } from "./tick-rail";
 
 // Design systems. One sign-up card, built from components and dressed by tokens. The theme switch swaps
@@ -269,6 +270,7 @@ export function DesignSystems() {
           </header>
 
           <div className="ds-specimen">
+            <div className="stage-frame">
             <div
               className="ds-stage"
               data-theme={theme.key}
@@ -297,21 +299,36 @@ export function DesignSystems() {
               </p>
             </div>
 
-            <div className="ds-controls">
-              <div className="si-shapes ds-themes" role="group" aria-label="Theme">
-                {DS_THEMES.map((t) => (
-                  <button key={t.key} type="button" className="si-shape-btn" aria-pressed={t.key === theme.key} onClick={() => setThemeKey(t.key)}>
-                    {t.name}
-                  </button>
-                ))}
-              </div>
-              <button type="button" className="ds-explode" aria-pressed={exploded} onClick={() => {
+            {/* the stage toolbar: themes (each with its swatch dots) and the layers toggle */}
+            <div className="tb">
+              <Segmented
+                label="Theme"
+                value={theme.key}
+                onChange={setThemeKey}
+                options={DS_THEMES.map((t) => ({
+                  key: t.key,
+                  label: t.name,
+                  mark: <SwatchDots colours={[t.colour.bg, t.colour.action, t.colour.accent]} />,
+                }))}
+              />
+              <span className="tb-div" aria-hidden />
+              <button
+                type="button"
+                className="tb-btn"
+                aria-pressed={exploded}
+                onClick={() => {
                   setExploded(!exploded);
                   if (exploded) setFocus(null);
-                }}>
-                <span className="ds-explode-icon" aria-hidden />
-                {exploded ? "Stack layers" : "Explode layers"}
+                }}
+              >
+                <span className="tb-stack" aria-hidden>
+                  <i />
+                  <i />
+                  <i />
+                </span>
+                {exploded ? "Stack" : "Pull apart"}
               </button>
+            </div>
             </div>
           </div>
 

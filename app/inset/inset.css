@@ -1060,6 +1060,155 @@ html:has(.inset-root) body {
   .dc-group { font-size: 11px; }
 }
 
+/* ---- stage toolbar: a soft segmented control and a toggle, on the stage's paper ground ---- */
+
+.stage-frame {
+  border-radius: 10px;
+  background: var(--paper);
+}
+.tb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: fit-content;
+  max-width: calc(100% - 24px);
+  margin: 0 auto;
+  padding: 4px;
+  translate: 0 -12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
+  box-shadow: 0 6px 18px -10px rgba(23, 23, 26, 0.28);
+}
+.seg {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--chip);
+}
+.seg-thumb {
+  position: absolute;
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgba(23, 23, 26, 0.12), 0 2px 6px -2px rgba(23, 23, 26, 0.18);
+  transition: left 0.25s cubic-bezier(0.22, 1, 0.36, 1), top 0.25s cubic-bezier(0.22, 1, 0.36, 1), width 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.seg-opt {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--ink-2);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.seg-opt:hover,
+.seg-opt[aria-checked="true"] {
+  color: var(--ink);
+}
+.inset-root .seg-opt:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: -2px;
+}
+.seg-mark {
+  display: inline-flex;
+}
+.seg-dots {
+  display: inline-flex;
+}
+.seg-dots i {
+  width: 13px;
+  height: 13px;
+  margin-left: -4px;
+  border: 1.5px solid var(--surface);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(23, 23, 26, 0.14);
+}
+.seg-dots i:first-child {
+  margin-left: 0;
+}
+.seg-glyph {
+  fill: currentColor;
+  stroke: currentColor;
+  opacity: 0.8;
+}
+.seg-glyph rect,
+.seg-glyph circle {
+  stroke: none;
+}
+.tb-div {
+  width: 1px;
+  height: 22px;
+  margin: 0 2px;
+  background: var(--line);
+}
+.tb-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 11px;
+  border: 0;
+  border-radius: 9px;
+  background: none;
+  color: var(--ink-2);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.tb-btn:hover {
+  color: var(--ink);
+  background: var(--chip);
+}
+.tb-btn[aria-pressed="true"] {
+  background: var(--accent-tint);
+  color: var(--accent-ink);
+}
+/* the stack icon: three planes that spread apart when on */
+.tb-stack {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 3px;
+  transition: gap 0.3s var(--spring);
+}
+.tb-stack i {
+  display: block;
+  width: 15px;
+  height: 2px;
+  border-radius: 1px;
+  background: currentColor;
+  transform: skewX(-35deg);
+}
+.tb-btn[aria-pressed="true"] .tb-stack {
+  gap: 5px;
+}
+
+@media (max-width: 760px) {
+  .tb { translate: 0 -8px; }
+  .seg-opt { padding: 6px 9px; font-size: 13px; gap: 6px; }
+  /* with a toggle beside it: the choices as equal columns (mark above name), the toggle on its own row */
+  .tb:has(.tb-btn) { flex-direction: column; align-items: stretch; width: calc(100% - 24px); }
+  .tb:has(.tb-btn) .seg { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .tb:has(.tb-btn) .seg-opt { flex-direction: column; justify-content: center; gap: 4px; padding: 7px 4px; }
+  .tb:has(.tb-btn) .tb-div { display: none; }
+  .tb:has(.tb-btn) .tb-btn { justify-content: center; }
+}
+
 /* ---- the shape of information ---- */
 
 .si {
@@ -1098,7 +1247,6 @@ html:has(.inset-root) body {
   position: relative;
   aspect-ratio: 2 / 1;
   border-radius: 10px;
-  background: var(--paper);
   overflow: hidden;
 }
 .si-piece {
@@ -1189,35 +1337,6 @@ html:has(.inset-root) body {
   position: absolute;
   border: 1.5px dashed var(--accent-text);
   border-radius: 12px;
-}
-
-.si-shapes {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 6px;
-  margin-top: 12px;
-}
-.si-shape-btn {
-  padding: 6px 14px;
-  border: 1px solid var(--line-2);
-  border-radius: var(--r-pill);
-  background: transparent;
-  color: var(--ink-2);
-  font: inherit;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
-}
-.si-shape-btn:hover {
-  border-color: var(--ink);
-  color: var(--ink);
-}
-.si-shape-btn[aria-pressed="true"] {
-  border-color: var(--ink);
-  background: var(--ink);
-  color: var(--paper);
 }
 
 /* the causal stream: information → distribution → shape → meaning */
@@ -1788,56 +1907,6 @@ html:has(.inset-root) body {
   border-radius: var(--ds-radius);
 }
 
-/* controls under the stage */
-.ds-controls {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 8px 16px;
-  margin-top: 12px;
-}
-.ds-themes { margin-top: 0; }
-.ds-explode {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 14px 6px 10px;
-  border: 1px dashed var(--ink-3);
-  border-radius: var(--r-pill);
-  background: transparent;
-  color: var(--ink);
-  font: inherit;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
-}
-.ds-explode:hover { border-color: var(--ink); }
-.ds-explode[aria-pressed="true"] {
-  border-style: solid;
-  border-color: var(--accent-ink);
-  background: var(--accent-tint);
-}
-.ds-explode-icon {
-  width: 16px;
-  height: 12px;
-  border-top: 2px solid currentColor;
-  border-bottom: 2px solid currentColor;
-  position: relative;
-  transition: height 0.3s var(--spring);
-}
-.ds-explode-icon::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  margin-top: -1px;
-  border-top: 2px solid currentColor;
-}
-.ds-explode[aria-pressed="true"] .ds-explode-icon { height: 16px; }
-
 /* the theme layer: a rail under the whole chain, tied up to each step */
 .ds-rail {
   position: relative;
@@ -1935,7 +2004,7 @@ html:has(.inset-root) body {
     height: 248px;
     --stack-scale: 0.58;
   }
-  .split[data-open] .ds-controls { margin-top: 8px; }
+  .split[data-open] .tb { translate: 0 -8px; }
   .split[data-open] .ds-sub { display: none; }
   .split[data-open] .ds-rail .si-seg-value { display: none; }
   .split[data-open] .ds-rail-tie { display: none; }

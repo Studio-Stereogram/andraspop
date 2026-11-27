@@ -1,6 +1,7 @@
 "use client";
 
 import { ViewTransition, startTransition, useMemo, useState, type CSSProperties } from "react";
+import { Segmented } from "./segmented";
 import { EdList, Spread, type SpreadItem } from "./spread";
 
 // The shape of information. A piece of information carries a meaning only once it takes a shape, and
@@ -218,6 +219,55 @@ const SPREADS: Record<Stage["key"], Omit<SpreadItem, "key">> = {
   },
 };
 
+/** A 16px drawing of each shape, for the toolbar. */
+function ShapeGlyph({ shape }: { shape: ShapeKey }) {
+  return (
+    <svg className="seg-glyph" width="16" height="16" viewBox="0 0 16 16" aria-hidden>
+      {shape === "none" && (
+        <>
+          <rect x="1.5" y="2" width="4" height="3" rx="0.8" transform="rotate(-12 3.5 3.5)" />
+          <rect x="9.5" y="1.5" width="4" height="3" rx="0.8" transform="rotate(10 11.5 3)" />
+          <rect x="5" y="8" width="4" height="3" rx="0.8" transform="rotate(6 7 9.5)" />
+          <rect x="10.5" y="11" width="4" height="3" rx="0.8" transform="rotate(-8 12.5 12.5)" />
+        </>
+      )}
+      {shape === "timeline" && (
+        <>
+          <path d="M1 8 H15" fill="none" strokeWidth="1.3" />
+          <circle cx="3.5" cy="8" r="1.6" />
+          <circle cx="8" cy="8" r="1.6" />
+          <circle cx="12.5" cy="8" r="1.6" />
+        </>
+      )}
+      {shape === "groups" && (
+        <>
+          <circle cx="3" cy="5" r="1.5" />
+          <circle cx="5.5" cy="7.5" r="1.5" />
+          <circle cx="3" cy="10" r="1.5" />
+          <circle cx="11.5" cy="5.5" r="1.5" />
+          <circle cx="13" cy="9.5" r="1.5" />
+        </>
+      )}
+      {shape === "hierarchy" && (
+        <>
+          <path d="M8 4 V7 M3.5 11 V7 H12.5 V11" fill="none" strokeWidth="1.3" />
+          <rect x="6" y="1" width="4" height="3" rx="0.8" />
+          <rect x="1.5" y="11" width="4" height="3" rx="0.8" />
+          <rect x="10.5" y="11" width="4" height="3" rx="0.8" />
+        </>
+      )}
+      {shape === "page" && (
+        <>
+          <rect x="1" y="1.5" width="14" height="2.5" rx="0.8" />
+          <rect x="1" y="5.5" width="14" height="4" rx="0.8" />
+          <rect x="1" y="11" width="6.5" height="3.5" rx="0.8" />
+          <rect x="8.5" y="11" width="6.5" height="3.5" rx="0.8" />
+        </>
+      )}
+    </svg>
+  );
+}
+
 export function ShapeOfInformation() {
   const [shapeKey, setShapeKey] = useState<ShapeKey>("timeline");
   const [open, setOpen] = useState<number | null>(null);
@@ -246,6 +296,7 @@ export function ShapeOfInformation() {
           </header>
 
           <div className="si-specimen">
+            <div className="stage-frame">
             <div className="si-stage" data-shape={shape.key} role="img" aria-label={`Seven pieces arranged as: ${shape.shape} ${shape.meaning}`}>
               {/* cues, drawn under the pieces: the timeline's thread, the tree's branches, the groups' enclosures */}
               <svg className="si-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
@@ -295,12 +346,10 @@ export function ShapeOfInformation() {
               })}
             </div>
 
-            <div className="si-shapes" role="group" aria-label="Arrange the pieces as">
-              {SHAPES.map((s) => (
-                <button key={s.key} type="button" className="si-shape-btn" aria-pressed={s.key === shape.key} onClick={() => setShapeKey(s.key)}>
-                  {s.name}
-                </button>
-              ))}
+            {/* the stage toolbar: each shape with a tiny glyph of itself */}
+            <div className="tb">
+              <Segmented label="Arrange the pieces as" value={shape.key} onChange={setShapeKey} options={SHAPES.map((s) => ({ key: s.key, label: s.name, mark: <ShapeGlyph shape={s.key} /> }))} />
+            </div>
             </div>
           </div>
 
