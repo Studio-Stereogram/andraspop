@@ -3,6 +3,7 @@
 import { ViewTransition, startTransition, useMemo, useState } from "react";
 import { DS_THEMES, themeVars, type DsTheme, type ThemeKey } from "@/lib/inset/ds-themes";
 import { EdList, Spread, type SpreadItem } from "./spread";
+import { TickRail } from "./tick-rail";
 
 // Design systems. One sign-up card, built from components and dressed by tokens. The theme switch swaps
 // the token set (No theme leaves the components raw and whitelabel); "Explode layers" pulls the card
@@ -22,11 +23,11 @@ const THEME_LAYER: Layer = { n: 5, key: "theme", label: "Theme layer" };
 
 // The exploded stack, top to bottom, with the buttons that focus each plane.
 type PlaneKey = Exclude<LayerKey, "theme">;
-const PLANES: { key: PlaneKey; label: string }[] = [
-  { key: "tokens", label: "Tokens" },
-  { key: "components", label: "Components" },
-  { key: "patterns", label: "Patterns" },
-  { key: "screens", label: "Screen" },
+const PLANES: { key: PlaneKey; label: string; hint: string }[] = [
+  { key: "tokens", label: "Tokens", hint: "Colour, type, corners" },
+  { key: "components", label: "Components", hint: "Button, input, toggle, tag" },
+  { key: "patterns", label: "Patterns", hint: "Form field, toggle row, action row" },
+  { key: "screens", label: "Screen", hint: "The composed sign-up" },
 ];
 
 function readout(key: LayerKey, t: DsTheme): string {
@@ -235,8 +236,12 @@ export function DesignSystems() {
   const [open, setOpen] = useState<number | null>(null);
   // the plane being inspected in the exploded view: picked beside the stack, or by opening it in the chain
   const [focus, setFocus] = useState<PlaneKey | null>(null);
+  // the plane under the rail's pointer or keyboard focus, previewed before it is picked
+  const [preview, setPreview] = useState<PlaneKey | null>(null);
   const theme = DS_THEMES.find((t) => t.key === themeKey) ?? DS_THEMES[1];
   const active = [...CHAIN, THEME_LAYER].find((l) => l.n === open);
+  const shown = preview ?? focus;
+  // the caption describes the kept layer; the rail's own card names a previewed one
   const focused = PLANES.find((p) => p.key === focus);
   const item = useMemo<SpreadItem | null>(() => (active ? { key: active.key, ...SPREADS[active.key] } : null), [active]);
 
@@ -268,7 +273,7 @@ export function DesignSystems() {
               className="ds-stage"
               data-theme={theme.key}
               data-exploded={exploded || undefined}
-              data-focus={exploded ? (focus ?? undefined) : undefined}
+              data-focus={exploded ? (shown ?? undefined) : undefined}
               style={themeVars(theme)}
             >
               <span
@@ -279,13 +284,9 @@ export function DesignSystems() {
                 <Planes theme={theme} />
               </span>
 
-              {/* inspect one layer at a time: it lifts out, the rest fade back */}
-              <div className="ds-inspect" role="group" aria-label="Inspect a layer" inert={!exploded}>
-                {PLANES.map((p) => (
-                  <button key={p.key} type="button" className="ds-inspect-btn" aria-pressed={focus === p.key} onClick={() => setFocus(focus === p.key ? null : p.key)}>
-                    {p.label}
-                  </button>
-                ))}
+              {/* inspect one layer at a time: hover the rail to preview a plane, click to keep it */}
+              <div className="ds-inspect">
+                <TickRail items={PLANES} selected={focus} onSelect={setFocus} onPreview={setPreview} label="Inspect a layer" disabled={!exploded} />
               </div>
               <p className="ds-caption" aria-live="polite" data-visible={(exploded && focused) || undefined}>
                 {exploded && focused ? (

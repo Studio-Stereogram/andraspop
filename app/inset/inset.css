@@ -1432,15 +1432,12 @@ html:has(.inset-root) body {
   translate: 0 0 60px; /* no higher than the focused top plane, which still fits the stage */
 }
 
-/* the layer buttons beside the stack, top to bottom like the planes */
+/* the tick rail beside the stack: one tick per plane, top to bottom like the planes */
 .ds-inspect {
   position: absolute;
   z-index: 2;
-  left: 14px;
+  left: 18px;
   top: 50%;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
   translate: 0 -50%;
   opacity: 0;
   transition: opacity 0.4s var(--ease);
@@ -1449,29 +1446,80 @@ html:has(.inset-root) body {
   opacity: 1;
   transition-delay: 0.3s;
 }
-.ds-inspect-btn {
-  padding: 5px 12px;
-  border: 1px solid var(--line-2);
-  border-radius: var(--r-pill);
-  background: color-mix(in srgb, var(--surface) 90%, transparent);
-  color: var(--ink-2);
+
+/* ---- tick rail (shared) ---- */
+.tr {
+  position: relative;
+  display: flex;
+  flex-direction: column;
   font-family: var(--f-sans);
   font-variation-settings: var(--rond);
-  font-size: 13px;
-  font-weight: 600;
-  text-align: left;
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
-.ds-inspect-btn:hover {
-  border-color: var(--ink);
+.tr-tick {
+  display: flex;
+  align-items: center;
+  width: 44px;
+  height: var(--row);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.tr-line {
+  display: block;
+  width: calc(12px + var(--grow, 0) * 18px);
+  height: 2px;
+  border-radius: 1px;
+  background: color-mix(in srgb, var(--ink-3) calc(55% + var(--grow, 0) * 45%), transparent);
+  transition: width 0.16s var(--ease), background 0.16s var(--ease);
+}
+.tr-tick[data-selected] .tr-line {
+  width: 30px;
+  height: 3px;
+  background: var(--accent-text);
+}
+.inset-root .tr-tick:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: -4px;
+  border-radius: 6px;
+}
+.tr-card {
+  position: absolute;
+  left: 52px;
+  top: calc(var(--at) * var(--row) + var(--row) / 2);
+  display: flex;
+  flex-direction: column;
+  min-width: max-content;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--surface);
+  box-shadow: 0 8px 20px -10px rgba(23, 23, 26, 0.3);
+  pointer-events: none;
+  opacity: 0;
+  translate: -4px -50%;
+  transition: opacity 0.16s var(--ease), translate 0.16s var(--ease), top 0.2s var(--ease);
+}
+.tr-card[data-visible] {
+  opacity: 1;
+  translate: 0 -50%;
+}
+.tr-card-label {
+  font-size: 13px;
+  font-weight: 650;
   color: var(--ink);
 }
-.ds-inspect-btn[aria-pressed="true"] {
-  border-color: var(--accent-ink);
-  background: var(--accent-tint);
-  color: var(--accent-ink);
+.tr-card-hint {
+  font-size: 12px;
+  color: var(--ink-2);
 }
+@media (prefers-reduced-motion: reduce) {
+  .tr-line,
+  .tr-card {
+    transition: none;
+  }
+}
+
 .ds-caption {
   position: absolute;
   z-index: 2;
@@ -1821,16 +1869,7 @@ html:has(.inset-root) body {
 
 @media (max-width: 760px) {
   .ds-stage { height: 430px; --stack-scale: 0.86; }
-  .ds-inspect {
-    left: 50%;
-    top: 10px;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    width: calc(100% - 20px);
-    translate: -50% 0;
-  }
-  .ds-inspect-btn { padding: 4px 10px; font-size: 12px; }
+  .ds-inspect { left: 8px; }
   .ds-rail-tie { display: none; }
   .ds-rail { margin-top: 24px; }
 }
