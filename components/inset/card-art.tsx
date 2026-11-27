@@ -115,7 +115,67 @@ const gestalt: Draw = (ctx, w, h, t, ink) => {
   ctx.globalAlpha = 1;
 };
 
-const DRAW: Record<ArtKind, Draw> = { lattice, lanes, gestalt };
+// Design systems: three stacked planes (tokens, components, screen) that drift apart and settle back,
+// an exploded view on a loop. The top plane carries swatches, the middle one blocks, the bottom one a page.
+const layers: Draw = (ctx, w, h, t, ink) => {
+  const k = smooth((Math.sin(t * 0.6) + 1) / 2); // 0 stacked, 1 exploded
+  const pw = Math.min(w * 0.62, h * 1.25);
+  const ph = pw * 0.42;
+  const cx = w / 2;
+  const base = h / 2 + ph * 0.3;
+  const gap = ph * (0.18 + 0.42 * k);
+  ctx.strokeStyle = ink;
+  ctx.fillStyle = ink;
+  ctx.lineWidth = 1.2;
+  for (let i = 0; i < 3; i++) {
+    const y = base - (i - 1) * gap;
+    // a plane seen from above at an angle: a rhombus
+    const corners: [number, number][] = [
+      [cx - pw / 2, y],
+      [cx, y - ph / 2],
+      [cx + pw / 2, y],
+      [cx, y + ph / 2],
+    ];
+    ctx.globalAlpha = 0.18 + i * 0.06;
+    ctx.beginPath();
+    corners.forEach(([x, yy], j) => (j ? ctx.lineTo(x, yy) : ctx.moveTo(x, yy)));
+    ctx.closePath();
+    ctx.fill();
+    ctx.globalAlpha = 0.9;
+    ctx.stroke();
+    // marks on each plane, laid out along its axes
+    const at = (u: number, v: number): [number, number] => [cx + (u - v) * (pw / 2), y + (u + v - 1) * (ph / 2)];
+    ctx.globalAlpha = 0.85;
+    if (i === 2) {
+      // tokens: a row of swatches
+      for (let s = 0; s < 4; s++) {
+        const [x, yy] = at(0.2 + s * 0.17, 0.35);
+        ctx.beginPath();
+        ctx.arc(x, yy, ph * 0.07, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    } else if (i === 1) {
+      // components: a few blocks
+      for (let s = 0; s < 3; s++) {
+        const [x, yy] = at(0.25 + s * 0.22, 0.55);
+        ctx.fillRect(x - ph * 0.09, yy - ph * 0.05, ph * 0.18, ph * 0.1);
+      }
+    } else {
+      // screen: lines of a page
+      for (let s = 0; s < 3; s++) {
+        const [x1, y1] = at(0.2, 0.3 + s * 0.18);
+        const [x2, y2] = at(0.7 - s * 0.1, 0.3 + s * 0.18);
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+      }
+    }
+  }
+  ctx.globalAlpha = 1;
+};
+
+const DRAW: Record<ArtKind, Draw> = { lattice, lanes, gestalt, layers };
 
 export function CardArt({ kind, ink, width, height, still }: Props) {
   const ref = useRef<HTMLCanvasElement>(null);

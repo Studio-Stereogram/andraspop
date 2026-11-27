@@ -250,9 +250,9 @@ html:has(.inset-root) body {
 @media (max-width: 640px) {
   .in-home { padding-top: 40px; }
   .in-fan { height: 300px; margin-top: 32px; }
-  .in-fan-slot { top: 8px; scale: 0.7; --spread: 0.62; }
+  .in-fan-slot { top: 8px; scale: 0.62; --spread: 0.44; }
   .in-fan:hover .in-fan-slot,
-  .in-fan:focus-within .in-fan-slot { --spread: 0.7; }
+  .in-fan:focus-within .in-fan-slot { --spread: 0.5; }
 }
 
 /* ---- the card ---- */
@@ -1328,6 +1328,419 @@ html:has(.inset-root) body {
   }
 }
 
+/* ---- design systems ---- */
+
+.ds {
+  --accent: #3fd69b;
+  --accent-ink: #053b2a;
+  --accent-tint: #dbf7ec;
+  --accent-text: #0b6b48;
+  width: 100%;
+  max-width: 920px;
+}
+.ds-head {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.ds-title {
+  margin-top: 10px;
+  font-size: clamp(40px, 7vw, 68px);
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+}
+.ds-sub {
+  margin-top: 12px;
+  font-size: clamp(16px, 2vw, 19px);
+  color: var(--ink-2);
+}
+
+.ds-specimen {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+/* the stage: the card, or its layers pulled apart in 3D */
+.ds-stage {
+  --stack-scale: 1;
+  position: relative;
+  height: 460px;
+  border-radius: 10px;
+  background: var(--paper);
+  overflow: hidden;
+  perspective: 1800px;
+  transition: background 0.5s var(--ease);
+}
+.ds-stack {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 340px;
+  height: 400px;
+  margin: -200px 0 0 -170px;
+  transform-style: preserve-3d;
+  transform: scale(var(--stack-scale));
+  transition: transform 0.9s var(--ease);
+}
+.ds-stage[data-exploded] .ds-stack {
+  /* tilt the stack and pull it back by half its depth, so the four planes centre on the stage */
+  transform: scale(calc(var(--stack-scale) * 0.66)) rotateX(56deg) rotateZ(-38deg) translateZ(-195px);
+}
+.ds-plane {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  opacity: 0;
+  transform: translateZ(0);
+  transition: transform 0.9s var(--ease), opacity 0.5s var(--ease), box-shadow 0.3s var(--ease);
+}
+.ds-plane[data-layer="screens"] { opacity: 1; }
+.ds-stage[data-exploded] .ds-plane {
+  opacity: 1;
+  background: color-mix(in srgb, var(--ds-bg) 82%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--ds-text) 22%, transparent), 0 30px 60px -30px rgba(23, 23, 26, 0.35);
+}
+.ds-stage[data-exploded] .ds-plane[data-layer="patterns"] { transform: translateZ(130px); }
+.ds-stage[data-exploded] .ds-plane[data-layer="components"] { transform: translateZ(260px); }
+.ds-stage[data-exploded] .ds-plane[data-layer="tokens"] { transform: translateZ(390px); }
+/* the layer opened in the chain is outlined in place */
+.ds-stage[data-exploded][data-focus="tokens"] .ds-plane[data-layer="tokens"],
+.ds-stage[data-exploded][data-focus="components"] .ds-plane[data-layer="components"],
+.ds-stage[data-exploded][data-focus="patterns"] .ds-plane[data-layer="patterns"],
+.ds-stage[data-exploded][data-focus="screens"] .ds-plane[data-layer="screens"] {
+  box-shadow: 0 0 0 3px var(--accent-text), 0 30px 60px -30px rgba(23, 23, 26, 0.35);
+}
+.ds-plane-label {
+  position: absolute;
+  left: 14px;
+  top: 10px;
+  font-family: var(--f-sans);
+  font-variation-settings: var(--rond);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ds-text);
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+}
+.ds-stage[data-exploded] .ds-plane-label { opacity: 0.85; }
+.ds-plane-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+/* the themed parts: everything reads --ds-* */
+.ds-stage {
+  color: var(--ds-text);
+  font-family: var(--ds-font-body);
+  font-weight: var(--ds-body-weight);
+  font-variation-settings: var(--ds-rond);
+}
+.ds-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  height: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  background: var(--ds-bg);
+  transition: background 0.5s var(--ease);
+}
+.ds-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+.ds-logo {
+  width: 18px;
+  height: 18px;
+  border-radius: min(var(--ds-radius), 6px);
+  background: var(--ds-action);
+}
+.ds-nav {
+  width: 40px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--ds-border);
+}
+.ds-nav:first-of-type { margin-left: auto; }
+.ds-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 270px;
+  padding: 18px;
+  border: var(--ds-border-w) solid var(--ds-border);
+  border-radius: var(--ds-radius);
+  background: var(--ds-surface);
+  box-shadow: var(--ds-shadow);
+  transition: background 0.5s var(--ease), border-radius 0.5s var(--ease), box-shadow 0.5s var(--ease), border-color 0.5s var(--ease);
+}
+.ds-h {
+  font-family: var(--ds-font-head);
+  font-weight: var(--ds-head-weight);
+  font-size: 23px;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.ds-p {
+  margin-top: -4px;
+  font-size: 13px;
+  color: var(--ds-muted);
+}
+.ds-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.ds-label {
+  font-family: var(--ds-font-label);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ds-muted);
+}
+.ds-input {
+  display: block;
+  padding: 7px 10px;
+  border: var(--ds-border-w) solid var(--ds-border);
+  border-radius: calc(var(--ds-radius) * 0.55);
+  background: var(--ds-surface);
+  font-size: 13px;
+  color: var(--ds-text);
+  transition: border-radius 0.5s var(--ease);
+}
+.ds-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+.ds-switch {
+  position: relative;
+  flex: none;
+  width: 30px;
+  height: 18px;
+  border-radius: min(var(--ds-btn-radius), 9px);
+  background: var(--ds-action);
+}
+.ds-knob {
+  position: absolute;
+  right: 3px;
+  top: 3px;
+  width: 12px;
+  height: 12px;
+  border-radius: min(var(--ds-btn-radius), 6px);
+  background: var(--ds-on-action);
+}
+.ds-tag {
+  align-self: flex-start;
+  padding: 2px 9px;
+  border-radius: min(var(--ds-btn-radius), 999px);
+  background: var(--ds-accent);
+  color: var(--ds-on-accent);
+  font-family: var(--ds-font-label);
+  font-size: 11px;
+  font-weight: 650;
+}
+.ds-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 2px;
+}
+.ds-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 15px;
+  border: var(--ds-border-w) solid var(--ds-border);
+  border-radius: var(--ds-btn-radius);
+  font-size: 13px;
+  font-weight: 650;
+  white-space: nowrap;
+  transition: background 0.5s var(--ease), border-radius 0.5s var(--ease), color 0.5s var(--ease);
+}
+.ds-btn-primary {
+  border-color: var(--ds-action);
+  background: var(--ds-action);
+  color: var(--ds-on-action);
+}
+.ds-btn-secondary {
+  background: transparent;
+  color: var(--ds-text);
+}
+/* a few theme-specific touches tokens alone don't carry */
+.ds-stage[data-theme="none"] .ds-btn,
+.ds-stage[data-theme="none"] .ds-tag,
+.ds-stage[data-theme="none"] .ds-label { font-weight: 400; }
+.ds-stage[data-theme="none"] .ds-btn-primary { border-color: var(--ds-border); }
+.ds-stage[data-theme="metamap"] .ds-label,
+.ds-stage[data-theme="metamap"] .ds-tag { letter-spacing: 0.04em; text-transform: uppercase; font-size: 10px; }
+.ds-stage[data-theme="sherbet"] .ds-btn { font-weight: 800; box-shadow: 2px 2px 0 var(--ds-border); }
+.ds-stage[data-theme="sherbet"] .ds-btn-primary { border-color: var(--ds-border); }
+
+/* the exploded layers' contents */
+.ds-patterns { gap: 12px; width: 270px; }
+.ds-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 18px 10px 10px;
+  border: 1.5px dashed color-mix(in srgb, var(--ds-text) 40%, transparent);
+  border-radius: calc(var(--ds-radius) * 0.7 + 4px);
+}
+.ds-group-label {
+  position: absolute;
+  left: 10px;
+  top: 3px;
+  font-family: var(--ds-font-label);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--ds-muted);
+}
+.ds-atoms {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 280px;
+  gap: 14px;
+}
+.ds-atoms .ds-input { width: 120px; }
+.ds-tokens { gap: 22px; }
+.ds-swatches {
+  display: flex;
+  gap: 12px;
+}
+.ds-swatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--ds-font-label);
+  font-size: 10px;
+  color: var(--ds-muted);
+}
+.ds-chip {
+  width: 38px;
+  height: 38px;
+  border: 1px solid color-mix(in srgb, var(--ds-text) 25%, transparent);
+  border-radius: min(var(--ds-radius), 10px);
+}
+.ds-type {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.ds-type-head {
+  font-family: var(--ds-font-head);
+  font-weight: var(--ds-head-weight);
+  font-size: 44px;
+  line-height: 1;
+}
+.ds-type-body {
+  font-size: 30px;
+  line-height: 1;
+}
+.ds-radius {
+  width: 44px;
+  height: 44px;
+  border: 3px solid var(--ds-action);
+  border-radius: var(--ds-radius);
+}
+
+/* controls under the stage */
+.ds-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 16px;
+  margin-top: 12px;
+}
+.ds-themes { margin-top: 0; }
+.ds-explode {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px 6px 10px;
+  border: 1px dashed var(--ink-3);
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.ds-explode:hover { border-color: var(--ink); }
+.ds-explode[aria-pressed="true"] {
+  border-style: solid;
+  border-color: var(--accent-ink);
+  background: var(--accent-tint);
+}
+.ds-explode-icon {
+  width: 16px;
+  height: 12px;
+  border-top: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  position: relative;
+  transition: height 0.3s var(--spring);
+}
+.ds-explode-icon::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  margin-top: -1px;
+  border-top: 2px solid currentColor;
+}
+.ds-explode[aria-pressed="true"] .ds-explode-icon { height: 16px; }
+
+/* the theme layer: a rail under the whole chain, tied up to each step */
+.ds-rail {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  margin-top: 34px;
+  padding: 12px 16px 14px;
+  border: 1px solid var(--accent-ink);
+  border-radius: 13px;
+  background: var(--accent-tint);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.ds-rail[data-open] { background: color-mix(in srgb, var(--accent) 45%, var(--accent-tint)); }
+.ds-rail-tie {
+  position: absolute;
+  bottom: 100%;
+  /* the centre of each of the four stream columns (44px gaps) */
+  left: calc((100% - 132px) / 8 + var(--i) * ((100% - 132px) / 4 + 44px));
+  height: 34px;
+  border-left: 1.5px dashed var(--accent-text);
+}
+.ds-rail[data-open] .vl-orbit-track { opacity: 0.3; }
+.ds-rail[data-open] .vl-orbit-dash { opacity: 1; }
+
+@media (max-width: 760px) {
+  .ds-stage { height: 430px; --stack-scale: 0.86; }
+  .ds-rail-tie { display: none; }
+  .ds-rail { margin-top: 24px; }
+}
+
 /* ---- two columns: on a landscape laptop screen an opened item sits beside its diagram ---- */
 
 @media (min-width: 1100px) and (min-aspect-ratio: 4/3) {
@@ -1345,12 +1758,14 @@ html:has(.inset-root) body {
   .split[data-open] .dc-head,
   .split[data-open] .vl-head,
   .split[data-open] .si-head,
+  .split[data-open] .ds-head,
   .split[data-open] .dc-credit {
     text-align: left;
   }
   .split[data-open] .dc-title,
   .split[data-open] .vl-title,
-  .split[data-open] .si-title {
+  .split[data-open] .si-title,
+  .split[data-open] .ds-title {
     font-size: clamp(36px, 3.4vw, 52px);
   }
   .split[data-open] .dc-map {
@@ -1378,10 +1793,20 @@ html:has(.inset-root) body {
     grid-template-columns: minmax(110px, 1fr) 3fr;
   }
   .split[data-open] .vl-head,
-  .split[data-open] .si-head {
+  .split[data-open] .si-head,
+  .split[data-open] .ds-head {
     margin-bottom: 24px;
   }
   /* keep the whole left column on one laptop screen */
+  .split[data-open] .ds-stage {
+    height: 248px;
+    --stack-scale: 0.58;
+  }
+  .split[data-open] .ds-controls { margin-top: 8px; }
+  .split[data-open] .ds-sub { display: none; }
+  .split[data-open] .ds-rail .si-seg-value { display: none; }
+  .split[data-open] .ds-rail-tie { display: none; }
+  .split[data-open] .ds-rail { margin-top: 14px; padding: 10px 14px 12px; }
   .split[data-open] .si-stage {
     aspect-ratio: 2.3 / 1;
   }

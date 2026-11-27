@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ViewTransition } from "react";
 import { DesignCycle } from "@/components/inset/design-cycle";
+import { DesignSystems } from "@/components/inset/design-systems";
 import { InProgress } from "@/components/inset/in-progress";
 import { ShapeOfInformation } from "@/components/inset/shape-of-information";
 import { Switcher } from "@/components/inset/switcher";
@@ -23,6 +24,7 @@ const PIECES: Record<string, () => React.ReactNode> = {
   "design-cycle": () => <DesignCycle />,
   "vehicle-for-logic": () => <VehicleForLogic />,
   "shape-of-information": () => <ShapeOfInformation />,
+  "design-systems": () => <DesignSystems />,
 };
 
 export default async function InsetPage({ params }: PageProps<"/inset/[slug]">) {

@@ -11,9 +11,10 @@ import { Sticker } from "./sticker";
 // Hovering a token or a card lifts that card; the fan opens up while the pointer is over it.
 
 const FAN = [
-  { x: -176, y: 18, r: -7 },
-  { x: 0, y: -6, r: 2 },
-  { x: 176, y: 22, r: 8 },
+  { x: -258, y: 24, r: -9 },
+  { x: -86, y: -2, r: -3 },
+  { x: 86, y: 4, r: 3 },
+  { x: 258, y: 26, r: 9 },
 ];
 
 export function InsetHome() {

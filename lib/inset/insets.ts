@@ -3,7 +3,8 @@
 
 import type { CSSProperties } from "react";
 
-export type ArtKind = "lattice" | "lanes" | "gestalt";
+export type ArtKind = "lattice" | "lanes" | "gestalt" | "layers";
+export type StickerShape = "diamond" | "triangle" | "circle" | "square";
 export type InsetStatus = "live" | "in-progress";
 
 export type Inset = {
@@ -14,7 +15,7 @@ export type Inset = {
   /** One line for the switcher and page meta. */
   summary: string;
   /** The word that stands for it in the home headline, with its sticker shape. */
-  token: { word: string; shape: "diamond" | "triangle" | "circle" };
+  token: { word: string; shape: StickerShape };
   /** Card fill and the ink drawn on it. */
   color: string;
   ink: string;
@@ -61,6 +62,18 @@ export const INSETS: Inset[] = [
     ink: "#5C0B2E",
     tint: "#FFE3EE",
     art: "gestalt",
+    status: "live",
+  },
+  {
+    slug: "design-systems",
+    title: "Design systems",
+    cardTitle: "Design\nsystems",
+    summary: "Components give it structure. Tokens give it feel.",
+    token: { word: "feel", shape: "square" },
+    color: "#3fd69b",
+    ink: "#053b2a",
+    tint: "#dbf7ec",
+    art: "layers",
     status: "live",
   },
 ];
