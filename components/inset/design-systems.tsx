@@ -352,8 +352,8 @@ export function DesignSystems() {
                     {readout(layer.key, theme)}
                   </span>
                   <svg className="vl-orbit" aria-hidden>
-                    <rect className="vl-orbit-track" width="100%" height="100%" rx="16" pathLength={100} />
-                    <rect className="vl-orbit-dash" width="100%" height="100%" rx="16" pathLength={100} />
+                    <rect className="vl-orbit-track" width="100%" height="100%" rx="13" pathLength={100} />
+                    <rect className="vl-orbit-dash" width="100%" height="100%" rx="13" pathLength={100} />
                   </svg>
                 </button>
               </li>
@@ -377,8 +377,8 @@ export function DesignSystems() {
               Runs through every layer. {readout("theme", theme)}
             </span>
             <svg className="vl-orbit" aria-hidden>
-              <rect className="vl-orbit-track" width="100%" height="100%" rx="16" pathLength={100} />
-              <rect className="vl-orbit-dash" width="100%" height="100%" rx="16" pathLength={100} />
+              <rect className="vl-orbit-track" width="100%" height="100%" rx="13" pathLength={100} />
+              <rect className="vl-orbit-dash" width="100%" height="100%" rx="13" pathLength={100} />
             </svg>
           </button>
         </div>

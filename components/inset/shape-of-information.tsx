@@ -374,8 +374,8 @@ export function ShapeOfInformation() {
                     {readout(stage, shape)}
                   </span>
                   <svg className="vl-orbit" aria-hidden>
-                    <rect className="vl-orbit-track" width="100%" height="100%" rx="16" pathLength={100} />
-                    <rect className="vl-orbit-dash" width="100%" height="100%" rx="16" pathLength={100} />
+                    <rect className="vl-orbit-track" width="100%" height="100%" rx="13" pathLength={100} />
+                    <rect className="vl-orbit-dash" width="100%" height="100%" rx="13" pathLength={100} />
                   </svg>
                 </button>
               </li>

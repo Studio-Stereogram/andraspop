@@ -2199,18 +2199,20 @@ html:has(.inset-root) body {
 }
 
 .vl-orbit {
+  /* the outline hugs the focused item's own edge, so it never crosses a neighbour or the box around it */
   position: absolute;
-  inset: -5px;
-  width: calc(100% + 10px);
-  height: calc(100% + 10px);
-  overflow: visible;
-  pointer-events: none;
-}
-/* on the ladder the outline hugs the thumb, inside the track, instead of floating outside the box */
-.vl-rung .vl-orbit {
   inset: 0;
   width: 100%;
   height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+/* boxes with a 1px border: lay the outline on the border line itself */
+.si-seg .vl-orbit,
+.ds-rail .vl-orbit {
+  inset: -1px;
+  width: calc(100% + 2px);
+  height: calc(100% + 2px);
 }
 .vl-orbit rect {
   fill: none;
