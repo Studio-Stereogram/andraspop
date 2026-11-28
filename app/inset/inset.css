@@ -393,7 +393,26 @@ html:has(.inset-root) body {
   font-weight: 600;
   color: var(--ink-3);
 }
+.in-menu-track {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 12px;
+  background: var(--chip);
+}
+.in-menu-glide {
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  border-radius: 9px;
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgba(23, 23, 26, 0.12), 0 2px 6px -2px rgba(23, 23, 26, 0.18);
+  transition: top 0.25s cubic-bezier(0.22, 1, 0.36, 1), height 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
 .in-menu-item {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -404,11 +423,21 @@ html:has(.inset-root) body {
   outline: none;
   cursor: pointer;
 }
-.in-menu-item[data-highlighted] {
-  background: var(--card-tint);
-}
-.in-menu-item[data-disabled] {
+.in-menu-item[aria-current="page"] {
+  box-shadow: inset 0 0 0 1px var(--line-2);
   cursor: default;
+}
+/* the menu renders outside .inset-root, so the map's global focus ring would apply: switch it off here */
+.in-menu-item:focus-visible,
+.in-menu-home:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+.in-menu-item[aria-current="page"]:focus-visible {
+  box-shadow: inset 0 0 0 1px var(--line-2);
+}
+.in-menu-track[data-keys] .in-menu-item[data-highlighted] {
+  box-shadow: inset 0 0 0 2px var(--ink); /* keyboard: a plain ring with the thumb; the pointer gets the thumb alone */
 }
 .in-menu-thumb {
   position: relative;
@@ -436,9 +465,8 @@ html:has(.inset-root) body {
 .in-menu-summary {
   font-size: 13px;
   line-height: 1.35;
-  color: var(--ink-2);
+  color: #4a4843; /* APCA Lc 78 on the grey track, 88 on the white thumb */
 }
-.in-menu-here,
 .in-menu-soon {
   margin-left: auto;
   flex: none;
@@ -446,10 +474,6 @@ html:has(.inset-root) body {
   border-radius: 999px;
   font-size: 11px;
   font-weight: 600;
-}
-.in-menu-here {
-  background: var(--card);
-  color: var(--card-ink);
 }
 .in-menu-soon {
   border: 1px solid var(--line);
